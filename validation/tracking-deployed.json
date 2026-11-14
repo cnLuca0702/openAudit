@@ -1,0 +1,54 @@
+{
+  "at": "2026-11-14T09:47:48.715Z",
+  "label": "演示模拟数据",
+  "scenarios": [
+    {
+      "id": "A03",
+      "artifactId": "artifact_59bded53-aee",
+      "rows": 21,
+      "sources": 5,
+      "blockingChecks": 0
+    },
+    {
+      "id": "C01",
+      "artifactId": "artifact_61aedafe-0ac",
+      "rows": 2,
+      "sources": 10,
+      "blockingChecks": 2
+    },
+    {
+      "id": "C02",
+      "artifactId": "artifact_de74a158-a45",
+      "rows": 6,
+      "sources": 6,
+      "blockingChecks": 6
+    },
+    {
+      "id": "E01",
+      "artifactId": "artifact_ba6ddfc7-162",
+      "rows": 4,
+      "sources": 29,
+      "blockingChecks": 7
+    },
+    {
+      "id": "F04",
+      "artifactId": "artifact_03322d80-bef",
+      "rows": 4,
+      "sources": 6,
+      "blockingChecks": 0
+    }
+  ],
+  "checks": [
+    "API及静态入口继续要求DSH鉴权",
+    "五个受影响场景实际运行，保留待核和阻断状态，输入资料与事实无变化",
+    "真实DSH侧栏进入工作台，流程台账可见",
+    "参考19节点及15问题可见，390px移动端无横向溢出"
+  ],
+  "project": {
+    "documents": 60,
+    "facts": 105,
+    "artifacts": 39,
+    "workflowRecords": 0
+  },
+  "passed": true
+}

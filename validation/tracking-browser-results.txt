@@ -1,0 +1,6 @@
+  ✓  1 tests/workbench.spec.ts:3:1 › real persisted project: 24 scenario runs, provenance, review, changes, exports, errors and mobile (45.7s)
+  ✓  2 tests/workbench.spec.ts:273:1 › human workflows: contract revision, freeze, legal applicability, resolution, governed reuse and Office export (21.1s)
+  ✓  3 tests/workbench.spec.ts:491:1 › source media: original-image zoom and visible OCR / ASR failures without model configuration (4.3s)
+  ✓  4 tests/workbench.spec.ts:549:1 › persisted manual transcript segments seek the actual original audio (3.8s)
+  ✓  5 tests/workflow.spec.ts:2:1 › tracking workflow: source reference, two receipts, signed gates, redline and archive are persisted (26.6s)
+  5 passed (1.8m)

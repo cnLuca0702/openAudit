@@ -16,6 +16,11 @@ import {
   markdown,
 } from "./core.js";
 import { SCENARIOS, executeScenario, testCapability } from "./scenarios.js";
+import {
+  workflowView,
+  saveWorkflowRecord,
+  validWorkflowRecord,
+} from "./workflow.js";
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const MAX = 10 * 1024 * 1024;
 const lists = {
@@ -30,6 +35,7 @@ const lists = {
 function initial() {
   return {
     schemaVersion: 1,
+    workflowRulesVersion: 1,
     revision: 0,
     project: {
       id: "DEMO-AUDIT-2027-006",
@@ -202,6 +208,34 @@ export class AuditService {
   }
   async init() {
     await this.store.init();
+    if (this.store.read().workflowRulesVersion !== 1) {
+      await this.store.transaction((s) => {
+        const changed = s.artifacts.filter(
+          (a) =>
+            ["A03", "C01", "C02", "E01", "F04"].includes(a.scenarioId) &&
+            !["stale", "superseded"].includes(a.status),
+        );
+        const reason =
+          "跟踪审计流程规则已校正，请按当前资料重新运行；原件和历史成果保留";
+        for (const a of changed) {
+          a.previousStatus = a.status;
+          a.status = "stale";
+          a.invalidationReason = reason;
+          a.invalidatedAt = now();
+        }
+        if (changed.length)
+          invalidate(
+            s,
+            changed.map((a) => a.id),
+            reason,
+          );
+        s.workflowRulesVersion = 1;
+        event(s, "workflow-rules-migrated", {
+          version: 1,
+          affected: changed.map((a) => a.id),
+        });
+      });
+    }
     if (!this.parser) {
       try {
         this.parser = await import("../parsers/index.js");
@@ -229,6 +263,7 @@ export class AuditService {
   state() {
     const s = this.store.read();
     s.scenarios = SCENARIOS;
+    s.workflow = workflowView(s);
     s.capabilities = {
       model: this.model?.capabilities?.() ?? {},
       parsers: Boolean(this.parser),
@@ -749,6 +784,69 @@ export class AuditService {
     );
     const response = await this.store.transaction(async (s) => {
       switch (action) {
+        case "workflow-save": {
+          human(p);
+          const record = saveWorkflowRecord(s, p);
+          if (record.kind === "issuance") {
+            const artifact = s.artifacts.find((a) => a.id === record.reportId);
+            const groups = new Map();
+            for (const d of s.documents) {
+              const versions = groups.get(d.logicalId) ?? [];
+              versions.push(d);
+              groups.set(d.logicalId, versions);
+            }
+            const documentIds = [...groups.values()]
+              .map(
+                (versions) =>
+                  versions.find((d) => d.status === "confirmed") ??
+                  versions.find((d) => d.status !== "superseded") ??
+                  versions[0],
+              )
+              .filter((d) => d.kind !== "report" || d.id === record.reportId)
+              .map((d) => d.id);
+            const execution = executeScenario(s, "E01", {
+              documentIds,
+              artifactIds: artifact ? [artifact.id] : [],
+              options: { reviewedReportId: record.reportId },
+            });
+            const blockers = execution.result.checks.filter((c) => c.blocking);
+            requireThat(
+              !blockers.length,
+              `出具核验未通过：${blockers.map((c) => c.message).join("；")}`,
+              409,
+            );
+            record.sources = unique([
+              ...record.sources,
+              ...execution.result.sources,
+            ]);
+            requireThat(
+              validWorkflowRecord(s, record),
+              "报告引用的证明版本尚未全部确认或已失效",
+              409,
+            );
+          }
+          const affected = s.artifacts.filter(
+            (a) =>
+              ["E01", "F04"].includes(a.scenarioId) && a.status !== "stale",
+          );
+          for (const a of affected) a.status = "stale";
+          invalidate(
+            s,
+            affected.map((a) => a.id),
+            "流程登记变化，请重新核验",
+          );
+          event(
+            s,
+            "workflow-recorded",
+            {
+              recordId: record.id,
+              kind: record.kind,
+              previousId: record.previousId,
+            },
+            p.actor,
+          );
+          return { record };
+        }
         case "seed":
           return this.seed(s, p);
         case "upload":
@@ -1400,6 +1498,7 @@ export class AuditService {
         { runId: response.result.runId },
       );
     response.state.scenarios = SCENARIOS;
+    response.state.workflow = workflowView(response.state);
     response.state.capabilities = this.state().capabilities;
     return response;
   }

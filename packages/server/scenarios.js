@@ -1,3 +1,4 @@
+import { calculateDeadline, qualityChecks, workflowView } from "./workflow.js";
 import {
   LABEL,
   AuditError,
@@ -101,14 +102,14 @@ const definitions = [
   [
     "C01",
     "结果资料编制与审查",
-    "征求意见与质量内控",
+    "征求意见",
     ["report"],
     "报告问题结构、金额口径、重复引用与限定",
   ],
   [
     "C02",
     "审计质量内部控制",
-    "征求意见与质量内控",
+    "征求意见",
     ["feedback"],
     "反馈拆解、签收期限、决定与落实分离",
   ],
@@ -143,42 +144,42 @@ const definitions = [
   [
     "E01",
     "出具前重要事项审核确认",
-    "正式出具前审核确认",
+    "出具送达",
     ["report"],
     "事实、日期、数字、版本四类确认卡",
   ],
   [
     "F01",
     "整改任务与证明核验",
-    "整改归档与复用",
+    "整改归档",
     ["rectification"],
     "要求、主体、到账证明和重复凭证逐项核验",
   ],
   [
     "F02",
     "整改效果复查与销号建议",
-    "整改归档与复用",
+    "整改归档",
     ["rectification"],
     "连续期复查、剩余金额和反弹核验",
   ],
   [
     "F03",
     "公告草案与公开审查",
-    "整改归档与复用",
+    "整改归档",
     ["report"],
     "按范围生成脱敏候选，保留自报和抽样限定",
   ],
   [
     "F04",
     "归档清单与缺件审查",
-    "整改归档与复用",
+    "整改归档",
     ["requirement"],
     "应有、实有、页码、错版和未确认，独立整改状态",
   ],
   [
     "F05",
     "三库沉淀与跨项目复用",
-    "整改归档与复用",
+    "整改归档",
     ["measurement"],
     "有血缘的知识、能力、数据候选及适配条件",
   ],
@@ -606,6 +607,10 @@ const handlers = {
       "实施方案",
       "审计通知书",
       "提供资料清单",
+      "审前公告",
+      "审计承诺书",
+      "账户开立情况表",
+      "重要管理事项记录",
     ];
     const templates = c.records("template");
     const rows = docs.flatMap((type) =>
@@ -1250,6 +1255,11 @@ const handlers = {
         id: r.id,
         title: r.title ?? r.subject,
         paragraph: r.text ?? r.description ?? r.title,
+        planItem: r.planItem ?? "方案事项序号待关联",
+        evidenceSheetNumber: r.evidenceSheetNumber ?? "取证单编号待关联",
+        workpaperIndex: r.workpaperIndex ?? "底稿索引待关联",
+        basis: r.basis ?? r.qualificationBasis ?? "定性依据待人工核验",
+        opinion: r.opinion ?? r.treatmentOpinion ?? "处理意见待人工审定",
         factRef: r.factRef ?? r.id,
         evidenceIds: r.evidenceIds ?? [],
         sampleScope: r.sampleScope ?? "sample",
@@ -1290,21 +1300,32 @@ const handlers = {
         : [r.issueId ?? r.id]
       ).map((issue) => {
         const days = number(r.deadlineDays);
-        const due =
-          date(r.receivedDate) && days !== null
-            ? new Date(Date.parse(r.receivedDate) + days * 86400000)
-                .toISOString()
-                .slice(0, 10)
-            : null;
+        const receiptDate = r.receiptDate ?? r.servedDate;
+        const deadline = calculateDeadline(
+          receiptDate,
+          days ?? 10,
+          r.deadlineUnit ?? "working",
+          c.options.workingCalendar,
+        );
+        const noChange = ["无需处理", "不予采纳", "无异议"].includes(
+          r.decision,
+        );
+        const reasonedNoChange =
+          noChange &&
+          Boolean(r.decisionReason ?? r.reply) &&
+          r.factStatus === "confirmed" &&
+          r.implementationEvidenceIds?.length &&
+          r.implementationEvidenceIds.every((eid) => evidenceExists(c, eid));
         const implemented = Boolean(
-          r.modifiedArtifactId &&
-            c.state.artifacts.some(
-              (a) => a.id === r.modifiedArtifactId && a.status !== "stale",
-            ) &&
-            r.implementationEvidenceIds?.length &&
-            r.implementationEvidenceIds.every((evidenceId) =>
-              evidenceExists(c, evidenceId),
-            ),
+          reasonedNoChange ||
+            (r.modifiedArtifactId &&
+              c.state.artifacts.some(
+                (a) => a.id === r.modifiedArtifactId && a.status !== "stale",
+              ) &&
+              r.implementationEvidenceIds?.length &&
+              r.implementationEvidenceIds.every((evidenceId) =>
+                evidenceExists(c, evidenceId),
+              )),
         );
         return {
           id: `${r.id}:${issue}`,
@@ -1312,13 +1333,23 @@ const handlers = {
           issueId: issue,
           claim: r.claim ?? r.text,
           decision: r.decision ?? "待人工决定",
+          decisionReason: r.decisionReason ?? "采纳或不采纳理由待说明",
+          changeRequired: !noChange,
           receivedDate: r.receivedDate,
-          dueDate: due,
-          deadlineBasis: r.deadlineBasis ?? "机构模拟规则，非法定期限推断",
+          subject: r.subject ?? r.entity ?? "反馈单位待登记",
+          receiptDate: receiptDate ?? null,
+          dueDate: deadline.dueDate,
+          deadlineStatus: deadline.deadlineStatus,
+          deadlineUnit: r.deadlineUnit ?? "working",
+          deadlineBasis:
+            r.deadlineBasis ??
+            "参考流程10个工作日；须核对征求意见书实际签收日及调休，不以反馈接收日代替",
           reply: r.reply ?? "",
           implemented,
           status: implemented
-            ? "有落实证据，待复核"
+            ? reasonedNoChange
+              ? "无需修改的决定已有依据，待复核"
+              : "有落实证据，待复核"
             : r.reply
               ? "已回复，未证实落实"
               : "待处理",
@@ -1538,14 +1569,40 @@ const handlers = {
   E01(c) {
     const reports = reportRows(c);
     const checks = reportChecks(c, reports);
+    const reportIds = c.selectedArtifacts
+      .filter((a) => a.scenarioId === "C01")
+      .map((a) => a.id);
+    if (!reportIds.length)
+      reportIds.push(
+        ...c.documents.filter((d) => d.kind === "report").map((d) => d.id),
+      );
+    const issuanceGaps = reportIds.flatMap((reportId) =>
+      qualityChecks(c.state, reportId),
+    );
+    // Technical artifact confirmation is distinct from formal issuance; workflow-save enforces all gates.
+    checks.push(
+      ...issuanceGaps.map((gap) => ({
+        ...gap,
+        blocking: false,
+        message: `签发登记仍受阻：${gap.message}`,
+      })),
+    );
     const relevant = c.selectedArtifacts.length
       ? c.selectedArtifacts.filter(
           (a) => !["C01", "B09"].includes(a.scenarioId),
         )
       : [
           ...group(
-            c.state.artifacts.filter((a) =>
-              ["C02", "D01", "D02", "D03", "D04"].includes(a.scenarioId),
+            c.state.artifacts.filter(
+              (a) =>
+                ["C02", "D01", "D02", "D03", "D04"].includes(a.scenarioId) &&
+                (!c.options.reviewedReportId ||
+                  a.dependsOn?.includes(c.options.reviewedReportId) ||
+                  a.sources.some(
+                    (source) =>
+                      source.documentId === c.options.reviewedReportId ||
+                      source.artifactId === c.options.reviewedReportId,
+                  )),
             ),
             (a) => a.scenarioId,
           ).values(),
@@ -1573,7 +1630,7 @@ const handlers = {
             "double-total",
             "attachment-amount",
           ],
-          ["unconfirmed-version"],
+          ["unconfirmed-version", "quality-gate"],
         ][i];
         const relevantChecks = checks.filter((x) => codes.includes(x.code));
         return {
@@ -1594,6 +1651,11 @@ const handlers = {
     return {
       rows,
       checks,
+      summary: {
+        issuanceReady: reportIds.length > 0 && issuanceGaps.length === 0,
+        workflowRevision: c.state.workflowRevision ?? 0,
+        note: "技术核验和成果确认不代替正式签发；请在流程与文书台账登记三道质控、签发用印及逐单位送达。",
+      },
       dependencies: [
         ...relevant.map((a) => a.id),
         ...c.selectedArtifacts.map((a) => a.id),
@@ -1742,16 +1804,20 @@ const handlers = {
       .records("requirement")
       .filter((r) => !r.phase || r.phase === "archive");
     const rows = requirements.map((r) => {
-      const ds = c.state.documents.filter(
-        (d) =>
-          d.kind === r.requiredKind ||
-          d.records.some((record) => record.type === r.requiredKind) ||
-          d.id === r.documentId,
+      const requested = r.expectedDocumentId ?? r.documentId;
+      const ds = c.state.documents.filter((d) =>
+        requested
+          ? d.id === requested
+          : d.kind === r.requiredKind ||
+            d.records.some((record) => record.type === r.requiredKind),
       );
       const selected = ds.find((d) => d.status === "confirmed") ?? ds[0];
       return {
         id: r.id,
         required: r.title ?? r.requiredKind,
+        group: r.archiveGroup ?? "档案单元待登记",
+        volume: r.volume ?? "案卷号待登记",
+        retention: r.retention ?? "保管期限待核定",
         documentId: selected?.id ?? "",
         name: selected?.name ?? "未提供",
         version: selected?.version ?? null,
@@ -1780,6 +1846,8 @@ const handlers = {
         ),
       summary: {
         rectificationIndependent: true,
+        archiveGroups: workflowView(c.state).archive,
+        note: "按结论类、证明类、立项类、备查类组卷；登记移交与整改销号独立。参考案例54条不作为当前项目应有数量。",
         unresolvedRectification: c.state.tasks.filter(
           (t) => t.scenarioId === "F01" && t.status !== "closed",
         ).length,

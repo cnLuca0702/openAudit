@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>政府投资项目跟踪审计全流程｜云溪江流域综合治理工程（一期）2023年度跟踪审计</title>
+<style>
+  :root{
+    --ink:#1c2026; --ink2:#3d444d; --ink3:#666e78; --line:#d8dbe0;
+    --navy:#1b3a5c; --navy2:#2c5478; --red:#9c2a2a; --bg:#ffffff; --soft:#f5f6f4;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; background:#eceef0; color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+    font-size:15px; line-height:1.85; letter-spacing:.01em;
+  }
+  .paper{
+    max-width:1080px; margin:28px auto; background:var(--bg);
+    padding:64px 72px 56px; box-shadow:0 2px 18px rgba(20,30,45,.10);
+  }
+
+  /* ---------- 封面 ---------- */
+  .org{font-size:13px; letter-spacing:.32em; color:var(--ink3); text-indent:.32em;}
+  .rule{height:3px; background:var(--navy); margin:10px 0 34px;}
+  h1{
+    font-size:38px; line-height:1.28; margin:0 0 12px; letter-spacing:.04em;
+    font-weight:700; color:var(--navy);
+  }
+  .sub{font-size:19px; color:var(--ink2); font-weight:400; margin:0 0 26px; letter-spacing:.02em;}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:10px 34px; font-size:13.5px; color:var(--ink3);
+    padding-bottom:26px; border-bottom:1px solid var(--line);
+  }
+  .meta b{color:var(--ink2); font-weight:600;}
+
+  .abstract{
+    display:flex; margin:30px 0 8px;
+    border:1px solid var(--line); border-radius:2px; overflow:hidden;
+  }
+  .abstract div{flex:1 1 0; padding:18px 18px; border-right:1px solid var(--line);}
+  .abstract div:last-child{border-right:none;}
+  .abstract .num{font-size:25px; font-weight:700; color:var(--navy); line-height:1.2; letter-spacing:.01em;}
+  .abstract .num small{font-size:13px; font-weight:600; margin-left:3px; color:var(--navy2);}
+  .abstract .lab{font-size:12px; color:var(--ink3); margin-top:5px; letter-spacing:.04em;}
+
+  /* ---------- 章节 ---------- */
+  h2{
+    font-size:21px; margin:52px 0 6px; padding-left:14px; border-left:5px solid var(--navy);
+    font-weight:700; letter-spacing:.03em; line-height:1.4;
+  }
+  h2 .no{color:var(--red); font-size:15px; margin-right:8px; font-weight:700; letter-spacing:.1em;}
+  h3{font-size:16px; margin:30px 0 10px; color:var(--navy2); font-weight:600; letter-spacing:.03em;}
+  h4{font-size:14.5px; margin:22px 0 8px; color:var(--ink2); font-weight:600;}
+  p{margin:10px 0;}
+  .lead{color:var(--ink2); font-size:15px;}
+  .note{font-size:13px; color:var(--ink3); margin:8px 0 0;}
+  .em{color:var(--red); font-weight:600;}
+
+  /* ---------- 表格 ---------- */
+  table{width:100%; border-collapse:collapse; margin:14px 0 6px; font-size:13.5px; line-height:1.7;}
+  th,td{border:1px solid var(--line); padding:9px 11px; vertical-align:top; text-align:left;}
+  th{background:var(--soft); font-weight:600; color:var(--ink2); letter-spacing:.02em; white-space:nowrap;}
+  td.c,th.c{text-align:center;}
+  td.r{text-align:right; font-variant-numeric:tabular-nums;}
+  tbody tr:nth-child(even){background:#fafbf9;}
+  .tbl-cap{font-size:12.5px; color:var(--ink3); margin:6px 0 18px; letter-spacing:.02em;}
+  table.tight td,table.tight th{padding:7px 9px; font-size:13px;}
+  .nowrap{white-space:nowrap;}
+
+  /* ---------- 流程 ---------- */
+  .flow{display:flex; align-items:stretch; margin:26px 0 10px; font-size:13px;}
+  .flow .step{
+    flex:1; border:1px solid var(--navy2); border-top:4px solid var(--navy);
+    padding:12px 10px 14px; background:#fbfcfd; position:relative; text-align:center;
+  }
+  .flow .step + .step{border-left:none;}
+  .flow .idx{font-size:11px; color:var(--red); letter-spacing:.2em; font-weight:700;}
+  .flow .nm{display:block; font-weight:700; color:var(--navy); margin:4px 0 4px; font-size:14.5px;}
+  .flow .ds{color:var(--ink3); font-size:12px; line-height:1.6;}
+
+  /* ---------- 时间轴 ---------- */
+  .tl{margin:20px 0 6px; border-left:2px solid var(--line); padding-left:0; list-style:none;}
+  .tl li{position:relative; padding:0 0 16px 26px;}
+  .tl li::before{
+    content:""; position:absolute; left:-6px; top:9px; width:8px; height:8px;
+    border-radius:50%; background:#fff; border:2px solid var(--navy2);
+  }
+  .tl li.key::before{background:var(--red); border-color:var(--red);}
+  .tl .d{font-size:12.5px; color:var(--red); font-weight:700; letter-spacing:.06em; font-variant-numeric:tabular-nums;}
+  .tl .t{font-size:14px; color:var(--ink); font-weight:600;}
+  .tl .s{font-size:12.5px; color:var(--ink3);}
+  .tl .gap{color:var(--ink3); font-weight:400; margin-left:8px; letter-spacing:0;}
+
+  .tl .hlg{margin-top:7px; padding:5px 10px; font-size:12px; color:var(--ink2);
+           background:#f7f8fa; border-left:2px solid var(--red); line-height:1.75;}
+  .tl .hlg b{color:var(--red); font-weight:600;}
+  .lg-mark{display:inline-block; width:3px; height:12px; background:var(--red); margin:0 3px; vertical-align:-1px;}
+
+  /* ---------- 卡 / 网格 ---------- */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:16px 0;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0;}
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:16px 0;}
+  .card{border:1px solid var(--line); border-left:4px solid var(--navy2); padding:14px 16px; background:#fcfcfb;}
+  .card .h{font-weight:700; color:var(--navy); font-size:14px; margin-bottom:4px; letter-spacing:.03em;}
+  .card .b{font-size:13px; color:var(--ink2); line-height:1.75;}
+
+  /* ---------- 阶梯（证据链） ---------- */
+  .chain{margin:18px 0 8px;}
+  .chain .lvl{
+    display:flex; align-items:flex-start; gap:16px; border-left:4px solid var(--navy2);
+    background:#fbfcfd; padding:12px 16px; margin-bottom:6px;
+  }
+  .chain .lvl .k{font-size:11.5px; letter-spacing:.14em; color:var(--red); font-weight:700; min-width:52px; padding-top:3px;}
+  .chain .lvl .m{font-size:14px; font-weight:600; color:var(--ink); min-width:170px;}
+  .chain .lvl .v{font-size:13px; color:var(--ink2);}
+
+  /* ---------- 花脸稿 ---------- */
+  .redline{display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); margin:16px 0 6px;}
+  .rl-col{padding:16px 18px;}
+  .rl-col + .rl-col{border-left:1px solid var(--line); background:#fbfbf9;}
+  .rl-h{font-size:12.5px; font-weight:700; color:var(--navy); letter-spacing:.08em; margin-bottom:10px;}
+  .redline p{margin:9px 0; font-size:13px; line-height:1.95;}
+  .redline ins{text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:4px; color:#1f2a36;}
+  .redline del{color:#8b9099; text-decoration:line-through; text-decoration-color:#9c2a2a; text-decoration-thickness:1.5px;}
+  .rl-note{font-size:11.5px; color:var(--ink3); margin-top:10px;}
+
+  /* ---------- 列举 ---------- */
+  ol.num,ul.dot{margin:8px 0 8px; padding-left:22px;}
+  ol.num li,ul.dot li{margin:5px 0;}
+  .kv{font-size:13.5px;}
+  .kv b{color:var(--ink2);}
+
+  .divider{height:1px; background:var(--line); margin:44px 0 0;}
+
+  footer{margin-top:44px; padding-top:18px; border-top:1px solid var(--line);
+         font-size:12.5px; color:var(--ink3); display:flex; justify-content:space-between; letter-spacing:.04em;}
+
+  /* ---------- 打印 ---------- */
+  @page{size:A4; margin:16mm 14mm;}
+  @media print{
+    body{background:#fff; font-size:10.5pt; line-height:1.7;}
+    .paper{box-shadow:none; margin:0; padding:0; max-width:none;}
+    h1{font-size:24pt;} .sub{font-size:12pt;}
+    h2{font-size:14pt; margin-top:22pt; break-after:avoid;}
+    h3{font-size:11.5pt; break-after:avoid;}
+    table{font-size:9pt; break-inside:auto;}
+    tr{break-inside:avoid;}
+    .abstract,.flow,.chain .lvl,.card,.redline{break-inside:avoid;}
+    .flow{flex-direction:row; font-size:8.5pt;}
+    .flow .step{flex:1 1 0; padding:8px 5px 10px;}
+    .flow .step + .step{border-left:none;}
+    .flow .nm{font-size:9pt;}
+    .flow .ds{font-size:7.5pt; line-height:1.5;}
+    .abstract .num{font-size:15pt;}
+    .abstract .lab{font-size:7.5pt; letter-spacing:.02em;}
+    .abstract div{padding:12px 10px;}
+    footer{break-inside:avoid;}
+  }
+  @media screen and (max-width:860px){
+    .paper{padding:32px 22px;}
+    .abstract{grid-template-columns:1fr 1fr;}
+    .abstract div:nth-child(2){border-right:none;}
+    .grid2,.grid3,.grid4{grid-template-columns:1fr;}
+    .flow{flex-direction:column;}
+    .redline{grid-template-columns:1fr;}
+    .rl-col + .rl-col{border-left:none; border-top:1px solid var(--line);}
+    .flow .step + .step{border-left:1px solid var(--navy2); border-top:none;}
+  }
+</style>
+</head>
+<body>
+<div class="paper">
+
+  <!-- ================= 封面 ================= -->
+  <div class="org">云溪市审计局　重大项目审计处</div>
+  <div class="rule"></div>
+  <h1>政府投资项目跟踪审计全流程</h1>
+  <p class="sub">云溪江流域综合治理工程（一期）2023 年度跟踪审计</p>
+  <div class="meta">
+    <span><b>审计类型</b>　政府投资项目跟踪审计（年度轮次）</span>
+    <span><b>审计对象</b>　项目法人及原建设管理单位</span>
+    <span><b>审计期间</b>　2021 年 11 月—2023 年 5 月</span>
+    <span><b>现场实施</b>　2024 年 3 月 25 日—4 月 24 日</span>
+    <span><b>审计组</b>　5 人＋协审 2 人</span>
+  </div>
+
+  <div class="abstract">
+    <div><div class="num">6</div><div class="lab">工作阶段</div></div>
+    <div><div class="num">19</div><div class="lab">关键节点</div></div>
+    <div><div class="num">15<small>项</small></div><div class="lab">查出问题</div></div>
+    <div><div class="num">9,597.57</div><div class="lab">涉及金额（万元）</div></div>
+    <div><div class="num">92<small>天</small></div><div class="lab">全程用时</div></div>
+  </div>
+
+  <!-- ================= 一、项目概况 ================= -->
+  <h2><span class="no">一、</span>项目概况</h2>
+  <p class="lead">本项目为市重点水利工程的年度跟踪审计。审计组在工程建设期内介入，按年度实施审计，对建设管理、资金使用、合同履约和现场施工进行全过程监督，出具年度审计报告并督促整改。</p>
+
+  <table>
+    <tbody>
+      <tr><th style="width:130px">审计依据</th><td>《中华人民共和国审计法》第二十三条；年度审计项目计划第 7 项；审计通知书（云审重通〔2024〕8 号）</td></tr>
+      <tr><th>审计对象</th><td>云溪江建设发展有限公司（项目法人，2022 年 6 月起承担建设任务）；云溪市水利工程建设管理中心（原建设管理单位，2022 年 6 月前承担建设任务）</td></tr>
+      <tr><th>审计范围</th><td>项目自立项至 2023 年 5 月的资金筹措使用和建设管理情况，必要时追溯以前年度或延伸审计有关单位</td></tr>
+      <tr><th>审计内容</th><td>总体建设管理、现场管理、招投标及合同管理、资金筹集使用四个方面，共 15 个审计事项</td></tr>
+      <tr><th>审计地点</th><td>审计局机关、被审计单位办公场所、工程施工现场、延伸审计单位</td></tr>
+      <tr><th>工程概况</th><td>概算总投资 186,500 万元，先行段投资 12,800 万元；建设内容为河道整治 12.4 公里、堤防加固 8.6 公里、生态堰 3 座、管理用房 1 处；计划工期 36 个月，2022 年 9 月 28 日开工</td></tr>
+      <tr><th>资金情况</th><td>累计收到财政补助 96,000 万元（省级 60,000 万元、市级 36,000 万元）；累计支出 88,420.36 万元；基本存款账户余额 7,579.64 万元</td></tr>
+      <tr><th>主要成果</th><td>审计报告 1 份，查出问题 15 项，涉及金额 9,597.57 万元；提出审计建议 5 条；要求被审计单位 60 日内书面报告整改情况</td></tr>
+      <tr><th>归档情况</th><td>按结论类、证明类、立项类、备查类四单元组卷，共 4 卷 54 个条目，保管期限永久</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 1　项目基本要素</p>
+
+  <!-- ================= 二、总体工作路径 ================= -->
+  <h2><span class="no">二、</span>总体工作路径</h2>
+  <p class="lead">项目按六个阶段推进，形成"立项准备—现场取证—征求意见—审理复核—出具送达—整改归档"的完整闭环。全部工作自审计通知书发出至归档完成历时 92 天。</p>
+
+  <div class="flow">
+    <div class="step"><div class="idx">阶段一</div><span class="nm">立项准备</span><div class="ds">通知、公告、调查了解、实施方案</div></div>
+    <div class="step"><div class="idx">阶段二</div><span class="nm">现场取证</span><div class="ds">查资料、看现场、做比对、出底稿</div></div>
+    <div class="step"><div class="idx">阶段三</div><span class="nm">征求意见</span><div class="ds">送达征求意见稿、被审计单位反馈</div></div>
+    <div class="step"><div class="idx">阶段四</div><span class="nm">审理复核</span><div class="ds">部门复核、业务会议、法规审理</div></div>
+    <div class="step"><div class="idx">阶段五</div><span class="nm">出具送达</span><div class="ds">报告定稿、签发用印、送达回证</div></div>
+    <div class="step"><div class="idx">阶段六</div><span class="nm">整改归档</span><div class="ds">整改反馈、公告、立卷移交</div></div>
+  </div>
+  <p class="tbl-cap">图 1　跟踪审计六阶段工作路径</p>
+
+  <h3>2.1　关键节点与时间安排</h3>
+  <p class="note" style="margin:2px 0 0">标注 <span class="lg-mark"></span> 的行为文书修改痕迹留存环节（花脸稿），其日期与对应文书定稿同日。</p>
+  <ul class="tl">
+    <li class="key"><span class="d">3 月 20 日</span>　<span class="t">审计通知书签发并送达；同日发布审前公告、开展审前调查了解</span><span class="gap">D0</span>
+      <div class="s">两家被审计单位分别签收送达回证；调查与公告同日办理，二者无法定先后</div>
+      <div class="hlg"><b>花脸稿</b>　同步留存审计通知书花脸稿：正文表述调整，附件空表（审计承诺书、账户开立情况表）随文修改，与定稿一并归档。</div></li>
+    <li><span class="d">3 月 21 日</span>　<span class="t">项目法人签署审计承诺书并报送账户开立情况</span><span class="gap">D+1</span></li>
+    <li><span class="d">3 月 26 日</span>　<span class="t">建设管理单位签署审计承诺书并报送账户开立情况</span><span class="gap">D+6</span></li>
+    <li><span class="d">3 月 28 日</span>　<span class="t">审计组讨论审计实施方案，形成重要管理事项记录</span><span class="gap">D+8</span></li>
+    <li class="key"><span class="d">4 月 2 日</span>　<span class="t">审计实施方案定稿并印发</span><span class="gap">D+13</span>
+      <div class="s">确定四大板块 15 个审计事项及人员分工</div>
+      <div class="hlg"><b>花脸稿</b>　同步留存审计实施方案花脸稿：文字格式、字间距、首行缩进距离及文字表述逐处批注修改。</div></li>
+    <li><span class="d">4 月 2 日—4 月 23 日</span>　<span class="t">现场实施：逐项制作审计取证单、编制审计工作底稿</span><span class="gap">D+13～D+34</span>
+      <div class="s">审计组 3 月 25 日进驻，方案定稿后按 15 个事项逐项取证；取证单一事一单，载明审计事项、事实摘要及依据、证据清单，经被审计单位盖章、证据提供人签字</div>
+      <div class="s">底稿由取证单生成，载明审计过程、认定事实与审计结论，经审核人签字并编索引号</div></li>
+    <li><span class="d">4 月 24 日</span>　<span class="t">现场实施结束，17 份审计工作底稿编制完成</span><span class="gap">D+35</span></li>
+    <li><span class="d">4 月 25 日</span>　<span class="t">审计工作底稿汇总表编制完成</span><span class="gap">D+36</span></li>
+    <li><span class="d">4 月 26 日</span>　<span class="t">审计组讨论报告征求意见稿</span><span class="gap">D+37</span></li>
+    <li class="key"><span class="d">5 月 16 日</span>　<span class="t">审计报告征求意见书制发并送达两家单位</span><span class="gap">D+57</span>
+      <div class="s">要求 10 个工作日内书面反馈，逾期视同无异议</div>
+      <div class="hlg"><b>花脸稿</b>　同步留存审计报告征求意见书花脸稿：问题表述修改、问题增删，痕迹随文送达。</div></li>
+    <li><span class="d">5 月 23 日</span>　<span class="t">被审计单位（建设管理单位）反馈意见，无异议</span><span class="gap">D+64</span></li>
+    <li><span class="d">5 月 24 日</span>　<span class="t">被审计单位（项目法人）反馈意见，提出 8 条意见并附证明材料</span><span class="gap">D+65</span></li>
+    <li><span class="d">6 月 5 日</span>　<span class="t">部门复核、审计业务会议、反馈意见采纳说明完成</span><span class="gap">D+77</span></li>
+    <li><span class="d">6 月 12 日</span>　<span class="t">送审理，移交材料 19 项</span><span class="gap">D+84</span>
+      <div class="s">送审理稿为花脸稿修改前的报告版本，审理意见据此提出</div></li>
+    <li><span class="d">6 月 13 日</span>　<span class="t">法规和审理处完成审理，出具审理意见书</span><span class="gap">D+85</span></li>
+    <li class="key"><span class="d">6 月 14 日</span>　<span class="t">审计报告定稿、签发</span><span class="gap">D+86</span>
+      <div class="s">文号云审重报〔2024〕6 号</div>
+      <div class="hlg"><b>花脸稿</b>　同步留存审计报告花脸稿：新增“审计期间，上述问题已进行整改”等表述；无落款、无盖章，页脚未完整注明日期。</div></li>
+    <li><span class="d">6 月 17 日</span>　<span class="t">审计报告送达两家单位并取得送达回证</span><span class="gap">D+89</span></li>
+    <li><span class="d">6 月 20 日</span>　<span class="t">签署归档承诺书，完成立卷</span><span class="gap">D+92</span></li>
+    <li><span class="d">8 月 16 日</span>　<span class="t">整改情况书面报告到期（收到报告之日起 60 日）</span><span class="gap">D+149</span></li>
+  </ul>
+
+  <!-- ================= 三、分阶段工作 ================= -->
+  <h2><span class="no">三、</span>分阶段工作内容</h2>
+
+  <h3>3.1　立项与审前准备（3 月 20 日—4 月 2 日）</h3>
+  <p>本阶段自审计通知书发出起至实施方案定稿止。审前调查与审前公告均在 3 月 20 日当日完成：同日制发并送达审计通知书、发布审前公告、开展审前调查了解。实务中一般先开展调查了解、再依据调查结果发布公告，但二者没有法定先后顺序，本项目档案记载为同日办理。3 月 21 日、26 日分别取得两家被审计单位的审计承诺书和账户开立情况表；3 月 28 日审计组讨论实施方案，4 月 2 日定稿印发。</p>
+  <table>
+    <thead><tr><th style="width:4%" class="c">序</th><th style="width:9%">时间</th><th style="width:15%">工作事项</th><th style="width:15%">责任主体</th><th style="width:12%">工作地点</th><th style="width:26%">内容重点</th><th style="width:19%">产出文书</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td class="nowrap">3 月前</td><td>项目立项</td><td>云溪市审计局</td><td>局机关</td><td>列入年度审计项目计划，明确审计类型与级别</td><td>项目计划、立项审批</td></tr>
+      <tr><td class="c">2</td><td class="nowrap">3 月 20 日前</td><td>组成审计组</td><td>重大项目审计处</td><td>局机关</td><td>配置工程、财务两条专业线，确定常驻协审人员及分工</td><td>审计组名单、协审聘请记录</td></tr>
+      <tr><td class="c">3</td><td class="nowrap">3 月 20 日</td><td>制发并送达审计通知书</td><td>云溪市审计局</td><td>局机关、被审计单位</td><td>载明审计依据、范围、期间、内容、审计组名单、资料清单及工作纪律；实施审计 3 日前送达</td><td>通知书（定稿、审批单、花脸稿）、送达回证</td></tr>
+      <tr><td class="c">4</td><td class="nowrap">3 月 20 日</td><td>发布审前公告</td><td>云溪市审计局</td><td>局机关、被审计单位</td><td>公开审计范围内容、实施时间、工作纪律和联系方式；与审前调查同日办理</td><td>审前公告</td></tr>
+      <tr><td class="c">5</td><td class="nowrap">3 月 20 日</td><td>审前调查了解</td><td>审计组</td><td>被审计单位、局机关</td><td>掌握项目基本情况、资金来源与审计重点，为编制方案提供依据</td><td>调查了解记录</td></tr>
+      <tr><td class="c">6</td><td class="nowrap">3 月 21 日<br>3 月 26 日</td><td>承诺与账户申报</td><td>被审计单位（两家）</td><td>被审计单位</td><td>对资料真实性完整性作出承诺，报送全部银行账户（含已销户账户）；3 月 21 日为项目法人，3 月 26 日为建设管理单位</td><td>审计承诺书、账户开立情况表</td></tr>
+      <tr><td class="c">7</td><td class="nowrap">3 月 28 日<br>4 月 2 日</td><td>制定审计实施方案</td><td>审计组编制，所在部门负责人审核，分管局长审批</td><td>局机关</td><td>确定审计目标、范围、15 个审计事项、人员分工与时间安排；3 月 28 日讨论，4 月 2 日定稿</td><td>实施方案（定稿、审批单、花脸稿）、重要管理事项记录</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 2　立项与审前准备工作</p>
+  <p class="note">按档案记载：调查了解记录的责任者为审计组所在部门负责人；审计工作底稿汇总表的责任者为审计组长；审计文件材料归档承诺书的责任者为审计组负责人。</p>
+
+  <h3>3.2　现场实施与取证（3 月 25 日—4 月 24 日）</h3>
+  <p>审计组于 3 月 25 日进驻被审计单位，实施方案于 4 月 2 日定稿后按确定的 15 个事项全面展开，4 月 24 日现场实施结束。实施期间同步开展资料查阅、账务核对、现场踏勘、访谈询问和外部延伸，形成"原始资料—取证单—工作底稿"的完整证据链。</p>
+
+  <h4>工作方法</h4>
+  <table class="tight">
+    <thead><tr><th style="width:110px">方法</th><th style="width:160px">实施地点</th><th>核查内容</th><th style="width:200px">形成材料</th></tr></thead>
+    <tbody>
+      <tr><td>资料查阅</td><td>被审计单位档案室、会议室</td><td>立项批复、概算、合同、凭证、账簿、会议纪要、内控制度</td><td>取证单及证据复印件</td></tr>
+      <tr><td>账务核对</td><td>被审计单位财务室</td><td>总账明细账、银行回单、记账凭证、决算报表</td><td>财务取证单、资金收支表</td></tr>
+      <tr><td>现场踏勘</td><td>工程施工现场</td><td>钢筋间距实测、临时设施、用地范围、监测点位、工资公示</td><td>现场照片、实测记录</td></tr>
+      <tr><td>访谈询问</td><td>被审计单位</td><td>项目负责人、财务人员、监理及施工单位人员</td><td>询问记录并入取证单</td></tr>
+      <tr><td>外部延伸</td><td>延伸审计单位</td><td>市水务集团借款、财政拨款、用地审批</td><td>延伸取证单</td></tr>
+      <tr><td>比对分析</td><td>审计组驻地</td><td>会议决议与合同价、设计图与现场、合同与结算、考勤与投标承诺</td><td>分析底稿、差异对照表</td></tr>
+      <tr><td>数据复算</td><td>审计组驻地</td><td>造价清单、税率、工期、监测频率</td><td>复算表（金额精确到元）</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 3　现场实施工作方法</p>
+
+  <h4>证据链结构</h4>
+  <div class="chain">
+    <div class="lvl"><div class="k">第一层</div><div class="m">原始资料</div><div class="v">合同、凭证、批复、图纸、照片、考勤表等外部取得材料</div></div>
+    <div class="lvl"><div class="k">第二层</div><div class="m">审计取证单</div><div class="v">一事一单：事项、摘要（事实与依据）、证据清单，经被审计单位盖章确认</div></div>
+    <div class="lvl"><div class="k">第三层</div><div class="m">审计工作底稿</div><div class="v">一事一稿：审计过程、认定事实、审计结论，经审核人签字并编索引号</div></div>
+    <div class="lvl"><div class="k">第四层</div><div class="m">审计报告</div><div class="v">按问题聚类提炼，形成"问题表述—定性依据—处理意见"三段式表述</div></div>
+  </div>
+  <p class="tbl-cap">图 2　四层证据链</p>
+  <p class="note">四层之间通过编号贯通：底稿索引号对应实施方案事项序号，再对应报告问题序号，并以审计工作底稿汇总表统一登记。</p>
+
+  <h4>现场实施产出</h4>
+  <table class="tight">
+    <thead><tr><th style="width:220px">产出材料</th><th style="width:160px">责任者</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>审计取证单（16 份）</td><td>审计人员</td><td>一事一单，须有被审计单位盖章及证据提供人签字</td></tr>
+      <tr><td>审计工作底稿（17 份）</td><td>审计人员</td><td>含基本情况与审计评价各 1 份，其余按问题逐项编制</td></tr>
+      <tr><td>审计工作底稿汇总表</td><td>审计组长</td><td>登记全部底稿索引及与方案、报告的对应关系</td></tr>
+      <tr><td>重要管理事项记录（4 份）</td><td>审计组所在部门负责人</td><td>记录协审聘请、方案讨论、征求意见稿讨论、反馈意见讨论等管理事项</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3　报告起草与征求意见（4 月 25 日—5 月 24 日）</h3>
+  <table>
+    <thead><tr><th style="width:34px" class="c">序</th><th style="width:150px">工作事项</th><th style="width:150px">责任主体</th><th style="width:110px">工作地点</th><th>要求与重点</th><th style="width:150px">产出</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>起草征求意见稿</td><td>审计组</td><td>局机关</td><td>含背景、基本情况、审计评价、发现问题、审计建议五部分；问题表述做到事实、定性、依据齐全</td><td>审计报告征求意见稿</td></tr>
+      <tr><td class="c">2</td><td>审计组内部讨论</td><td>审计组、部门负责人</td><td>局机关会议室</td><td>研究问题取舍、表述口径与金额确认</td><td>重要管理事项记录</td></tr>
+      <tr><td class="c">3</td><td>制发征求意见书</td><td>审计局</td><td>局机关、被审计单位</td><td>附征求意见稿；要求 10 个工作日内书面反馈，逾期视同无异议</td><td>征求意见书（定稿、花脸稿、审批单）、送达回证</td></tr>
+      <tr><td class="c">4</td><td>接收反馈意见</td><td>被审计单位</td><td>被审计单位</td><td>对问题事实、定性、金额提出承认或申辩意见，可附整改证明材料</td><td>反馈意见函及附件</td></tr>
+      <tr><td class="c">5</td><td>逐条研究反馈</td><td>审计组</td><td>局机关</td><td>区分采纳、部分采纳、不予采纳，逐条说明理由</td><td>采纳说明、审计组对被审计单位意见的说明</td></tr>
+      <tr><td class="c">6</td><td>修订报告</td><td>审计组</td><td>局机关</td><td>采纳的修改，不采纳的说明；审计期间已整改的事项在报告中注明</td><td>修订稿（保留修改痕迹）</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 4　征求意见阶段工作</p>
+  <p>本阶段两家被审计单位分别送达、分别取得回证。项目法人提出 8 条反馈意见，审计组采纳 4 条、部分采纳 2 条、无需处理 2 条；建设管理单位反馈无异议。报告因此形成 8 处修改。</p>
+
+  <h3>3.4　审理与复核（6 月 5 日—6 月 13 日）</h3>
+  <p>审计报告在签发前须通过三道质量控制关口，全部留痕并签字负责。</p>
+  <div class="grid3">
+    <div class="card"><div class="h">第一关　部门复核</div><div class="b">审计组所在部门负责人按 8 项法定内容逐项复核，出具复核意见书，对报告质量负第一责任。</div></div>
+    <div class="card"><div class="h">第二关　业务会议</div><div class="b">集体讨论问题定性、金额口径与表述方式，形成审计业务会议记录，参会人员签名确认。</div></div>
+    <div class="card"><div class="h">第三关　法规审理</div><div class="b">法规和审理处以独立视角审查程序合法性、定性依据与表述规范，出具审理意见书。</div></div>
+  </div>
+
+  <h4>部门复核的八项内容</h4>
+  <div class="grid2">
+    <div class="card"><div class="b">
+      1. 实施方案确定的审计目标是否实现；<br>
+      2. 方案及调整方案确定的事项是否实施完毕；<br>
+      3. 审计工作底稿要素是否齐全、证据是否适当充分；<br>
+      4. 审计事实是否清楚、数据是否准确；
+    </div></div>
+    <div class="card"><div class="b">
+      5. 审计评价、定性、处理处罚和移送处理意见是否恰当；<br>
+      6. 适用法律法规和标准是否适当；<br>
+      7. 有关单位和人员提出的合理意见是否采纳；<br>
+      8. 审计发现的重要问题是否在审计报告中反映。
+    </div></div>
+  </div>
+
+  <p>本项目送审理移交材料 19 项，法规和审理处提出 6 条审理意见，涉及时间节点表述、整改主体明确、问题分列、金额口径统一、整改要求细化、评价量化支撑，审计组全部采纳并逐条修改。</p>
+
+  <h3>3.5　出具与送达（6 月 14 日—6 月 17 日）</h3>
+  <table class="tight">
+    <thead><tr><th style="width:34px" class="c">序</th><th style="width:130px">工作事项</th><th style="width:190px">责任主体</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>报告定稿与发文审批</td><td>审计组拟稿，处室复核，相关处室审核，分管领导审核，局长签发</td><td>使用正式文号云审重报〔2024〕6 号，附件含审理意见书及采纳情况说明</td></tr>
+      <tr><td class="c">2</td><td>保留花脸稿</td><td>云溪市审计局</td><td>完整保留修改痕迹，无落款、无盖章，用于证明修改过程；花脸稿与定稿一并归档（详见 7.4）</td></tr>
+      <tr><td class="c">3</td><td>用印与印发</td><td>办公室</td><td>加盖公章，登记发文，明确主送、抄报、抄送及印发份数</td></tr>
+      <tr><td class="c">4</td><td>送达</td><td>审计局</td><td>两家单位分别送达并取得送达回证，签收日为整改期限起算日</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.6　整改与归档（6 月 20 日—8 月 16 日）</h3>
+  <table class="tight">
+    <thead><tr><th style="width:34px" class="c">序</th><th style="width:130px">工作事项</th><th style="width:150px">责任主体</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>整改</td><td>被审计单位</td><td>逐条整改，区分已整改、正在整改、未整改，附证明材料</td></tr>
+      <tr><td class="c">2</td><td>整改跟踪检查</td><td>审计组</td><td>核实整改真实性与是否反弹，建立整改台账并逐项销号</td></tr>
+      <tr><td class="c">3</td><td>公告</td><td>审计局</td><td>报告及整改情况以适当方式公告</td></tr>
+      <tr><td class="c">4</td><td>立卷归档</td><td>审计组、档案室</td><td>按四单元排序、编页号、编制卷内目录、确定保管期限并签署归档承诺书</td></tr>
+      <tr><td class="c">5</td><td>移交</td><td>审计组移交档案室</td><td>登记全宗号、目录号、案卷号</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ================= 四、审计发现 ================= -->
+  <h2><span class="no">四、</span>审计发现与问题分布</h2>
+  <p class="lead">本次审计查出问题 15 项，涉及金额 9,597.57 万元，按总体建设管理、资金筹集使用、合同履约管理、现场管理四个方面归类。</p>
+
+  <table style="max-width:900px">
+    <thead><tr><th style="width:170px">问题类别</th><th class="c" style="width:80px">问题数</th><th class="r" style="width:130px">涉及金额（万元）</th><th class="r" style="width:80px">金额占比</th><th>分布情况</th></tr></thead>
+    <tbody>
+      <tr><td>总体建设管理</td><td class="c">6</td><td class="r">15.75</td><td class="r">0.16%</td><td>人员配备、内控制度、决策执行、用地审批、安全备案</td></tr>
+      <tr><td>现场管理</td><td class="c">2</td><td class="r">86.40</td><td class="r">0.90%</td><td>施工质量、农民工工资支付</td></tr>
+      <tr><td>合同履约管理</td><td class="c">4</td><td class="r">38.22</td><td class="r">0.40%</td><td>合同计价、结算审核、委托依据、履约管理</td></tr>
+      <tr><td>资金筹集使用</td><td class="c">3</td><td class="r">9,457.20</td><td class="r">98.54%</td><td>筹资方式、存量资金、固定资产入账</td></tr>
+      <tr><td><b>合计</b></td><td class="c"><b>15</b></td><td class="r"><b>9,597.57</b></td><td class="r"><b>100%</b></td><td></td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 5　问题类别与金额分布</p>
+  <p class="note">资金筹集使用类问题金额占比 98.54%，主要由未及时退回的存量资金 8,650 万元构成；其余三类问题以管理程序、计价准确性为主，单项金额较小但涉及面广。</p>
+
+  <h3>4.1　问题明细</h3>
+  <table class="tight">
+    <thead><tr><th class="c" style="width:4%">序</th><th style="width:12%">类别</th><th style="width:23%">问题</th><th style="width:43%">关键事实</th><th class="r" style="width:9%">金额<br>（万元）</th><th style="width:9%" class="c">底稿索引</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>建设管理</td><td>项目管理人员配备不到位</td><td>在职 9 人，低于中型工程不少于 12 人要求；技术负责人与质量负责人由总经理一人兼任</td><td class="r">—</td><td class="c">3-1</td></tr>
+      <tr><td class="c">2</td><td>建设管理</td><td>建设单位内控制度不完善</td><td>现有制度 11 项，未建立招标采购管理制度，未明确审批权限与流程</td><td class="r">—</td><td class="c">3-2</td></tr>
+      <tr><td class="c">3</td><td>建设管理</td><td>线路迁改工程合同价未按党总支决策执行</td><td>党总支会议确定预算 12.60 万元，实际签订合同 28.35 万元，未重新上会决策</td><td class="r">15.75</td><td class="c">3-3</td></tr>
+      <tr><td class="c">4</td><td>建设管理</td><td>未取得建设用地规划许可证先行用地</td><td>永久征地 6.80 公顷，其中 2.40 公顷未取得规划许可即已施工</td><td class="r">—</td><td class="c">3-4</td></tr>
+      <tr><td class="c">5</td><td>建设管理</td><td>先行段临时用地未批先用</td><td>拌合站、钢筋加工棚等临时设施占地 0.85 公顷，未取得临时用地批准</td><td class="r">—</td><td class="c">3-5</td></tr>
+      <tr><td class="c">6</td><td>建设管理</td><td>保证安全生产措施方案备案滞后</td><td>开工后 26 个工作日才完成编制备案，超过 15 个工作日时限</td><td class="r">—</td><td class="c">3-6</td></tr>
+      <tr><td class="c">7</td><td>现场管理</td><td>未按设计和技术标准施工</td><td>设计钢筋间距 200mm，实测 18 处为 245—268mm；320 个直螺纹套筒未送样复试</td><td class="r">—</td><td class="c">4-1</td></tr>
+      <tr><td class="c">8</td><td>现场管理</td><td>未及时开设农民工工资专户并支付工资</td><td>开户滞后开工 41 天；2022 年 10 月应付 28.64 万元未发放</td><td class="r">86.40</td><td class="c">4-2</td></tr>
+      <tr><td class="c">9</td><td>合同履约</td><td>环境保护监理合同费用高估</td><td>计费施工期多计 1 个月、合同签订晚于开工 17 天、税率由 3% 误用为 6%</td><td class="r">1.86</td><td class="c">5-1</td></tr>
+      <tr><td class="c">10</td><td>合同履约</td><td>造价咨询单位重复计费</td><td>综合单价已含企业管理费，项目汇总表又单列计取</td><td class="r">24.36</td><td class="c">5-2</td></tr>
+      <tr><td class="c">11</td><td>合同履约</td><td>水土保持监理委托依据不充分</td><td>土石方开挖 18.60 万立方米，未达 50 万立方米配置专业监理单位门槛，委托前未作必要性论证</td><td class="r">12.00</td><td class="c">5-3</td></tr>
+      <tr><td class="c">12</td><td>合同履约</td><td>参建单位合同履约管理不到位</td><td>监理承诺 3 名人员未到岗且未办变更；监测应测 30 次实为 4 次，缺 3 个测点</td><td class="r">—</td><td class="c">5-4</td></tr>
+      <tr><td class="c">13</td><td>资金筹集</td><td>项目建设资金筹资不规范</td><td>以借款方式筹措项目资本金 30,000 万元，年利率 3.1%，与财政全额保障模式不一致</td><td class="r">620.80</td><td class="c">6-1</td></tr>
+      <tr><td class="c">14</td><td>资金筹集</td><td>未及时退回存量资金</td><td>8,650 万元财政预算资金连续两年结转，原建设管理单位已不再承担建设任务</td><td class="r">8,650.00</td><td class="c">6-2</td></tr>
+      <tr><td class="c">15</td><td>资金筹集</td><td>部分新增固定资产未及时登记入账</td><td>12 台套设备单价均超 5,000 元，验收后未登记固定资产账</td><td class="r">186.40</td><td class="c">6-3</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 6　审计查出问题明细（金额为涉及金额，非全部应缴应退金额）</p>
+
+  <h3>4.2　问题发现路径的特征</h3>
+  <p>15 项问题中，有 3 项仅通过现场踏勘发现，账面资料无异常：临时用地未批先用、钢筋间距超标与套筒未复试、监测点位缺失。另有 4 项通过跨主体比对发现，需将决策文件、合同、凭证、考勤等不同来源材料交叉核对才能确认。</p>
+  <div class="grid3">
+    <div class="card"><div class="h">文件比对型（8 项）</div><div class="b">决议与合同、合同与结算、方案与执行之间的差异，通过金额、日期、数量的直接比对发现。</div></div>
+    <div class="card"><div class="h">现场核查型（3 项）</div><div class="b">需实地测量、拍照取证或踏勘才能确认，书面资料无法反映真实情况。</div></div>
+    <div class="card"><div class="h">跨主体交叉型（4 项）</div><div class="b">需延伸至水务集团、监理、监测等外部单位取证，单看被审计单位资料无法定性。</div></div>
+  </div>
+
+  <!-- ================= 五、质量与档案 ================= -->
+  <h2><span class="no">五、</span>质量控制与档案归集</h2>
+
+  <h3>5.1　质量控制留痕</h3>
+  <table class="tight">
+    <thead><tr><th style="width:150px">环节</th><th style="width:200px">控制方式</th><th>留痕材料</th></tr></thead>
+    <tbody>
+      <tr><td>方案编制</td><td>部门复核＋分管局长审批</td><td>实施方案审批单、方案讨论记录</td></tr>
+      <tr><td>现场取证</td><td>取证单签章确认、底稿双人审核</td><td>取证单、工作底稿及审核意见</td></tr>
+      <tr><td>报告起草</td><td>审计组集体讨论</td><td>重要管理事项记录</td></tr>
+      <tr><td>征求意见</td><td>逐条研究并说明理由</td><td>采纳说明、审计组说明</td></tr>
+      <tr><td>报告审核</td><td>部门复核、业务会议、法规审理</td><td>复核意见书、会议记录、审理意见书及确认书</td></tr>
+      <tr><td>签发送达</td><td>分级审核签发、用印登记</td><td>发文审批单、花脸稿、送达回证</td></tr>
+      <tr><td>归档</td><td>完整性核对、签署承诺</td><td>归档承诺书、移交清单</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 7　质量控制留痕</p>
+
+  <h3>5.2　档案组卷结构</h3>
+  <table>
+    <thead><tr><th style="width:150px">单元</th><th style="width:90px" class="c">条目数</th><th>主要内容</th></tr></thead>
+    <tbody>
+      <tr><td>第一单元　结论类</td><td class="c">23</td><td>审计报告、发文审批单、花脸稿、送达回证、业务会议记录、审理意见书、复核意见书、采纳说明、征求意见全套材料</td></tr>
+      <tr><td>第二单元　证明类</td><td class="c">20</td><td>审计承诺书、账户开立情况表、底稿汇总表、各问题工作底稿及取证材料</td></tr>
+      <tr><td>第三单元　立项类</td><td class="c">9</td><td>调查了解记录、实施方案（定稿、审批单、花脸稿）、审计通知书（定稿、审批单、花脸稿、回证）、方案讨论记录</td></tr>
+      <tr><td>第四单元　备查类</td><td class="c">2</td><td>审前公告、审计文件材料归档承诺书</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 8　审计档案四单元结构（共 4 卷 54 个条目，保管期限永久）</p>
+  <p class="note">组卷顺序为结论在前、证明居中、立项在后、备查垫底，便于查阅时先看结论、再追溯证据。</p>
+
+  <!-- ================= 六、组织保障 ================= -->
+  <h2><span class="no">六、</span>组织保障与职责分工</h2>
+  <table>
+    <thead><tr><th style="width:170px">主体</th><th style="width:120px">角色定位</th><th>主要职责</th><th style="width:160px">签字责任文书</th></tr></thead>
+    <tbody>
+      <tr><td>局长</td><td>最高审批</td><td>签发审计报告，审批实施方案重大调整</td><td>签发意见</td></tr>
+      <tr><td>分管副局长</td><td>审核</td><td>审核实施方案、审计报告及重要文书</td><td>审核意见</td></tr>
+      <tr><td>重大项目审计处（处长）</td><td>主办处室、审计组组长</td><td>组建审计组，组织现场实施，复核底稿与报告，对报告质量负第一责任</td><td>复核意见书、重要管理事项记录</td></tr>
+      <tr><td>审计组（主审及成员）</td><td>实施主体</td><td>取证、编制底稿、起草报告、研究反馈意见</td><td>取证单、底稿</td></tr>
+      <tr><td>协审机构人员</td><td>技术支持</td><td>承担工程造价复核、财务核对等专业工作，不独立出具审计结论</td><td>协审工作记录</td></tr>
+      <tr><td>法规和审理处</td><td>独立审理</td><td>审查程序合法性、定性依据与表述规范</td><td>审理意见书</td></tr>
+      <tr><td>办公室</td><td>文秘与档案</td><td>文号登记、用印印发、档案接收</td><td>发文登记</td></tr>
+      <tr><td>被审计单位</td><td>被审计对象</td><td>提供资料并承诺真实性，反馈意见，落实整改</td><td>承诺书、反馈意见函、整改报告</td></tr>
+      <tr><td>延伸审计单位</td><td>证据来源</td><td>提供借款、拨款、用地审批等外部证据</td><td>延伸取证材料</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 9　参与主体与职责</p>
+
+  <!-- ================= 七、文书流转 ================= -->
+  <h2><span class="no">七、</span>审计业务文书流转</h2>
+  <p class="lead">项目全部对外文书均通过"审计业务文书审批单"流转，实行拟稿、复核、审核、签发、用印、送达的固定程序。</p>
+
+  <h3>7.1　审批单要素</h3>
+  <table class="tight">
+    <thead><tr><th style="width:120px">区域</th><th>要素</th></tr></thead>
+    <tbody>
+      <tr><td>表头</td><td>文种、紧急程度、密级</td></tr>
+      <tr><td>签发区</td><td>签发人、分管局领导审核、相关处室审核，均签姓名、日期及意见</td></tr>
+      <tr><td>承办区</td><td>办公室审核、主办处室、主办处室复核（双人签名）</td></tr>
+      <tr><td>正文区</td><td>拟稿人、联系电话、印发份数、标题、主送机关、抄送机关、附件、分送、事项分类、备注</td></tr>
+      <tr><td>文尾</td><td>发文字号、是否只发电子文件、是否网上展示</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.2　三类文书流转路径</h3>
+  <div class="grid3">
+    <div class="card"><div class="h">审计通知书、审前公告</div><div class="b">拟稿 → 处室复核 → 相关处室审核 → 分管领导审核 → 签发 → 登记文号并盖章 → 送达并取得回证</div></div>
+    <div class="card"><div class="h">审计实施方案</div><div class="b">拟稿 → 处室复核 → 部门负责人意见 → 分管局长审批（重大调整报局长）→ 印发 → 送达</div></div>
+    <div class="card"><div class="h">审计报告</div><div class="b">拟稿 → 处室复核 → 相关处室审核 → 分管领导审核 → 签发 → 盖章 → 送达；签发前须完成三道质控</div></div>
+  </div>
+
+  <h3>7.3　文号体系</h3>
+  <table class="tight" style="max-width:760px">
+    <thead><tr><th style="width:220px">文号</th><th style="width:160px">文书类型</th><th>本项目实际使用</th></tr></thead>
+    <tbody>
+      <tr><td>云审重通〔2024〕8 号</td><td>审计通知书</td><td>3 月 20 日制发并送达</td></tr>
+      <tr><td>云审重征〔2024〕5 号</td><td>审计报告征求意见书</td><td>5 月 16 日制发并送达</td></tr>
+      <tr><td>云审重报〔2024〕6 号</td><td>审计报告</td><td>6 月 14 日定稿签发</td></tr>
+    </tbody>
+  </table>
+  <p class="note">文号构成规则：机关简称＋处室简称＋文种简称＋年份＋序号。本项目未出具审计决定书和移送处理书。</p>
+
+  <h3>7.4　修改痕迹与花脸稿</h3>
+  <p>花脸稿是正式稿形成之前保留修改痕迹的稿件，新增内容以下划线标示、删除内容以删除线标示。本项目对审计通知书、审计实施方案、审计报告征求意见书、审计报告四类文书均留存花脸稿，作为修改过程与修改结果的证明。</p>
+
+  <table class="tight">
+    <thead><tr><th style="width:30%">文书</th><th style="width:42%">花脸稿反映的修改内容</th><th>与定稿的区别</th></tr></thead>
+    <tbody>
+      <tr><td>审计通知书（花脸稿）</td><td>正文表述调整，附件空表（审计承诺书、账户开立情况表）随文修改</td><td>无落款、无盖章</td></tr>
+      <tr><td>审计实施方案（花脸稿）</td><td>文字格式、字间距、首行缩进距离及文字表述修改，逐处批注</td><td>无落款、无盖章</td></tr>
+      <tr><td>审计报告征求意见书（花脸稿）</td><td>问题表述修改、问题增删</td><td>无落款、无盖章</td></tr>
+      <tr><td>审计报告（花脸稿）</td><td>问题与金额表述调整，新增“审计期间，上述问题已进行整改”等说明</td><td>无落款、无盖章，页脚未完整注明日期</td></tr>
+    </tbody>
+  </table>
+  <p class="tbl-cap">表 10　四类花脸稿的留存情况</p>
+
+  <p>花脸稿的形成过程为：拟稿 → 部门复核、相关处室审核、法规审理提出修改意见 → 在原稿上批注修改并保留痕迹 → 清稿后定稿签发。花脸稿与定稿一并归入档案结论类，用于证明问题定性、金额和表述的修改依据。</p>
+
+  <div class="redline">
+    <div class="rl-col">
+      <div class="rl-h">花脸稿（保留修改痕迹）</div>
+      <p>云溪江建设发展有限公司在职人员 9 人，未达到中型水利工程建设项目法人不少于 12 人的配备要求……</p>
+      <p><ins>审计期间，上述问题云溪江建设发展有限公司已进行整改，现有人数 13 人并已分设技术负责人与质量负责人。</ins></p>
+      <p><del>上述事项不符合《水利工程建设项目法人管理指导意见》的规定。</del></p>
+      <p class="rl-note">下划线＝新增内容　删除线＝删除内容</p>
+    </div>
+    <div class="rl-col">
+      <div class="rl-h">定稿（清稿后）</div>
+      <p>云溪江建设发展有限公司在职人员 9 人，未达到中型水利工程建设项目法人不少于 12 人的配备要求……</p>
+      <p>审计期间，上述问题云溪江建设发展有限公司已进行整改，现有人数 13 人并已分设技术负责人与质量负责人。</p>
+      <p>上述事项不符合《水利工程建设项目法人管理指导意见》关于“项目法人必须严格遵守……建立健全内部控制制度”的规定。</p>
+    </div>
+  </div>
+  <p class="tbl-cap">图 3　花脸稿与定稿的对应关系（示例）</p>
+
+
+  <!-- ================= 八、工作要点 ================= -->
+  <h2><span class="no">八、</span>工作要点</h2>
+  <ol class="num">
+    <li><b>路径闭环。</b>自审计通知书发出至档案归档历时 92 天，六个阶段、十九个关键节点全部完成，形成"审前准备—现场取证—征求意见—审理复核—出具送达—整改归档"的完整链条。</li>
+    <li><b>问题依托证据链。</b>15 项问题均具备"原始资料—取证单—工作底稿—报告表述"四层支撑，底稿索引号与方案事项、报告问题逐一对应，可逐项回溯。</li>
+    <li><b>质量控制前置。</b>部门复核、业务会议、法规审理三道关口均在签发前完成，复核八项内容逐项作答，审理提出的 6 条意见全部采纳并留痕。</li>
+    <li><b>现场核查不可替代。</b>临时用地未批先用、钢筋间距超标、监测点位缺失 3 项问题仅在现场发现；另有 4 项问题需延伸外部单位取证方能定性。</li>
+    <li><b>整改形成闭环。</b>报告明确 60 日整改期限，签收日起算；整改情况书面报告后纳入跟踪台账，报告及整改情况一并公告。</li>
+    <li><b>档案完整可查。</b>按四单元组卷 4 卷 54 个条目，保管期限永久，具备接受复查、复议和巡视检查的条件。</li>
+  </ol>
+
+  <div class="divider"></div>
+  <footer>
+    <span>云溪市审计局　重大项目审计处</span>
+    <span>编制：李静　　审核：张明远</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -48,6 +48,7 @@ import {
 } from "./components";
 import { ActionDialog, UploadDialog } from "./dialogs";
 import { ScenarioView } from "./scenario";
+import { WorkflowView } from "./workflow";
 type Modal = { action: string; targetType?: string; row?: Row; title?: string };
 export default function App() {
   const [state, setState] = useState<State | null>(null);
@@ -169,6 +170,7 @@ export default function App() {
     scenario?.title ||
     {
       overview: "项目工作总览",
+      workflow: "流程与文书台账",
       documents: "资料与版本中心",
       facts: "项目事实台账",
       review: "人工核验与待办",
@@ -221,6 +223,13 @@ export default function App() {
           >
             <Database size={17} />
             项目事实
+          </button>
+          <button
+            className={"nav-main " + (view === "workflow" ? "active" : "")}
+            onClick={() => navigate("workflow")}
+          >
+            <ClipboardCheck size={17} />
+            流程与文书台账
           </button>
           <div className="nav-section-label">
             全流程审计 <span>{state?.scenarios.length ?? 0} 个场景</span>
@@ -895,6 +904,14 @@ export default function App() {
                   act={act}
                   onSource={setSource}
                   onAction={openAction}
+                />
+              )}
+              {view === "workflow" && (
+                <WorkflowView
+                  state={state}
+                  busy={!!busy}
+                  act={act}
+                  onSource={setSource}
                 />
               )}
               {view === "review" && (

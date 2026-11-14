@@ -2677,3 +2677,80 @@ video {
     flex-wrap: wrap;
   }
 }
+
+.workflow .card {
+  margin: 18px 0;
+}
+.workflow .padded {
+  padding: 24px;
+}
+.workflow-tabs {
+  flex-wrap: wrap;
+}
+.workflow-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.workflow-toolbar label {
+  min-width: 220px;
+}
+.workflow-timeline {
+  border-left: 2px solid var(--line, #d8dbe0);
+  padding-left: 28px;
+}
+.workflow-timeline li {
+  padding: 10px 0;
+}
+.workflow-timeline p {
+  color: #64748b;
+  font-size: 13px;
+}
+.workflow-record {
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.workflow-record summary {
+  cursor: pointer;
+  line-height: 2;
+}
+.workflow-hash {
+  overflow-wrap: anywhere;
+}
+.workflow-form {
+  display: grid;
+  gap: 16px;
+}
+.workflow-form fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid #e2e8f0;
+}
+.workflow-form select[multiple] {
+  min-height: 110px;
+}
+.workflow-redline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  background: #f8fafc;
+  padding: 16px;
+  white-space: pre-wrap;
+}
+.workflow-redline del {
+  color: #9c2a2a;
+}
+.workflow-redline ins {
+  color: #215e42;
+  text-underline-offset: 4px;
+}
+@media (max-width: 700px) {
+  .workflow-redline {
+    grid-template-columns: 1fr;
+  }
+  .workflow .padded {
+    padding: 16px;
+  }
+}
