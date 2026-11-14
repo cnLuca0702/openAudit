@@ -1,0 +1,6 @@
+{
+  "text":{"provider":"deepseek","baseURL":"https://api.deepseek.com","model":"deepseek-flash","apiKey":"FILL_ON_SERVER"},
+  "vision":{"provider":"glm","baseURL":"https://open.bigmodel.cn/api/paas/v4","model":"glm-4.6v","apiKey":"FILL_ON_SERVER"},
+  "speech":{"provider":"glm","baseURL":"https://open.bigmodel.cn/api/paas/v4","model":"glm-asr-2512","apiKey":"FILL_ON_SERVER"},
+  "timeoutMs":90000,"maxTokens":4096
+}

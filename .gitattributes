@@ -1,0 +1,4 @@
+# Preserve generated CSV bytes (including Excel-compatible BOM/CRLF) and hashes.
+*.csv -text whitespace=cr-at-eol
+# Archival source text is retained exactly as extracted from the original proposal.
+docs/source/方案原文.txt -whitespace

@@ -1,0 +1,369 @@
+[
+  {
+    "id": "LAW-01",
+    "title": "中华人民共和国审计法",
+    "name": "中华人民共和国审计法",
+    "article": "第二十三条",
+    "effectiveFrom": "2022-01-01",
+    "effectiveTo": null,
+    "version": "2021年第二次修正",
+    "excerpt": "审计机关对政府投资和以政府投资为主的建设项目",
+    "officialUrl": "https://www.audit.gov.cn/n6/n36/n10083637/c10191187/content.html",
+    "url": "https://www.audit.gov.cn/n6/n36/n10083637/c10191187/content.html",
+    "level": "法律",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "A03",
+        "B04",
+        "D03"
+      ],
+      "conditions": "确认审计机关管辖、政府投资性质、被审计期间及审计范围；本摘录是条文片段，不含完整审计范围。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.audit.gov.cn/n6/n36/n10083637/c10191187/content.html",
+        "locator": "第二十三条"
+      }
+    ],
+    "applicabilityText": "确认审计机关管辖、政府投资性质、被审计期间及审计范围；本摘录是条文片段，不含完整审计范围。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-02",
+    "title": "政府投资条例",
+    "name": "政府投资条例",
+    "article": "第二十三条第一款",
+    "effectiveFrom": "2019-07-01",
+    "effectiveTo": null,
+    "version": "国务院令第712号",
+    "excerpt": "政府投资项目建设投资原则上不得超过经核定的投资概算。",
+    "officialUrl": "https://xzfg.moj.gov.cn/front/law/detail?LawID=442&Query=",
+    "url": "https://xzfg.moj.gov.cn/front/law/detail?LawID=442&Query=",
+    "level": "行政法规",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "B03",
+        "B04",
+        "D03"
+      ],
+      "conditions": "核对政府投资属性、概算版本、实际建设投资口径及依法核定调整；48600与50200口径未核实，不能直接认定超概算。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://xzfg.moj.gov.cn/front/law/detail?LawID=442&Query=",
+        "locator": "第二十三条第一款"
+      }
+    ],
+    "applicabilityText": "核对政府投资属性、概算版本、实际建设投资口径及依法核定调整；48600与50200口径未核实，不能直接认定超概算。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-03",
+    "title": "中华人民共和国招标投标法实施条例",
+    "name": "中华人民共和国招标投标法实施条例",
+    "article": "第五十七条第一款（节录）",
+    "effectiveFrom": "2019-03-02",
+    "effectiveTo": null,
+    "version": "2019年第三次修订；原条例2012-02-01施行",
+    "excerpt": "招标人和中标人不得再行订立背离合同实质性内容的其他协议。",
+    "officialUrl": "https://xzfg.moj.gov.cn/mobile/law/detail?LawID=339",
+    "url": "https://xzfg.moj.gov.cn/mobile/law/detail?LawID=339",
+    "level": "行政法规",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "B04",
+        "B05",
+        "D03"
+      ],
+      "conditions": "核对招标文件、中标投标文件及补充协议，辨别实质性内容与合法变更；不得仅凭两版付款比例不同定性。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://xzfg.moj.gov.cn/mobile/law/detail?LawID=339",
+        "locator": "第五十七条第一款（节录）"
+      }
+    ],
+    "applicabilityText": "核对招标文件、中标投标文件及补充协议，辨别实质性内容与合法变更；不得仅凭两版付款比例不同定性。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-04",
+    "title": "建设工程质量管理条例",
+    "name": "建设工程质量管理条例",
+    "article": "第十六条第三款",
+    "effectiveFrom": "2019-04-23",
+    "effectiveTo": null,
+    "version": "2019年第二次修订；原条例2000-01-30施行",
+    "excerpt": "建设工程经验收合格的，方可交付使用。",
+    "officialUrl": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_e42ecef60e9146af83cf9846821fac6c.html",
+    "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_e42ecef60e9146af83cf9846821fac6c.html",
+    "level": "行政法规",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "B04",
+        "B06",
+        "B08"
+      ],
+      "conditions": "核实建设工程类型、验收对象及实际交付使用行为；未提供验收材料仅说明证明缺口。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_e42ecef60e9146af83cf9846821fac6c.html",
+        "locator": "第十六条第三款"
+      }
+    ],
+    "applicabilityText": "核实建设工程类型、验收对象及实际交付使用行为；未提供验收材料仅说明证明缺口。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-05",
+    "title": "中华人民共和国国家审计准则",
+    "name": "中华人民共和国国家审计准则",
+    "article": "第一百三十八条第一款（节录）",
+    "effectiveFrom": "2011-01-01",
+    "effectiveTo": null,
+    "version": "审计署令第8号",
+    "excerpt": "审计组应当进一步核实",
+    "officialUrl": "https://www.audit.gov.cn/n11/n10165075/n10165124/c10176144/content.html",
+    "url": "https://www.audit.gov.cn/n11/n10165075/n10165124/c10176144/content.html",
+    "level": "部门规章",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "C02",
+        "D01",
+        "D04"
+      ],
+      "conditions": "适用于国家审计机关业务；异议、核实结果、采纳说明及修订须对应具体稿件，不能把审计组讨论代替业务会议审议。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.audit.gov.cn/n11/n10165075/n10165124/c10176144/content.html",
+        "locator": "第一百三十八条第一款（节录）"
+      }
+    ],
+    "applicabilityText": "适用于国家审计机关业务；异议、核实结果、采纳说明及修订须对应具体稿件，不能把审计组讨论代替业务会议审议。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-06",
+    "title": "基本建设财务规则",
+    "name": "基本建设财务规则",
+    "article": "第二十一条第一款（节录）",
+    "effectiveFrom": "2016-09-01",
+    "effectiveTo": null,
+    "version": "财政部令第81号",
+    "excerpt": "建设成本是指按照批准的建设内容由项目建设资金安排的各项支出",
+    "officialUrl": "https://www.mof.gov.cn/gp/xxgkml/tfs/201605/t20160506_2510372.htm",
+    "url": "https://www.mof.gov.cn/gp/xxgkml/tfs/201605/t20160506_2510372.htm",
+    "level": "部门规章",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "B01",
+        "B04",
+        "B05"
+      ],
+      "conditions": "确认主体及财政资金范围；区分概算、建设成本、支付与台账计划投资，不将金额差直接等同损失。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.mof.gov.cn/gp/xxgkml/tfs/201605/t20160506_2510372.htm",
+        "locator": "第二十一条第一款（节录）"
+      }
+    ],
+    "applicabilityText": "确认主体及财政资金范围；区分概算、建设成本、支付与台账计划投资，不将金额差直接等同损失。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-07",
+    "title": "中华人民共和国档案法",
+    "name": "中华人民共和国档案法",
+    "article": "第十四条第二款",
+    "effectiveFrom": "2021-01-01",
+    "effectiveTo": null,
+    "version": "2020年修订",
+    "excerpt": "国家规定不得归档的材料，禁止擅自归档。",
+    "officialUrl": "https://www.saac.gov.cn/daj/yaow/202006/cfc8c422e68f4d3aae46389a3c470a5f.shtml",
+    "url": "https://www.saac.gov.cn/daj/yaow/202006/cfc8c422e68f4d3aae46389a3c470a5f.shtml",
+    "level": "法律",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "F04",
+        "F05"
+      ],
+      "conditions": "归档范围须结合第十三条及有权机构目录、保管期限、原件要求；不得把所有模拟材料一键视为正式归档。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.saac.gov.cn/daj/yaow/202006/cfc8c422e68f4d3aae46389a3c470a5f.shtml",
+        "locator": "第十四条第二款"
+      }
+    ],
+    "applicabilityText": "归档范围须结合第十三条及有权机构目录、保管期限、原件要求；不得把所有模拟材料一键视为正式归档。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-08",
+    "title": "中华人民共和国民法典",
+    "name": "中华人民共和国民法典",
+    "article": "第五百零九条第一款",
+    "effectiveFrom": "2021-01-01",
+    "effectiveTo": null,
+    "version": "2020年通过",
+    "excerpt": "当事人应当按照约定全面履行自己的义务。",
+    "officialUrl": "https://www.court.gov.cn/zixun/xiangqing/233181.html",
+    "url": "https://www.court.gov.cn/zixun/xiangqing/233181.html",
+    "level": "法律",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "B05",
+        "D03"
+      ],
+      "conditions": "先确认合同效力、适用版本、具体义务、履行条件、变更及证据；合同检查不自动确定违约责任。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.court.gov.cn/zixun/xiangqing/233181.html",
+        "locator": "第五百零九条第一款"
+      }
+    ],
+    "applicabilityText": "先确认合同效力、适用版本、具体义务、履行条件、变更及证据；合同检查不自动确定违约责任。",
+    "appliesTo": "project"
+  },
+  {
+    "id": "LAW-09",
+    "title": "中华人民共和国个人信息保护法",
+    "name": "中华人民共和国个人信息保护法",
+    "article": "第六条第二款",
+    "effectiveFrom": "2021-11-01",
+    "effectiveTo": null,
+    "version": "2021年通过",
+    "excerpt": "收集个人信息，应当限于实现处理目的的最小范围，不得过度收集个人信息。",
+    "officialUrl": "https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm",
+    "url": "https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm",
+    "level": "法律",
+    "conditions": [
+      "projectType",
+      "behaviorDate",
+      "scopeConfirmed"
+    ],
+    "applicability": {
+      "jurisdiction": "中华人民共和国",
+      "scenarios": [
+        "A01",
+        "F03",
+        "F05"
+      ],
+      "conditions": "确认个人信息处理目的、法律基础、必要范围及公开权限；当前文件仅含虚构角色，跨项目发布仍须审查。",
+      "humanApproval": null
+    },
+    "status": "待人工核验",
+    "label": "演示模拟数据",
+    "notice": "演示资料中的真实法律摘录；非虚构法条；节录不得脱离全文适用",
+    "verifiedAt": "2026-11-14",
+    "verification": "已浏览官方原文并核对条号和所列施行/修订信息；未作个案适用确认；演示前应再次核验后续修法",
+    "sources": [
+      {
+        "url": "https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm",
+        "locator": "第六条第二款"
+      }
+    ],
+    "applicabilityText": "确认个人信息处理目的、法律基础、必要范围及公开权限；当前文件仅含虚构角色，跨项目发布仍须审查。",
+    "appliesTo": "project"
+  }
+]

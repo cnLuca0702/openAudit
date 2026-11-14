@@ -1,0 +1,14 @@
+- id: workspace-controller
+  config:
+    documentsDirectory: /opt/dsh-v2/workspace
+- insert:
+    - id: openaudit-server
+      name: /opt/dsh-v2/openaudit/packages/server/index.js
+      config:
+        dataDir: /opt/dsh-v2/openaudit-data
+        clientDist: /opt/dsh-v2/openaudit/packages/client/dist
+        demoDir: /opt/dsh-v2/openaudit/demo
+        modelAdapter: /opt/dsh-v2/openaudit/packages/models/index.js
+        modelConfigFile: /opt/dsh-v2/secrets/openaudit-models.json
+    - id: openaudit-navigation
+      name: /opt/dsh-v2/openaudit/packages/dsh-bridge/index.js

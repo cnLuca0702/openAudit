@@ -1,0 +1,115 @@
+{
+  "taskId": "task_f59347dbd64a",
+  "dispatchId": "ctx_47dfda3061df",
+  "generatedAt": "2026-11-14T09:06:09.152Z",
+  "label": "演示模拟数据",
+  "scope": "packages/server/** and docs/specs/api.md only",
+  "status": "implementation-and-local-verification-complete",
+  "runtime": {
+    "local": "v22.23.3",
+    "target": "Node >=24, DSH 0.2.2-rc.1"
+  },
+  "verification": {
+    "command": "node --test packages/server/test/*.test.js",
+    "tests": 45,
+    "passed": 45,
+    "failed": 0,
+    "all24ScenarioPersistenceSourceAndMissingInput": true,
+    "manifestDocuments": 57,
+    "nativeParsers": [
+      "DOCX",
+      "XLSX",
+      "PDF text",
+      "PDF page rasterization"
+    ],
+    "exports": [
+      "md",
+      "json",
+      "csv",
+      "docx",
+      "xlsx"
+    ],
+    "lastExportRegression": {
+      "command": "node --test --test-name-pattern=\"calculated finding\" packages/server/test/integration.test.js",
+      "passed": 1
+    },
+    "coverage": [
+      "SHA-256 immutable originals and state restart",
+      "serialized concurrent actions and failure rollback",
+      "all 24 scenarios against actual persisted manifest",
+      "contract versions and only dependent artifact invalidation",
+      "unit/date fact revisions recalculate",
+      "B03 overlap 120 × 1800 = 216000 from input",
+      "payment bank/ledger transaction identity dedup and conflicting amount unknown",
+      "per-measurement payment ratio changes with contract version",
+      "low-resolution drawing blocks calculation",
+      "duplicate image fingerprint and transcription uncertainty",
+      "replied versus implemented with evidence validity",
+      "E01 source amount/date/scope/attachment checks",
+      "B03 finding → B09 → C01 actual amount and human confirmation lineage",
+      "edited C01 rows/prose inspected by E01, correction/recheck/confirmation loop",
+      "rectification proof subject/recipient/noncash verification and independent archive state",
+      "capability executed test gate, invalidation, no historical facts copied on reuse",
+      "raw image bytes, actual PDF rasterization and audio bytes reach injected adapters",
+      "model failures and OCR/ASR failures persist failed runs",
+      "model input includes document/fact confirmation provenance and actual rule findings",
+      "HTTP auth guard covers API and every static file",
+      "real DSH named route registration/disposer interface",
+      "all five formats retain candidate finding amount and provenance"
+    ],
+    "networkModelTesting": "Local tests use injected adapters; coordinator independently owns real network model and DSH/browser end-to-end verification.",
+    "summary": "# tests 45\n# suites 0\n# pass 45\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 13037.45015\n"
+  },
+  "integration": {
+    "entry": "packages/server/index.js",
+    "exports": [
+      "name",
+      "inject",
+      "apply",
+      "AuditService",
+      "createHandlers"
+    ],
+    "inject": [
+      "webServer",
+      "connection"
+    ],
+    "routes": [
+      "/api/audit",
+      "/audit"
+    ],
+    "config": [
+      "dataDir",
+      "clientDist",
+      "demoDir",
+      "modelAdapter?",
+      "modelConfigFile?"
+    ],
+    "dependencies": "Server uses Node builtins; deploy adjacent packages/models and packages/parsers with declared mammoth/exceljs/fflate dependencies, pdftotext/pdfinfo/pdftoppm, ffmpeg/ffprobe, client dist and demo manifest.",
+    "externalModelConfig": "Private external config path consumed through coordinator loadModelConfig; never exposed through state/events.",
+    "noDeploymentByWorker": true,
+    "noCommitsOrPushes": true
+  },
+  "remainingCoordinatorChecks": [
+    "Synchronize final code and latest 57-file demo to /opt/dsh-v2 only.",
+    "Run final real DSH + client browser flows against these hashes.",
+    "Run real text/vision/PDF recognition/audio/video smoke against final model prompt and record results."
+  ],
+  "intentionalBoundaries": [
+    "Single active writer process per dataDir; not a multi-tenant production audit platform.",
+    "Model/OCR/ASR output remains candidate text/records requiring human field mapping and confirmation.",
+    "Source excerpts and legal applicability remain pending until explicit human scope approval.",
+    "Report approval, signing, delivery, real publication and automatic legal determinations are excluded.",
+    "Historical originals, revisions and confirmation invalidation remain available; no credential or old infrastructure access was performed."
+  ],
+  "files": {
+    "packages/server/package.json": "32ece068099b5a690c03a59f63a8eff464ac5e0800fbc61124d7ac13f6a5fb71",
+    "packages/server/core.js": "0cc95fe437abc7c7d48ac81931f4dd00ea6fb7365a5d18ff8c228fcf442dd9b6",
+    "packages/server/scenarios.js": "37381b40da8b884f4b0f40c380b1d1f73224130f1890d5b80ed4fb9f7238472d",
+    "packages/server/service.js": "696cbeac747951ce3576c9d9b919256716ee6cf157282d4acfbbfbd45d6054d3",
+    "packages/server/index.js": "97e09b269a59775474199adc38bace4b4bfbe871cc4cdb8c959dd976334ee3b8",
+    "packages/server/test/fixtures.js": "2cf3156038334a770c1ba17699b6c43d3dbebfae36177e4ae10a9a5f810abbeb",
+    "packages/server/test/server.test.js": "bbcc8d6e5401dcad51eaed398aa7be1b4ac2fca954d9137a83333c096ec945a4",
+    "packages/server/test/integration.test.js": "b02a227d59dc88932d3bd9103d056c09d47b455d7cfe4433b4024e09fbd5f549",
+    "docs/specs/api.md": "54786e8d9100eebe0d0ab105ea4670de941fd5154e91e2589ea92a060bb95cf3"
+  }
+}

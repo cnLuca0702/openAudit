@@ -1,0 +1,6 @@
+﻿id,type,contractId,date,amount,unit,transactionId,invoiceId,measurementId,acceptanceId,subject,direction,counterparty,label,recordSubtype,payee,locator,reversalOf,originalTransactionId
+PAY-051,payment,C01,2027-06-05,518400,元,TX-051,INV-05,MEAS-05,ACC-MAY,进度支付,out,澄川泽远市政工程有限公司,演示模拟数据,payment,澄川泽远市政工程有限公司,第2行,,
+PAY-061,payment,C01,2027-07-05,51.84,万元,TX-061,INV-06,MEAS-06,,进度支付,out,澄川泽远市政工程有限公司,演示模拟数据,payment,澄川泽远市政工程有限公司,第3行,,
+PAY-071,payment,C03,2027-07-09,300000,元,TX-071,INV-MON,,,监理服务误付,out,澄川清序工程咨询有限公司,演示模拟数据,payment,澄川清序工程咨询有限公司,第4行,,
+PAY-072,payment,C03,2027-07-10,-300000,元,TX-072,,,,原路冲回,in,澄川清序工程咨询有限公司,演示模拟数据,payment,澄川清序工程咨询有限公司,第5行,PAY-071,TX-071
+PAY-073,payment,C03,2027-07-11,300000,元,TX-073,INV-MON,,,更正后重付,out,澄川清序工程咨询有限公司,演示模拟数据,payment,澄川清序工程咨询有限公司,第6行,,

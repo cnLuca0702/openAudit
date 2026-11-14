@@ -1,0 +1,170 @@
+{
+  "label": "演示模拟数据",
+  "taskId": "task_0e9dafd0a66e",
+  "scope": "docs（排除specs/implementation.md及specs/api.md）、demo、scripts/generate-demo.py、scripts/revise-plan.py",
+  "proposal": {
+    "word": "docs/deliverables/政府投资项目审计全流程AI赋能演示方案-V3.docx",
+    "pdf": "docs/deliverables/政府投资项目审计全流程AI赋能演示方案-V3.pdf",
+    "pdfPages": 31,
+    "scenarios": 24,
+    "detailCategoriesPerScenario": 8,
+    "leadershipMinutes": "25—30（建议28）",
+    "practitionerMinutes": "60—90（建议80）",
+    "originalV2UnchangedSha256": "5dd2c9fd76132d7018ff33424dde5f152fb7c6df2a2ef4dfb01c80a34e2d2d12",
+    "changes": [
+      "内部修订及编号沿革移至附录",
+      "保留24场景全部八类业务要素",
+      "领导路线纳入B05，使合同版本测试实际可执行",
+      "增加共同人工控制和模型实际配置",
+      "C02审计组内部讨论与D04业务复核会议分工",
+      "统一标题标点",
+      "官方DSH固定版本链接与法规链接为Word超链接"
+    ]
+  },
+  "dataset": {
+    "project": {
+      "id": "DEMO-AUDIT-2027-006",
+      "name": "澄川市南岸片区雨污分流与道路更新工程",
+      "label": "演示模拟数据",
+      "datasetVersion": "2026.11.14-v3",
+      "type": "市政工程",
+      "budgetWan": 48600,
+      "ledgerInvestmentWan": 50200,
+      "currency": "CNY",
+      "auditPeriod": "2027-01-01/2027-09-30"
+    },
+    "businessArtifacts": 57,
+    "formats": {
+      ".docx": 27,
+      ".pdf": 7,
+      ".xlsx": 10,
+      ".csv": 2,
+      ".png": 5,
+      ".svg": 2,
+      ".mp4": 1,
+      ".txt": 1,
+      ".wav": 1,
+      ".json": 1
+    },
+    "batches": {
+      "initial": 36,
+      "feedback": 7,
+      "review": 5,
+      "rectification": 9
+    },
+    "optionalZip": "demo/packages/initial-materials.zip",
+    "videoSeconds": 12,
+    "audioSeconds": 51.2669375,
+    "audioOrigin": "协调者提供MiniMax speech-2.8-hd合成录音；已纳入manifest",
+    "laws": 9,
+    "lawStatus": "全部待人工核验",
+    "modelConfiguration": [
+      "deepseek-flash",
+      "deepseek-v4-pro（备选）",
+      "glm-4.6v",
+      "glm-asr-2512"
+    ],
+    "sourceAndTruthSeparation": "manifest/seed仅含业务资料；truth/不在导入路径，所有expected测试值仅供测试人员"
+  },
+  "verification": {
+    "nativeFileParsingAndPersistence": [
+      {
+        "batch": "initial",
+        "imported": 36
+      },
+      {
+        "batch": "feedback",
+        "imported": 7
+      },
+      {
+        "batch": "review",
+        "imported": 5
+      },
+      {
+        "batch": "rectification",
+        "imported": 9
+      }
+    ],
+    "deterministicScenariosPassed": 24,
+    "behavioralChecks": [
+      {
+        "name": "B03 同管线120米交集=216000元",
+        "passed": true
+      },
+      {
+        "name": "B03 不同雨水管线未计为重复",
+        "passed": true
+      },
+      {
+        "name": "B01 同一交易多来源去重后净额1336800元",
+        "passed": true
+      },
+      {
+        "name": "E01 日期与来源冲突被识别",
+        "passed": true
+      },
+      {
+        "name": "E01 全部范围超出样本被识别",
+        "passed": true
+      },
+      {
+        "name": "B07 重复影像被识别",
+        "passed": true
+      },
+      {
+        "name": "B06 未确认参数阻止复算",
+        "passed": true
+      },
+      {
+        "name": "九项法规均保持待人工核验",
+        "passed": true
+      },
+      {
+        "name": "F01 无证明人工核验不能具备复查条件",
+        "passed": true
+      }
+    ],
+    "reproducibility": {
+      "label": "演示模拟数据",
+      "checkedFiles": 75,
+      "changedFiles": [],
+      "sameEnvironmentByteReproducible": true,
+      "caveat": "云TTS原件保留，未重新生成；测试报告与交付总结自身排除",
+      "pdfFonts": "嵌入中文TrueType，全部8份PDF通过本机Poppler文字提取且无语言包错误"
+    },
+    "formatChecks": [
+      "DOCX/XLSX重开并核验模拟标识",
+      "全部PDF提取文本可读且含模拟标识",
+      "57个manifest文件路径存在及SHA256一致",
+      "ZIP CRC检查通过且含36个初始原件",
+      "音频16kHz单声道且实际时长51.2669375秒",
+      "PDF抽样5页渲染并目视检查其中2页；图纸及盘点PNG目视检查",
+      "Word内24场景×8标签完整、17条官方链接可点击关系存在",
+      "原V2未覆盖",
+      "全部7份业务PDF及31页方案PDF通过真实pdftotext文本提取，无Adobe-GB1依赖错误",
+      "最终嵌入字体PDF第4页、第31页已渲染目视检查"
+    ],
+    "evidence": [
+      "demo/truth/fixtures-verification.json",
+      "demo/truth/reproducibility.json",
+      "demo/verification.json",
+      "docs/deliverables/proposal-verification.json"
+    ]
+  },
+  "knownGaps": [
+    "本worker未进行UI、真实模型、部署和全部业务动作端到端验收，协调者另行验证；24次规则运行不等于全功能通过",
+    "Word已重开检查结构，但未使用Microsoft Word/LibreOffice渲染；附PDF为独立排版，并非Word像素一致导出",
+    "法规已浏览官方原文并核对所列条号及日期，个案适用及后续修法仍待有权人员复核",
+    "云TTS生成非位级确定；复现验证保留已交付音频原件，不重新请求云TTS",
+    "演示中有意保留未提供附件、未核实投资口径、未确认参数及未完成整改，不作为已解决问题",
+    "records为模拟派生记录，不冒充OCR或ASR输出；人工脚本与真实ASR结果分开"
+  ],
+  "noCommitOrPush": true,
+  "operatorGuide": "docs/deliverables/演示操作指南.md",
+  "dataGuide": "demo/README.md",
+  "coordinatorReportedStatus": {
+    "messageTime": "2026-11-14T08:55:16Z",
+    "statement": "协调者报告真实DSH鉴权/侧栏/iframe、旧55资料/24场景/五格式导出和真实视觉/ASR通过；最终57资料和PDF字体版需协调者重跑",
+    "independentlyVerifiedByThisWorker": false
+  }
+}

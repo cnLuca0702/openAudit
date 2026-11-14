@@ -1,0 +1,8 @@
+# 演示模拟数据
+file 'video-frame-1.png'
+duration 4
+file 'video-frame-2.png'
+duration 4
+file 'video-frame-3.png'
+duration 4
+file 'video-frame-3.png'

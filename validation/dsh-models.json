@@ -1,0 +1,954 @@
+{
+  "at": "2026-11-14T09:06:16.090Z",
+  "label": "演示模拟数据",
+  "results": [
+    {
+      "action": "run",
+      "scenarioId": "B03",
+      "run": {
+        "id": "run_88c214c5-bb0",
+        "scenarioId": "B03",
+        "input": {
+          "documentIds": [
+            "B-MEASUREMENTS",
+            "B-DRAWING-NOTES"
+          ],
+          "useModel": true,
+          "options": {
+            "prompt": "简洁列出关键依据和待核事项，不超过800字。"
+          }
+        },
+        "startedAt": "2026-11-14T09:06:17.015Z",
+        "status": "succeeded",
+        "engine": "deterministic+model",
+        "label": "演示模拟数据",
+        "modelDocumentIds": [
+          "B-MEASUREMENTS",
+          "B-DRAWING-NOTES"
+        ],
+        "artifactId": "artifact_de19205a-f57",
+        "finishedAt": "2026-11-14T09:06:22.856Z"
+      },
+      "artifact": {
+        "id": "artifact_de19205a-f57",
+        "scenarioId": "B03",
+        "title": "跨文件多事项比对",
+        "content": "# 跨文件多事项比对\n\n演示模拟数据 · 辅助分析，事实与适用性待人工确认\n\n| matter | id | document | scope | quantity | amountYuan | start | end |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| DEMO-AUDIT-2027-006/C01/NA-WS-01/米 | MEAS-05 | 五月六月计量申请明细.xlsx |  | 360 | 648000 | 0 | 360 |\n| DEMO-AUDIT-2027-006/C01/NA-WS-01/米 | MEAS-06 | 五月六月计量申请明细.xlsx |  | 360 | 648000 | 240 | 600 |\n| DEMO-AUDIT-2027-006/C01/NA-YS-02/米 | MEAS-06-R | 五月六月计量申请明细.xlsx |  | 360 | 828000 | 240 | 600 |\n\n## 候选发现与计算过程（待人工核验）\n\n### DEMO-AUDIT-2027-006/C01/NA-WS-01/米 疑似重复计量 120米\n\nMEAS-05 [0,360] 与 MEAS-06 [240,600] 交集；120米 × 1800元/米 = 216000元，须核实实体与口径\n\n涉及金额：216000元。来源：B-MEASUREMENTS v1 数据!第3行；B-MEASUREMENTS v1 数据!第4行\n\n## AI 辅助解释（待人工核验）\n\n## 分析结论（演示模拟）\n\n**一、规则结果性质**\n本次 findings 中的 “疑似重复计量 120 米 / 216000 元” 是**待核实线索**，不是人工已确认事实。三份资料的 status 均为 pending，validConfirmationIds 均为空，因此没有任何“人工已确认事实”。\n\n**二、关键依据（资料记载）**\n1. B-MEASUREMENTS@v1 数据!第3行：MEAS-05，C01，2027-05，NA-WS-01，DN600污水管，起止 0–360、0M–360M，数量360米，单价1800，金额648000元。\n2. B-MEASUREMENTS@v1 数据!第4行：MEAS-06，C01，2027-06，同为 NA-WS-01、DN600污水管，起止 240–600、240M–600M，数量360米，单价1800，金额648000元。\n   → 两行区间 [0,360] 与 [240,600] 交集为 240–360，共120米；120×1800=216000元，与规则数值一致。\n3. B-DRAWING-NOTES@v1 段落4：DWG-01 V1 示意 NA-WS-01 为 DN600污水管，**全段 0+000 至 0+600**；段落5：红框 0+240 至 0+360 为“待核区间”，并说明“不可按屏幕比例测量”。\n4. B-DRAWING-NOTES@v1 段落7：length=600米，parameterStatus 记为“长度为模拟设计标注，管底标高待核”，parameterConfirmed=False。\n\n**三、候选解释（均为推断，需核实）**\n- 解释A：两期计量按不同“零起点分段”申报（五月 0–360、六月 240–600），而图纸总长600米。若两行均按实际完成长度独立计量，则 240–360 段可能被两次计入，形成重复，即120米/216000元。\n- 解释B：其中一期（或两期）的 startM/endM 是“本期相对桩号”而非图纸绝对桩号，属口径不一致；若换算为绝对桩号后不重叠，则金额差异不成立。\n- 解释C：图纸“长度为模拟设计标注、parameterConfirmed=False”，且红框区间明确“待核”；600米本身尚未人工确认，重叠判断所依赖的总长和分段均属资料记载。\n\n**四、疑点**\n- MEAS-06-R（数据!第5行）为 NA-YS-02、DN800、单价2300、金额828000元，虽同为 240–600 区间，但**管段与管径不同**，不能与上述污水管直接合并计算；而已有规则未把它列入 finding，需注意是否另有重叠线索，不能据此认定无问题（checks 为零不代表无线索）。\n- 两期单价均为1800元/米，但未提供合同工程量清单或计价依据，无法核对单价与计量口径。\n\n**五、需补充资料**\n1. C01 合同工程量清单及计量支付条款（分段计量规则、桩号定义）。\n2. DWG-01 V1 带清晰尺寸标注的平面图与纵剖图（管底标高、分段标注）。\n3. 五月、六月计量申请的现场计量记录、监理签认单、形象进度照片或测量成果。\n4. 两期计量的桩号换算说明（相对桩号/绝对桩号）。\n\n**六、需人工确认事项**\n- NA-WS-01 实际完成长度及 240–360 段是否被两次计量（实体与口径双重核实）。\n- DWG-01 长度600米、红框区间范围是否经设计/监理确认。\n- 216000元是否应扣减、如何扣减，以及是否涉及审批或销号。\n- MEAS-06-R 与污水管计量是否存在关联或独立性问题。\n- 相关法规适用条件及效力，需人工核验。\n\n（本分析不改变规则数值与人工状态，不替代事实认定、法律适用与审批。）",
+        "rows": [
+          {
+            "matter": "DEMO-AUDIT-2027-006/C01/NA-WS-01/米",
+            "id": "MEAS-05",
+            "document": "五月六月计量申请明细.xlsx",
+            "scope": "",
+            "quantity": 360,
+            "amountYuan": 648000,
+            "start": 0,
+            "end": 360,
+            "sources": [
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_7415eec1-156",
+                "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+              }
+            ]
+          },
+          {
+            "matter": "DEMO-AUDIT-2027-006/C01/NA-WS-01/米",
+            "id": "MEAS-06",
+            "document": "五月六月计量申请明细.xlsx",
+            "scope": "",
+            "quantity": 360,
+            "amountYuan": 648000,
+            "start": 240,
+            "end": 600,
+            "sources": [
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_b4bb42c8-28a",
+                "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+              }
+            ]
+          },
+          {
+            "matter": "DEMO-AUDIT-2027-006/C01/NA-YS-02/米",
+            "id": "MEAS-06-R",
+            "document": "五月六月计量申请明细.xlsx",
+            "scope": "",
+            "quantity": 360,
+            "amountYuan": 828000,
+            "start": 240,
+            "end": 600,
+            "sources": [
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第5行",
+                "factId": "fact_46a7781c-604",
+                "quote": "{\"id\":\"MEAS-06-R\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-YS-02\",\"pipeId\":\"NA-YS-02\",\"item\":\"DN800雨水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":2300,\"amount\":828000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-YS-02\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第5行\"}"
+              }
+            ]
+          }
+        ],
+        "checks": [],
+        "sources": [
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第3行",
+            "factId": "fact_7415eec1-156",
+            "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+          },
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第4行",
+            "factId": "fact_b4bb42c8-28a",
+            "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+          },
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第5行",
+            "factId": "fact_46a7781c-604",
+            "quote": "{\"id\":\"MEAS-06-R\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-YS-02\",\"pipeId\":\"NA-YS-02\",\"item\":\"DN800雨水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":2300,\"amount\":828000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-YS-02\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第5行\"}"
+          }
+        ],
+        "status": "draft",
+        "version": 2,
+        "previousId": "artifact_9fe9e10f-9ff",
+        "runId": "run_88c214c5-bb0",
+        "createdAt": "2026-11-14T09:06:22.856Z",
+        "dependsOn": [],
+        "model": {
+          "text": "## 分析结论（演示模拟）\n\n**一、规则结果性质**\n本次 findings 中的 “疑似重复计量 120 米 / 216000 元” 是**待核实线索**，不是人工已确认事实。三份资料的 status 均为 pending，validConfirmationIds 均为空，因此没有任何“人工已确认事实”。\n\n**二、关键依据（资料记载）**\n1. B-MEASUREMENTS@v1 数据!第3行：MEAS-05，C01，2027-05，NA-WS-01，DN600污水管，起止 0–360、0M–360M，数量360米，单价1800，金额648000元。\n2. B-MEASUREMENTS@v1 数据!第4行：MEAS-06，C01，2027-06，同为 NA-WS-01、DN600污水管，起止 240–600、240M–600M，数量360米，单价1800，金额648000元。\n   → 两行区间 [0,360] 与 [240,600] 交集为 240–360，共120米；120×1800=216000元，与规则数值一致。\n3. B-DRAWING-NOTES@v1 段落4：DWG-01 V1 示意 NA-WS-01 为 DN600污水管，**全段 0+000 至 0+600**；段落5：红框 0+240 至 0+360 为“待核区间”，并说明“不可按屏幕比例测量”。\n4. B-DRAWING-NOTES@v1 段落7：length=600米，parameterStatus 记为“长度为模拟设计标注，管底标高待核”，parameterConfirmed=False。\n\n**三、候选解释（均为推断，需核实）**\n- 解释A：两期计量按不同“零起点分段”申报（五月 0–360、六月 240–600），而图纸总长600米。若两行均按实际完成长度独立计量，则 240–360 段可能被两次计入，形成重复，即120米/216000元。\n- 解释B：其中一期（或两期）的 startM/endM 是“本期相对桩号”而非图纸绝对桩号，属口径不一致；若换算为绝对桩号后不重叠，则金额差异不成立。\n- 解释C：图纸“长度为模拟设计标注、parameterConfirmed=False”，且红框区间明确“待核”；600米本身尚未人工确认，重叠判断所依赖的总长和分段均属资料记载。\n\n**四、疑点**\n- MEAS-06-R（数据!第5行）为 NA-YS-02、DN800、单价2300、金额828000元，虽同为 240–600 区间，但**管段与管径不同**，不能与上述污水管直接合并计算；而已有规则未把它列入 finding，需注意是否另有重叠线索，不能据此认定无问题（checks 为零不代表无线索）。\n- 两期单价均为1800元/米，但未提供合同工程量清单或计价依据，无法核对单价与计量口径。\n\n**五、需补充资料**\n1. C01 合同工程量清单及计量支付条款（分段计量规则、桩号定义）。\n2. DWG-01 V1 带清晰尺寸标注的平面图与纵剖图（管底标高、分段标注）。\n3. 五月、六月计量申请的现场计量记录、监理签认单、形象进度照片或测量成果。\n4. 两期计量的桩号换算说明（相对桩号/绝对桩号）。\n\n**六、需人工确认事项**\n- NA-WS-01 实际完成长度及 240–360 段是否被两次计量（实体与口径双重核实）。\n- DWG-01 长度600米、红框区间范围是否经设计/监理确认。\n- 216000元是否应扣减、如何扣减，以及是否涉及审批或销号。\n- MEAS-06-R 与污水管计量是否存在关联或独立性问题。\n- 相关法规适用条件及效力，需人工核验。\n\n（本分析不改变规则数值与人工状态，不替代事实认定、法律适用与审批。）",
+          "model": "deepseek-flash",
+          "provider": "deepseek",
+          "sources": [
+            "B-MEASUREMENTS",
+            "B-DRAWING-NOTES"
+          ],
+          "usage": {
+            "prompt_tokens": 1508,
+            "completion_tokens": 920,
+            "total_tokens": 2428,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1508
+          },
+          "mode": "text",
+          "generatedAt": "2026-11-14T09:06:22.856Z",
+          "status": "pending-review"
+        },
+        "label": "演示模拟数据",
+        "findings": [
+          {
+            "title": "DEMO-AUDIT-2027-006/C01/NA-WS-01/米 疑似重复计量 120米",
+            "detail": "MEAS-05 [0,360] 与 MEAS-06 [240,600] 交集；120米 × 1800元/米 = 216000元，须核实实体与口径",
+            "amount": 216000,
+            "sources": [
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_7415eec1-156",
+                "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_b4bb42c8-28a",
+                "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+              }
+            ],
+            "id": "finding_9dd4017f-91f",
+            "scenarioId": "B03",
+            "artifactId": "artifact_de19205a-f57",
+            "dependsOn": [
+              "artifact_de19205a-f57"
+            ],
+            "status": "pending",
+            "label": "演示模拟数据"
+          }
+        ]
+      }
+    },
+    {
+      "action": "run",
+      "scenarioId": "B06",
+      "run": {
+        "id": "run_0e48a7e0-666",
+        "scenarioId": "B06",
+        "input": {
+          "documentIds": [
+            "B-MEASUREMENTS",
+            "B-DRAWING-NOTES",
+            "drawing-plan-PNG"
+          ],
+          "useModel": true,
+          "options": {
+            "prompt": "简洁列出关键依据和待核事项，不超过800字。"
+          }
+        },
+        "startedAt": "2026-11-14T09:06:23.542Z",
+        "status": "succeeded",
+        "engine": "deterministic+model",
+        "label": "演示模拟数据",
+        "modelDocumentIds": [
+          "B-MEASUREMENTS",
+          "B-DRAWING-NOTES",
+          "drawing-plan-PNG"
+        ],
+        "artifactId": "artifact_6d49cdce-c98",
+        "finishedAt": "2026-11-14T09:06:52.054Z"
+      },
+      "artifact": {
+        "id": "artifact_6d49cdce-c98",
+        "scenarioId": "B06",
+        "title": "图纸知识与工程量计价",
+        "content": "# 图纸知识与工程量计价\n\n演示模拟数据 · 辅助分析，事实与适用性待人工确认\n\n| id | drawing | component | legend | region | quantity | unit | unitPrice | total | formula |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| DWG-01 | 图纸目录、设计说明与图例.docx | DN600 | 蓝色污水管、绿色雨水管；按标注净长度 | x=480,y=190,w=180,h=195 | null | 米 | 1800 | null | 阻止复算：参数需清晰来源和人工确认 |\n| DWG-IMG | DWG-01 管网平面与剖面示意.png | NA-WS-01 | 未提供图例解释 | SVG/PNG区域[480,190,180,195] | null | 米 | 1800 | null | 阻止复算：参数需清晰来源和人工确认 |\n\n## 核验与缺口\n- 待人工核验: DWG-01 参数尚未经人工确认，未进入工程量复算\n- 待人工核验: DWG-IMG 参数尚未经人工确认，未进入工程量复算\n\n## AI 辅助解释（待人工核验）\n\n\n### 关键依据  \n1. **图纸参数未确认**：B-DRAWING-NOTES@v1:正文段落7／记录1 记载DWG-01参数（长度、管底标高等）`parameterConfirmed=False`，未进入工程量复算；drawing-plan-PNG@v1:SVG/PNG区域[480,190,180,195] 对应DWG-IMG参数未确认。  \n2. **计量事实待核**：B-MEASUREMENTS 中 MEAS-05、MEAS-06、MEAS-06-R 事实状态为 `pending`，无有效人工确认，属于资料记载。  \n\n\n### 疑点  \n1. 计量申请中的工程量（如 MEAS-05、MEAS-06 的 360 米）是否基于未确认的图纸参数计算，可能影响工程量准确性。  \n2. 图纸中“待核区间（0+240 至 0+360）”的尺寸标注是否经核实，因图纸说明“尺寸以标注为准，不可按屏幕比例测量”，但参数未确认，存在标注错误风险。  \n\n\n### 需补充资料  \n1. 人工确认 DWG-01 图纸参数（长度、管底标高）的记录（如设计院确认函、现场复核记录）。  \n2. 计量申请中工程量计算依据的详细说明（是否基于图纸标注，标注核实过程）。  \n\n\n### 人工确认事项  \n1. DWG-01 图纸中 NA-WS-01（DN600 污水管）、NA-YS-02（DN800 雨水管）的长度、管底标高等参数是否经人工确认。  \n2. 计量申请中工程量（MEAS-05、MEAS-06、MEAS-06-R 的 quantity）是否基于确认后图纸参数计算，计算过程是否合规。",
+        "rows": [
+          {
+            "id": "DWG-01",
+            "drawing": "图纸目录、设计说明与图例.docx",
+            "component": "DN600",
+            "legend": "蓝色污水管、绿色雨水管；按标注净长度",
+            "region": "x=480,y=190,w=180,h=195",
+            "quantity": null,
+            "unit": "米",
+            "unitPrice": 1800,
+            "total": null,
+            "formula": "阻止复算：参数需清晰来源和人工确认",
+            "sources": [
+              {
+                "documentId": "B-DRAWING-NOTES",
+                "version": 1,
+                "locator": "正文段落7／记录1",
+                "factId": "fact_38cbef50-560",
+                "quote": "{\"id\":\"DWG-01\",\"type\":\"drawing\",\"segment\":\"NA-WS-01\",\"drawingVersion\":\"V1\",\"length\":600,\"unit\":\"米\",\"diameter\":\"DN600\",\"parameterStatus\":\"长度为模拟设计标注，管底标高待核\",\"region\":\"x=480,y=190,w=180,h=195\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"drawing\",\"segmentId\":\"NA-WS-01\",\"component\":\"DN600\",\"legend\":\"蓝色污水管、绿色雨水管；按标注净长度\",\"parameterConfirmed\":false,\"readable\":true,\"locator\":\"正文段落7／记录1\"}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_7415eec1-156",
+                "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_b4bb42c8-28a",
+                "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第5行",
+                "factId": "fact_46a7781c-604",
+                "quote": "{\"id\":\"MEAS-06-R\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-YS-02\",\"pipeId\":\"NA-YS-02\",\"item\":\"DN800雨水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":2300,\"amount\":828000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-YS-02\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第5行\"}"
+              }
+            ]
+          },
+          {
+            "id": "DWG-IMG",
+            "drawing": "DWG-01 管网平面与剖面示意.png",
+            "component": "NA-WS-01",
+            "legend": "未提供图例解释",
+            "region": "SVG/PNG区域[480,190,180,195]",
+            "quantity": null,
+            "unit": "米",
+            "unitPrice": 1800,
+            "total": null,
+            "formula": "阻止复算：参数需清晰来源和人工确认",
+            "sources": [
+              {
+                "documentId": "drawing-plan-PNG",
+                "version": 1,
+                "locator": "SVG/PNG区域[480,190,180,195]",
+                "factId": "fact_2cee2c2b-0cd",
+                "quote": "{\"id\":\"DWG-IMG\",\"type\":\"drawing\",\"drawingId\":\"DWG-01\",\"segment\":\"NA-WS-01\",\"start\":0,\"end\":600,\"unit\":\"米\",\"unitPrice\":1800,\"locator\":\"SVG/PNG区域[480,190,180,195]\",\"label\":\"演示模拟数据\",\"segmentId\":\"NA-WS-01\",\"parameterConfirmed\":false}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_7415eec1-156",
+                "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+              },
+              {
+                "documentId": "B-MEASUREMENTS",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_b4bb42c8-28a",
+                "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+              }
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "id": "check_19c27519-6f6",
+            "code": "drawing-unverified",
+            "message": "DWG-01 参数尚未经人工确认，未进入工程量复算",
+            "sources": [
+              {
+                "documentId": "B-DRAWING-NOTES",
+                "version": 1,
+                "locator": "正文段落7／记录1",
+                "factId": "fact_38cbef50-560",
+                "quote": "{\"id\":\"DWG-01\",\"type\":\"drawing\",\"segment\":\"NA-WS-01\",\"drawingVersion\":\"V1\",\"length\":600,\"unit\":\"米\",\"diameter\":\"DN600\",\"parameterStatus\":\"长度为模拟设计标注，管底标高待核\",\"region\":\"x=480,y=190,w=180,h=195\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"drawing\",\"segmentId\":\"NA-WS-01\",\"component\":\"DN600\",\"legend\":\"蓝色污水管、绿色雨水管；按标注净长度\",\"parameterConfirmed\":false,\"readable\":true,\"locator\":\"正文段落7／记录1\"}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": true
+          },
+          {
+            "id": "check_f7f88225-fcc",
+            "code": "drawing-unverified",
+            "message": "DWG-IMG 参数尚未经人工确认，未进入工程量复算",
+            "sources": [
+              {
+                "documentId": "drawing-plan-PNG",
+                "version": 1,
+                "locator": "SVG/PNG区域[480,190,180,195]",
+                "factId": "fact_2cee2c2b-0cd",
+                "quote": "{\"id\":\"DWG-IMG\",\"type\":\"drawing\",\"drawingId\":\"DWG-01\",\"segment\":\"NA-WS-01\",\"start\":0,\"end\":600,\"unit\":\"米\",\"unitPrice\":1800,\"locator\":\"SVG/PNG区域[480,190,180,195]\",\"label\":\"演示模拟数据\",\"segmentId\":\"NA-WS-01\",\"parameterConfirmed\":false}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": true
+          }
+        ],
+        "sources": [
+          {
+            "documentId": "B-DRAWING-NOTES",
+            "version": 1,
+            "locator": "正文段落7／记录1",
+            "factId": "fact_38cbef50-560",
+            "quote": "{\"id\":\"DWG-01\",\"type\":\"drawing\",\"segment\":\"NA-WS-01\",\"drawingVersion\":\"V1\",\"length\":600,\"unit\":\"米\",\"diameter\":\"DN600\",\"parameterStatus\":\"长度为模拟设计标注，管底标高待核\",\"region\":\"x=480,y=190,w=180,h=195\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"drawing\",\"segmentId\":\"NA-WS-01\",\"component\":\"DN600\",\"legend\":\"蓝色污水管、绿色雨水管；按标注净长度\",\"parameterConfirmed\":false,\"readable\":true,\"locator\":\"正文段落7／记录1\"}"
+          },
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第3行",
+            "factId": "fact_7415eec1-156",
+            "quote": "{\"id\":\"MEAS-05\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-05\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":0,\"end\":360,\"startM\":0,\"endM\":360,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-05-31\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第3行\"}"
+          },
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第4行",
+            "factId": "fact_b4bb42c8-28a",
+            "quote": "{\"id\":\"MEAS-06\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-WS-01\",\"pipeId\":\"NA-WS-01\",\"item\":\"DN600污水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":1800,\"amount\":648000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-WS-01\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第4行\"}"
+          },
+          {
+            "documentId": "B-MEASUREMENTS",
+            "version": 1,
+            "locator": "数据!第5行",
+            "factId": "fact_46a7781c-604",
+            "quote": "{\"id\":\"MEAS-06-R\",\"type\":\"measurement\",\"contractId\":\"C01\",\"period\":\"2027-06\",\"segment\":\"NA-YS-02\",\"pipeId\":\"NA-YS-02\",\"item\":\"DN800雨水管\",\"start\":240,\"end\":600,\"startM\":240,\"endM\":600,\"quantity\":360,\"unit\":\"米\",\"unitPrice\":2300,\"amount\":828000,\"amountUnit\":\"元\",\"drawingId\":\"DWG-01\",\"date\":\"2027-06-30\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"measurement\",\"segmentId\":\"NA-YS-02\",\"projectId\":\"DEMO-AUDIT-2027-006\",\"locator\":\"数据!第5行\"}"
+          },
+          {
+            "documentId": "drawing-plan-PNG",
+            "version": 1,
+            "locator": "SVG/PNG区域[480,190,180,195]",
+            "factId": "fact_2cee2c2b-0cd",
+            "quote": "{\"id\":\"DWG-IMG\",\"type\":\"drawing\",\"drawingId\":\"DWG-01\",\"segment\":\"NA-WS-01\",\"start\":0,\"end\":600,\"unit\":\"米\",\"unitPrice\":1800,\"locator\":\"SVG/PNG区域[480,190,180,195]\",\"label\":\"演示模拟数据\",\"segmentId\":\"NA-WS-01\",\"parameterConfirmed\":false}"
+          }
+        ],
+        "status": "draft",
+        "version": 2,
+        "previousId": "artifact_34946c73-2f5",
+        "runId": "run_0e48a7e0-666",
+        "createdAt": "2026-11-14T09:06:52.054Z",
+        "dependsOn": [],
+        "model": {
+          "text": "\n### 关键依据  \n1. **图纸参数未确认**：B-DRAWING-NOTES@v1:正文段落7／记录1 记载DWG-01参数（长度、管底标高等）`parameterConfirmed=False`，未进入工程量复算；drawing-plan-PNG@v1:SVG/PNG区域[480,190,180,195] 对应DWG-IMG参数未确认。  \n2. **计量事实待核**：B-MEASUREMENTS 中 MEAS-05、MEAS-06、MEAS-06-R 事实状态为 `pending`，无有效人工确认，属于资料记载。  \n\n\n### 疑点  \n1. 计量申请中的工程量（如 MEAS-05、MEAS-06 的 360 米）是否基于未确认的图纸参数计算，可能影响工程量准确性。  \n2. 图纸中“待核区间（0+240 至 0+360）”的尺寸标注是否经核实，因图纸说明“尺寸以标注为准，不可按屏幕比例测量”，但参数未确认，存在标注错误风险。  \n\n\n### 需补充资料  \n1. 人工确认 DWG-01 图纸参数（长度、管底标高）的记录（如设计院确认函、现场复核记录）。  \n2. 计量申请中工程量计算依据的详细说明（是否基于图纸标注，标注核实过程）。  \n\n\n### 人工确认事项  \n1. DWG-01 图纸中 NA-WS-01（DN600 污水管）、NA-YS-02（DN800 雨水管）的长度、管底标高等参数是否经人工确认。  \n2. 计量申请中工程量（MEAS-05、MEAS-06、MEAS-06-R 的 quantity）是否基于确认后图纸参数计算，计算过程是否合规。",
+          "model": "glm-4.6v",
+          "provider": "glm",
+          "sources": [
+            "B-MEASUREMENTS",
+            "B-DRAWING-NOTES",
+            "drawing-plan-PNG"
+          ],
+          "usage": {
+            "completion_tokens": 960,
+            "completion_tokens_details": {
+              "reasoning_tokens": 553
+            },
+            "prompt_tokens": 2751,
+            "prompt_tokens_details": {
+              "cached_tokens": 5
+            },
+            "total_tokens": 3711
+          },
+          "mode": "vision",
+          "generatedAt": "2026-11-14T09:06:52.054Z",
+          "status": "pending-review"
+        },
+        "label": "演示模拟数据",
+        "findings": []
+      }
+    },
+    {
+      "action": "run",
+      "scenarioId": "B07",
+      "run": {
+        "id": "run_915c1301-530",
+        "scenarioId": "B07",
+        "input": {
+          "documentIds": [
+            "B-INVENTORY",
+            "B-COUNTS",
+            "B-ISSUE",
+            "inventory-a-PNG"
+          ],
+          "useModel": true,
+          "options": {
+            "prompt": "简洁列出关键依据和待核事项，不超过800字。"
+          }
+        },
+        "startedAt": "2026-11-14T09:06:52.569Z",
+        "status": "succeeded",
+        "engine": "deterministic+model",
+        "label": "演示模拟数据",
+        "modelDocumentIds": [
+          "B-INVENTORY",
+          "B-COUNTS",
+          "B-ISSUE",
+          "inventory-a-PNG"
+        ],
+        "artifactId": "artifact_a563fc98-4ca",
+        "finishedAt": "2026-11-14T09:07:29.778Z"
+      },
+      "artifact": {
+        "id": "artifact_a563fc98-4ca",
+        "scenarioId": "B07",
+        "title": "盘点盘库与资产流转",
+        "content": "# 盘点盘库与资产流转\n\n演示模拟数据 · 辅助分析，事实与适用性待人工确认\n\n| id | asset | location | book | actual | unit | difference | issuedNotPosted | status | warnings |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| INV-PIPE | DN600短管 | 一号库A区 | 12 | null | 件 | null | 2 | 未盘/数量或换算待确认 |  |\n| INV-SEAL | 密封圈 | 一号库B区 | 5 | null | 箱 | null | 0 | 未盘/数量或换算待确认 |  |\n\n## 核验与缺口\n- 待人工核验: DN600短管：未盘/数量或换算待确认\n- 待人工核验: 密封圈：未盘/数量或换算待确认\n\n## AI 辅助解释（待人工核验）\n\n\n### 关键依据  \n1. **DN600短管**：  \n   - B-INVENTORY@v1:数据!第3行：台账记录bookQuantity=12件、issuedQuantity=2件（未记账出库）、quantity=12件；  \n   - B-COUNTS@v1:第2行：现场盘点actualQuantity=10件、conversionFactor=1（换算确认状态为False）；  \n   - B-ISSUE@v1:段落4：2027-07-02领用2件且台账未记出库（与issuedQuantity一致）；  \n   - inventory-a-PNG：人工模拟复点10件（与盘点数量一致）。  \n\n2. **密封圈**：  \n   - B-INVENTORY@v1:数据!第4行：台账记录bookQuantity=5箱、conversionFactor=10（换算成件）；  \n   - B-COUNTS@v1:第3行：现场盘点actualQuantity=50件、conversionFactor=0.1（换算成箱，确认状态为False）。  \n\n\n### 待核事项  \n1. **DN600短管**：  \n   - 台账中bookQuantity=12件、issuedQuantity=2件（未记账），账面应存10件，但台账quantity仍为12，需确认台账是否未更新出库记录；  \n   - 盘点记录中conversionFactor=1（换算确认False），需人工确认换算是否正确（单位为“件”，换算因子1理论上合理，但确认状态为False需核实）。  \n\n2. **密封圈**：  \n   - 台账中bookQuantity=5箱、conversionFactor=10（换算成件为50件），盘点actualQuantity=50件，需确认换算因子0.1（换算成箱为5箱）是否正确及conversionConfirmed为False的原因；  \n   - 盘点数量50件与台账换算后件数（5箱×10=50件）一致，但换算确认状态为False需人工核实。  \n\n\n### 需补充资料  \n- DN600短管台账是否已更新出库记录（issuedNotPosted=2的处理状态）；  \n- 密封圈盘点换算因子0.1的准确性证明（如计量规则、历史数据等）；  \n- DN600短管盘点数量10件与台账应存数量（12-2=10）的一致性说明（若一致则台账未更新，需核实原因）；  \n- 密封圈盘点数量50件与台账换算后数量（5箱×10=50件）的一致性说明（若一致则换算逻辑合理，需确认换算确认状态）。  \n\n\n### 人工确认事项  \n- DN600短管：台账数量与盘点数量的差异原因（台账未更新出库？），及换算因子确认；  \n- 密封圈：换算因子的正确性及确认状态，盘点数量与台账换算后数量的一致性。",
+        "rows": [
+          {
+            "id": "INV-PIPE",
+            "asset": "DN600短管",
+            "location": "一号库A区",
+            "book": 12,
+            "actual": null,
+            "unit": "件",
+            "difference": null,
+            "issuedNotPosted": 2,
+            "status": "未盘/数量或换算待确认",
+            "warnings": "",
+            "sources": [
+              {
+                "documentId": "B-INVENTORY",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_acabc37f-29a",
+                "quote": "{\"id\":\"INV-PIPE\",\"type\":\"inventory\",\"item\":\"DN600短管\",\"itemId\":\"PIPE-A\",\"location\":\"一号库A区\",\"bookQuantity\":12,\"quantity\":12,\"unit\":\"件\",\"issuedQuantity\":2,\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"PIPE-A\",\"name\":\"DN600短管\",\"issuedNotPosted\":2,\"locator\":\"数据!第3行\"}"
+              },
+              {
+                "documentId": "B-COUNTS",
+                "version": 1,
+                "locator": "第2行",
+                "factId": "fact_8a67b63b-c33",
+                "quote": "{\"id\":\"COUNT-PIPE\",\"type\":\"count\",\"itemId\":\"PIPE-A\",\"item\":\"DN600短管\",\"actualQuantity\":10,\"quantity\":10,\"unit\":\"件\",\"photoIds\":\"PHOTO-A,PHOTO-A-DUP\",\"countMethod\":\"模拟人工复点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"PIPE-A\",\"confirmed\":false,\"conversionFactor\":1,\"conversionConfirmed\":false,\"locator\":\"第2行\"}"
+              }
+            ]
+          },
+          {
+            "id": "INV-SEAL",
+            "asset": "密封圈",
+            "location": "一号库B区",
+            "book": 5,
+            "actual": null,
+            "unit": "箱",
+            "difference": null,
+            "issuedNotPosted": 0,
+            "status": "未盘/数量或换算待确认",
+            "warnings": "",
+            "sources": [
+              {
+                "documentId": "B-INVENTORY",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_236f725e-251",
+                "quote": "{\"id\":\"INV-SEAL\",\"type\":\"inventory\",\"item\":\"密封圈\",\"itemId\":\"SEAL-B\",\"location\":\"一号库B区\",\"bookQuantity\":5,\"quantity\":5,\"unit\":\"箱\",\"conversionFactor\":10,\"baseUnit\":\"件\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"SEAL-B\",\"name\":\"密封圈\",\"issuedNotPosted\":0,\"locator\":\"数据!第4行\"}"
+              },
+              {
+                "documentId": "B-COUNTS",
+                "version": 1,
+                "locator": "第3行",
+                "factId": "fact_6a4ce4cd-c13",
+                "quote": "{\"id\":\"COUNT-SEAL\",\"type\":\"count\",\"itemId\":\"SEAL-B\",\"item\":\"密封圈\",\"actualQuantity\":50,\"quantity\":50,\"unit\":\"件\",\"countMethod\":\"模拟人工逐件清点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"SEAL-B\",\"confirmed\":false,\"conversionFactor\":0.1,\"conversionConfirmed\":false,\"locator\":\"第3行\"}"
+              }
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "id": "check_2008bf51-3fc",
+            "code": "inventory-recount",
+            "message": "DN600短管：未盘/数量或换算待确认",
+            "sources": [
+              {
+                "documentId": "B-INVENTORY",
+                "version": 1,
+                "locator": "数据!第3行",
+                "factId": "fact_acabc37f-29a",
+                "quote": "{\"id\":\"INV-PIPE\",\"type\":\"inventory\",\"item\":\"DN600短管\",\"itemId\":\"PIPE-A\",\"location\":\"一号库A区\",\"bookQuantity\":12,\"quantity\":12,\"unit\":\"件\",\"issuedQuantity\":2,\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"PIPE-A\",\"name\":\"DN600短管\",\"issuedNotPosted\":2,\"locator\":\"数据!第3行\"}"
+              },
+              {
+                "documentId": "B-COUNTS",
+                "version": 1,
+                "locator": "第2行",
+                "factId": "fact_8a67b63b-c33",
+                "quote": "{\"id\":\"COUNT-PIPE\",\"type\":\"count\",\"itemId\":\"PIPE-A\",\"item\":\"DN600短管\",\"actualQuantity\":10,\"quantity\":10,\"unit\":\"件\",\"photoIds\":\"PHOTO-A,PHOTO-A-DUP\",\"countMethod\":\"模拟人工复点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"PIPE-A\",\"confirmed\":false,\"conversionFactor\":1,\"conversionConfirmed\":false,\"locator\":\"第2行\"}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": false
+          },
+          {
+            "id": "check_1a342598-ac9",
+            "code": "inventory-recount",
+            "message": "密封圈：未盘/数量或换算待确认",
+            "sources": [
+              {
+                "documentId": "B-INVENTORY",
+                "version": 1,
+                "locator": "数据!第4行",
+                "factId": "fact_236f725e-251",
+                "quote": "{\"id\":\"INV-SEAL\",\"type\":\"inventory\",\"item\":\"密封圈\",\"itemId\":\"SEAL-B\",\"location\":\"一号库B区\",\"bookQuantity\":5,\"quantity\":5,\"unit\":\"箱\",\"conversionFactor\":10,\"baseUnit\":\"件\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"SEAL-B\",\"name\":\"密封圈\",\"issuedNotPosted\":0,\"locator\":\"数据!第4行\"}"
+              },
+              {
+                "documentId": "B-COUNTS",
+                "version": 1,
+                "locator": "第3行",
+                "factId": "fact_6a4ce4cd-c13",
+                "quote": "{\"id\":\"COUNT-SEAL\",\"type\":\"count\",\"itemId\":\"SEAL-B\",\"item\":\"密封圈\",\"actualQuantity\":50,\"quantity\":50,\"unit\":\"件\",\"countMethod\":\"模拟人工逐件清点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"SEAL-B\",\"confirmed\":false,\"conversionFactor\":0.1,\"conversionConfirmed\":false,\"locator\":\"第3行\"}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": false
+          }
+        ],
+        "sources": [
+          {
+            "documentId": "B-INVENTORY",
+            "version": 1,
+            "locator": "数据!第3行",
+            "factId": "fact_acabc37f-29a",
+            "quote": "{\"id\":\"INV-PIPE\",\"type\":\"inventory\",\"item\":\"DN600短管\",\"itemId\":\"PIPE-A\",\"location\":\"一号库A区\",\"bookQuantity\":12,\"quantity\":12,\"unit\":\"件\",\"issuedQuantity\":2,\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"PIPE-A\",\"name\":\"DN600短管\",\"issuedNotPosted\":2,\"locator\":\"数据!第3行\"}"
+          },
+          {
+            "documentId": "B-COUNTS",
+            "version": 1,
+            "locator": "第2行",
+            "factId": "fact_8a67b63b-c33",
+            "quote": "{\"id\":\"COUNT-PIPE\",\"type\":\"count\",\"itemId\":\"PIPE-A\",\"item\":\"DN600短管\",\"actualQuantity\":10,\"quantity\":10,\"unit\":\"件\",\"photoIds\":\"PHOTO-A,PHOTO-A-DUP\",\"countMethod\":\"模拟人工复点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"PIPE-A\",\"confirmed\":false,\"conversionFactor\":1,\"conversionConfirmed\":false,\"locator\":\"第2行\"}"
+          },
+          {
+            "documentId": "B-INVENTORY",
+            "version": 1,
+            "locator": "数据!第4行",
+            "factId": "fact_236f725e-251",
+            "quote": "{\"id\":\"INV-SEAL\",\"type\":\"inventory\",\"item\":\"密封圈\",\"itemId\":\"SEAL-B\",\"location\":\"一号库B区\",\"bookQuantity\":5,\"quantity\":5,\"unit\":\"箱\",\"conversionFactor\":10,\"baseUnit\":\"件\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"inventory\",\"assetId\":\"SEAL-B\",\"name\":\"密封圈\",\"issuedNotPosted\":0,\"locator\":\"数据!第4行\"}"
+          },
+          {
+            "documentId": "B-COUNTS",
+            "version": 1,
+            "locator": "第3行",
+            "factId": "fact_6a4ce4cd-c13",
+            "quote": "{\"id\":\"COUNT-SEAL\",\"type\":\"count\",\"itemId\":\"SEAL-B\",\"item\":\"密封圈\",\"actualQuantity\":50,\"quantity\":50,\"unit\":\"件\",\"countMethod\":\"模拟人工逐件清点\",\"date\":\"2027-07-03\",\"label\":\"演示模拟数据\",\"recordSubtype\":\"count\",\"assetId\":\"SEAL-B\",\"confirmed\":false,\"conversionFactor\":0.1,\"conversionConfirmed\":false,\"locator\":\"第3行\"}"
+          }
+        ],
+        "status": "draft",
+        "version": 2,
+        "previousId": "artifact_6067475b-ded",
+        "runId": "run_915c1301-530",
+        "createdAt": "2026-11-14T09:07:29.778Z",
+        "dependsOn": [],
+        "model": {
+          "text": "\n### 关键依据  \n1. **DN600短管**：  \n   - B-INVENTORY@v1:数据!第3行：台账记录bookQuantity=12件、issuedQuantity=2件（未记账出库）、quantity=12件；  \n   - B-COUNTS@v1:第2行：现场盘点actualQuantity=10件、conversionFactor=1（换算确认状态为False）；  \n   - B-ISSUE@v1:段落4：2027-07-02领用2件且台账未记出库（与issuedQuantity一致）；  \n   - inventory-a-PNG：人工模拟复点10件（与盘点数量一致）。  \n\n2. **密封圈**：  \n   - B-INVENTORY@v1:数据!第4行：台账记录bookQuantity=5箱、conversionFactor=10（换算成件）；  \n   - B-COUNTS@v1:第3行：现场盘点actualQuantity=50件、conversionFactor=0.1（换算成箱，确认状态为False）。  \n\n\n### 待核事项  \n1. **DN600短管**：  \n   - 台账中bookQuantity=12件、issuedQuantity=2件（未记账），账面应存10件，但台账quantity仍为12，需确认台账是否未更新出库记录；  \n   - 盘点记录中conversionFactor=1（换算确认False），需人工确认换算是否正确（单位为“件”，换算因子1理论上合理，但确认状态为False需核实）。  \n\n2. **密封圈**：  \n   - 台账中bookQuantity=5箱、conversionFactor=10（换算成件为50件），盘点actualQuantity=50件，需确认换算因子0.1（换算成箱为5箱）是否正确及conversionConfirmed为False的原因；  \n   - 盘点数量50件与台账换算后件数（5箱×10=50件）一致，但换算确认状态为False需人工核实。  \n\n\n### 需补充资料  \n- DN600短管台账是否已更新出库记录（issuedNotPosted=2的处理状态）；  \n- 密封圈盘点换算因子0.1的准确性证明（如计量规则、历史数据等）；  \n- DN600短管盘点数量10件与台账应存数量（12-2=10）的一致性说明（若一致则台账未更新，需核实原因）；  \n- 密封圈盘点数量50件与台账换算后数量（5箱×10=50件）的一致性说明（若一致则换算逻辑合理，需确认换算确认状态）。  \n\n\n### 人工确认事项  \n- DN600短管：台账数量与盘点数量的差异原因（台账未更新出库？），及换算因子确认；  \n- 密封圈：换算因子的正确性及确认状态，盘点数量与台账换算后数量的一致性。",
+          "model": "glm-4.6v",
+          "provider": "glm",
+          "sources": [
+            "B-INVENTORY",
+            "B-COUNTS",
+            "B-ISSUE",
+            "inventory-a-PNG"
+          ],
+          "usage": {
+            "completion_tokens": 1991,
+            "completion_tokens_details": {
+              "reasoning_tokens": 1345
+            },
+            "prompt_tokens": 2665,
+            "prompt_tokens_details": {
+              "cached_tokens": 5
+            },
+            "total_tokens": 4656
+          },
+          "mode": "vision",
+          "generatedAt": "2026-11-14T09:07:29.778Z",
+          "status": "pending-review"
+        },
+        "label": "演示模拟数据",
+        "findings": []
+      }
+    },
+    {
+      "action": "run",
+      "scenarioId": "B08",
+      "run": {
+        "id": "run_0f10712f-185",
+        "scenarioId": "B08",
+        "input": {
+          "documentIds": [
+            "B-VIDEO",
+            "B-AUDIO"
+          ],
+          "useModel": true,
+          "options": {
+            "prompt": "简洁列出关键依据和待核事项，不超过800字。"
+          }
+        },
+        "startedAt": "2026-11-14T09:07:30.302Z",
+        "status": "succeeded",
+        "engine": "deterministic+model",
+        "label": "演示模拟数据",
+        "modelDocumentIds": [
+          "B-VIDEO",
+          "B-AUDIO"
+        ],
+        "artifactId": "artifact_e4bc65f2-b65",
+        "finishedAt": "2026-11-14T09:07:54.772Z"
+      },
+      "artifact": {
+        "id": "artifact_e4bc65f2-b65",
+        "scenarioId": "B08",
+        "title": "多模态现场取证",
+        "content": "# 多模态现场取证\n\n演示模拟数据 · 辅助分析，事实与适用性待人工确认\n\n| id | type | location | timecode | statement | speaker | measurement | design | difference | status |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| VIDEO-01 | video | 点位待核 | 00:04–00:08 | 局部沟槽可见 | 说话人待核 | null | null | null | 转写/影像待人工核验 |\n| AUDIO-01 | 现场记录 | 点位待核 | 全段；字句时间码待真实ASR/人工对齐 | 未提供转写/可见对象描述 | 说话人待核 | null | null | null | 转写/影像待人工核验 |\n\n## 核验与缺口\n- 待人工核验: VIDEO-01 拍摄/录音时间没有独立确认\n- 待人工核验: AUDIO-01 拍摄/录音时间没有独立确认\n\n## 实际语音转写（待人工核验）\nB-AUDIO：演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段五月和六月的计量范围分别是什么？施工资料员答，五月申报从桩号0加000到0加360，六月申报从0加240到0加600。\n是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不做。\n作为事实认定\n\n## AI 辅助解释（待人工核验）\n\n\n### 依据  \n1. **B-VIDEO@v1:00:04–00:08**：资料记载“合成现场踏勘视频.mp4 0秒”，且“00:00—00:04 模拟检查点：NA-WS-01，0+240”，明确标注“图像仅演示可见对象与时间码；不替代测量、现场核查”，说明视频为合成内容，时间码为模拟演示，无独立真实时间来源。  \n2. **B-AUDIO@v1:全段**：资料记载“合成访谈录音.wav”，真实ASR转写注明“演示模拟数据，这是一段合成访谈，不是真实人员录音”，且“字句时间码待真实ASR/人工对齐”，说明音频为合成内容，时间码未通过真实ASR或人工对齐确认。  \n\n\n### 疑点  \n1. 视频（VIDEO-01）与音频（AUDIO-01）的拍摄/录音时间均未通过独立来源（如设备时间戳、现场记录、人工核对）确认，仅依赖合成内容的模拟时间码，真实性存疑。  \n2. 音频转写内容为“演示模拟数据”，未说明是否基于真实访谈生成，转写内容的真实性需进一步验证。  \n\n\n### 需补充资料  \n1. 视频（B-VIDEO）的原始拍摄时间戳记录（如设备日志、拍摄记录表），或能证明时间码真实性的独立证据（如现场监理签字的踏勘时间记录）。  \n2. 音频（B-AUDIO）的真实ASR转写结果（非模拟数据），或人工对齐后的时间码记录，以及合成音频的生成说明（如合成工具、参数）。  \n\n\n### 人工确认事项  \n1. 视频（VIDEO-01）的拍摄时间是否通过独立来源（如设备时间、现场记录）确认，合成视频的时间码是否与真实时间一致。  \n2. 音频（AUDIO-01）的录制时间是否通过独立来源确认，合成音频的转写内容是否基于真实访谈，时间码是否经真实ASR或人工对齐验证。",
+        "rows": [
+          {
+            "id": "VIDEO-01",
+            "type": "video",
+            "location": "点位待核",
+            "timecode": "00:04–00:08",
+            "statement": "局部沟槽可见",
+            "speaker": "说话人待核",
+            "measurement": null,
+            "design": null,
+            "difference": null,
+            "status": "转写/影像待人工核验",
+            "sources": [
+              {
+                "documentId": "B-VIDEO",
+                "version": 1,
+                "locator": "00:04–00:08",
+                "factId": "fact_3be1d6c8-49c",
+                "quote": "{\"id\":\"VIDEO-01\",\"type\":\"media\",\"mediaType\":\"video\",\"timecode\":\"00:04–00:08\",\"statement\":\"局部沟槽可见\",\"checkpoint\":\"NA-WS-01\",\"label\":\"演示模拟数据\",\"locator\":\"00:04–00:08\",\"description\":\"局部沟槽示意可见\",\"transcriptOrigin\":\"生成画面人工字幕\"}"
+              }
+            ]
+          },
+          {
+            "id": "AUDIO-01",
+            "type": "现场记录",
+            "location": "点位待核",
+            "timecode": "全段；字句时间码待真实ASR/人工对齐",
+            "statement": "未提供转写/可见对象描述",
+            "speaker": "说话人待核",
+            "measurement": null,
+            "design": null,
+            "difference": null,
+            "status": "转写/影像待人工核验",
+            "sources": [
+              {
+                "documentId": "B-AUDIO",
+                "version": 1,
+                "locator": "全段；字句时间码待真实ASR/人工对齐",
+                "factId": "fact_d4b644f2-bf0",
+                "quote": "{\"id\":\"AUDIO-01\",\"type\":\"media\",\"label\":\"演示模拟数据\",\"locator\":\"全段；字句时间码待真实ASR/人工对齐\",\"origin\":\"MiniMax speech-2.8-hd 合成语音；非真实人员\",\"durationSeconds\":51.2669375}"
+              }
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "id": "check_55dc10f1-6d4",
+            "code": "capture-time",
+            "message": "VIDEO-01 拍摄/录音时间没有独立确认",
+            "sources": [
+              {
+                "documentId": "B-VIDEO",
+                "version": 1,
+                "locator": "00:04–00:08",
+                "factId": "fact_3be1d6c8-49c",
+                "quote": "{\"id\":\"VIDEO-01\",\"type\":\"media\",\"mediaType\":\"video\",\"timecode\":\"00:04–00:08\",\"statement\":\"局部沟槽可见\",\"checkpoint\":\"NA-WS-01\",\"label\":\"演示模拟数据\",\"locator\":\"00:04–00:08\",\"description\":\"局部沟槽示意可见\",\"transcriptOrigin\":\"生成画面人工字幕\"}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": false
+          },
+          {
+            "id": "check_61be1cdd-6b9",
+            "code": "capture-time",
+            "message": "AUDIO-01 拍摄/录音时间没有独立确认",
+            "sources": [
+              {
+                "documentId": "B-AUDIO",
+                "version": 1,
+                "locator": "全段；字句时间码待真实ASR/人工对齐",
+                "factId": "fact_d4b644f2-bf0",
+                "quote": "{\"id\":\"AUDIO-01\",\"type\":\"media\",\"label\":\"演示模拟数据\",\"locator\":\"全段；字句时间码待真实ASR/人工对齐\",\"origin\":\"MiniMax speech-2.8-hd 合成语音；非真实人员\",\"durationSeconds\":51.2669375}"
+              }
+            ],
+            "status": "待人工核验",
+            "blocking": false
+          }
+        ],
+        "sources": [
+          {
+            "documentId": "B-VIDEO",
+            "version": 1,
+            "locator": "00:04–00:08",
+            "factId": "fact_3be1d6c8-49c",
+            "quote": "{\"id\":\"VIDEO-01\",\"type\":\"media\",\"mediaType\":\"video\",\"timecode\":\"00:04–00:08\",\"statement\":\"局部沟槽可见\",\"checkpoint\":\"NA-WS-01\",\"label\":\"演示模拟数据\",\"locator\":\"00:04–00:08\",\"description\":\"局部沟槽示意可见\",\"transcriptOrigin\":\"生成画面人工字幕\"}"
+          },
+          {
+            "documentId": "B-AUDIO",
+            "version": 1,
+            "locator": "全段；字句时间码待真实ASR/人工对齐",
+            "factId": "fact_d4b644f2-bf0",
+            "quote": "{\"id\":\"AUDIO-01\",\"type\":\"media\",\"label\":\"演示模拟数据\",\"locator\":\"全段；字句时间码待真实ASR/人工对齐\",\"origin\":\"MiniMax speech-2.8-hd 合成语音；非真实人员\",\"durationSeconds\":51.2669375}"
+          }
+        ],
+        "status": "draft",
+        "version": 2,
+        "previousId": "artifact_6e884e32-d53",
+        "runId": "run_0f10712f-185",
+        "createdAt": "2026-11-14T09:07:54.772Z",
+        "dependsOn": [],
+        "model": {
+          "text": "\n### 依据  \n1. **B-VIDEO@v1:00:04–00:08**：资料记载“合成现场踏勘视频.mp4 0秒”，且“00:00—00:04 模拟检查点：NA-WS-01，0+240”，明确标注“图像仅演示可见对象与时间码；不替代测量、现场核查”，说明视频为合成内容，时间码为模拟演示，无独立真实时间来源。  \n2. **B-AUDIO@v1:全段**：资料记载“合成访谈录音.wav”，真实ASR转写注明“演示模拟数据，这是一段合成访谈，不是真实人员录音”，且“字句时间码待真实ASR/人工对齐”，说明音频为合成内容，时间码未通过真实ASR或人工对齐确认。  \n\n\n### 疑点  \n1. 视频（VIDEO-01）与音频（AUDIO-01）的拍摄/录音时间均未通过独立来源（如设备时间戳、现场记录、人工核对）确认，仅依赖合成内容的模拟时间码，真实性存疑。  \n2. 音频转写内容为“演示模拟数据”，未说明是否基于真实访谈生成，转写内容的真实性需进一步验证。  \n\n\n### 需补充资料  \n1. 视频（B-VIDEO）的原始拍摄时间戳记录（如设备日志、拍摄记录表），或能证明时间码真实性的独立证据（如现场监理签字的踏勘时间记录）。  \n2. 音频（B-AUDIO）的真实ASR转写结果（非模拟数据），或人工对齐后的时间码记录，以及合成音频的生成说明（如合成工具、参数）。  \n\n\n### 人工确认事项  \n1. 视频（VIDEO-01）的拍摄时间是否通过独立来源（如设备时间、现场记录）确认，合成视频的时间码是否与真实时间一致。  \n2. 音频（AUDIO-01）的录制时间是否通过独立来源确认，合成音频的转写内容是否基于真实访谈，时间码是否经真实ASR或人工对齐验证。",
+          "model": "glm-4.6v",
+          "provider": "glm",
+          "sources": [
+            "B-VIDEO@0s",
+            "B-AUDIO"
+          ],
+          "usage": {
+            "completion_tokens": 1106,
+            "completion_tokens_details": {
+              "reasoning_tokens": 655
+            },
+            "prompt_tokens": 2250,
+            "prompt_tokens_details": {
+              "cached_tokens": 37
+            },
+            "total_tokens": 3356
+          },
+          "mode": "vision",
+          "generatedAt": "2026-11-14T09:07:54.771Z",
+          "status": "pending-review"
+        },
+        "transcriptions": [
+          {
+            "documentId": "B-AUDIO",
+            "version": 1,
+            "text": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段五月和六月的计量范围分别是什么？施工资料员答，五月申报从桩号0加000到0加360，六月申报从0加240到0加600。\n是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不做。\n作为事实认定",
+            "segments": [
+              {
+                "start": 0,
+                "end": 25,
+                "text": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段五月和六月的计量范围分别是什么？施工资料员答，五月申报从桩号0加000到0加360，六月申报从0加240到0加600。"
+              },
+              {
+                "start": 25,
+                "end": 50,
+                "text": "是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不做。"
+              },
+              {
+                "start": 50,
+                "end": 51.266938,
+                "text": "作为事实认定"
+              }
+            ],
+            "model": "glm-asr-2512",
+            "provider": "glm",
+            "status": "pending-review",
+            "warning": "时间码为实际音频分段范围，并非逐词对齐；转写内容、说话人及分段边界处断句须人工核验。"
+          }
+        ],
+        "label": "演示模拟数据",
+        "findings": []
+      }
+    },
+    {
+      "action": "recognize",
+      "sourceDocumentId": "A-APPROVAL",
+      "run": {
+        "id": "run_1f2e7677-ede",
+        "scenarioId": "A01",
+        "input": {
+          "action": "recognize",
+          "documentId": "A-APPROVAL"
+        },
+        "status": "succeeded",
+        "engine": "vision-model",
+        "startedAt": "2026-11-14T09:07:55.247Z",
+        "label": "演示模拟数据",
+        "finishedAt": "2026-11-14T09:08:24.793Z",
+        "documentId": "doc_39d93a45-7a3"
+      },
+      "document": {
+        "id": "doc_39d93a45-7a3",
+        "name": "初步设计与投资概算批复节选.pdf.识别.json",
+        "logicalId": "初步设计与投资概算批复节选.pdf.识别.json",
+        "version": 1,
+        "status": "pending",
+        "kind": "approval",
+        "source": "真实视觉识别 glm/glm-4.6v；原件 A-APPROVAL v1 第 1 页；待人工核验",
+        "mimeType": "application/json",
+        "sha256": "4fb4f933f213e6da0b6e730c6778ede10846a729cfcf32722ba0ffcbd4904851",
+        "size": 3283,
+        "text": "{\"label\":\"演示模拟数据\",\"records\":[{\"id\":\"A-APPROVAL-recognition\",\"type\":\"approval\",\"description\":\"\\n### 派生记录（待人工核验）  \\n1. **标题**：初步设计与投资概算批复节选  \\n   - 依据：资料 A-APPROVAL@page1，区域为文档标题位置  \\n2. **标注“演示模拟数据”**  \\n   - 依据：资料 A-APPROVAL@page1，区域为标题下方  \\n3. **项目信息**：项目：澄川市南岸片区雨污分流与道路更新工程；编号：DEMO-AUDIT-2027-006  \\n   - 依据：资料 A-APPROVAL@page1，区域为项目描述部分  \\n4. **批复文号及金额、日期**：澄发改演示〔2027〕06号。批准概算48600万元。批准日2027-02-18，文件形成日2027-02-20。  \\n   - 依据：资料 A-APPROVAL@page1，区域为批复核心信息部分  \\n5. **批复范围**：范围：南岸路雨污管网及路面更新；附属景观提升不在本次批复列明范围。  \\n   - 依据：资料 A-APPROVAL@page1，区域为范围说明部分  \\n6. **元数据信息**：id=APP-1；type=approval；subject=初步设计概算；amount=48600；unit=万元；date=2027-02-18；dateRole=批准日；budget=48600；label=演示模拟数据；recordSubtype=approval；locator=第1页／记录1  \\n   - 依据：资料 A-APPROVAL@page1，区域为文档末尾元数据部分  \\n\\n\\n### 说明  \\n- 所有内容均基于资料 A-APPROVAL@page1 的可见文字提取，未对金额、日期、印章真实性等做主观判断，需人工核验原始资料以确认有效性。  \\n- 文档中“演示模拟数据”标注表明内容为模拟场景，实际审计中需结合真实资料验证。\",\"transcript\":\"\\n### 派生记录（待人工核验）  \\n1. **标题**：初步设计与投资概算批复节选  \\n   - 依据：资料 A-APPROVAL@page1，区域为文档标题位置  \\n2. **标注“演示模拟数据”**  \\n   - 依据：资料 A-APPROVAL@page1，区域为标题下方  \\n3. **项目信息**：项目：澄川市南岸片区雨污分流与道路更新工程；编号：DEMO-AUDIT-2027-006  \\n   - 依据：资料 A-APPROVAL@page1，区域为项目描述部分  \\n4. **批复文号及金额、日期**：澄发改演示〔2027〕06号。批准概算48600万元。批准日2027-02-18，文件形成日2027-02-20。  \\n   - 依据：资料 A-APPROVAL@page1，区域为批复核心信息部分  \\n5. **批复范围**：范围：南岸路雨污管网及路面更新；附属景观提升不在本次批复列明范围。  \\n   - 依据：资料 A-APPROVAL@page1，区域为范围说明部分  \\n6. **元数据信息**：id=APP-1；type=approval；subject=初步设计概算；amount=48600；unit=万元；date=2027-02-18；dateRole=批准日；budget=48600；label=演示模拟数据；recordSubtype=approval；locator=第1页／记录1  \\n   - 依据：资料 A-APPROVAL@page1，区域为文档末尾元数据部分  \\n\\n\\n### 说明  \\n- 所有内容均基于资料 A-APPROVAL@page1 的可见文字提取，未对金额、日期、印章真实性等做主观判断，需人工核验原始资料以确认有效性。  \\n- 文档中“演示模拟数据”标注表明内容为模拟场景，实际审计中需结合真实资料验证。\",\"transcriptConfirmed\":false,\"locator\":\"第 1 页\",\"sourceDocumentId\":\"A-APPROVAL\"}]}",
+        "records": [
+          {
+            "id": "A-APPROVAL-recognition",
+            "type": "approval",
+            "description": "\n### 派生记录（待人工核验）  \n1. **标题**：初步设计与投资概算批复节选  \n   - 依据：资料 A-APPROVAL@page1，区域为文档标题位置  \n2. **标注“演示模拟数据”**  \n   - 依据：资料 A-APPROVAL@page1，区域为标题下方  \n3. **项目信息**：项目：澄川市南岸片区雨污分流与道路更新工程；编号：DEMO-AUDIT-2027-006  \n   - 依据：资料 A-APPROVAL@page1，区域为项目描述部分  \n4. **批复文号及金额、日期**：澄发改演示〔2027〕06号。批准概算48600万元。批准日2027-02-18，文件形成日2027-02-20。  \n   - 依据：资料 A-APPROVAL@page1，区域为批复核心信息部分  \n5. **批复范围**：范围：南岸路雨污管网及路面更新；附属景观提升不在本次批复列明范围。  \n   - 依据：资料 A-APPROVAL@page1，区域为范围说明部分  \n6. **元数据信息**：id=APP-1；type=approval；subject=初步设计概算；amount=48600；unit=万元；date=2027-02-18；dateRole=批准日；budget=48600；label=演示模拟数据；recordSubtype=approval；locator=第1页／记录1  \n   - 依据：资料 A-APPROVAL@page1，区域为文档末尾元数据部分  \n\n\n### 说明  \n- 所有内容均基于资料 A-APPROVAL@page1 的可见文字提取，未对金额、日期、印章真实性等做主观判断，需人工核验原始资料以确认有效性。  \n- 文档中“演示模拟数据”标注表明内容为模拟场景，实际审计中需结合真实资料验证。",
+            "transcript": "\n### 派生记录（待人工核验）  \n1. **标题**：初步设计与投资概算批复节选  \n   - 依据：资料 A-APPROVAL@page1，区域为文档标题位置  \n2. **标注“演示模拟数据”**  \n   - 依据：资料 A-APPROVAL@page1，区域为标题下方  \n3. **项目信息**：项目：澄川市南岸片区雨污分流与道路更新工程；编号：DEMO-AUDIT-2027-006  \n   - 依据：资料 A-APPROVAL@page1，区域为项目描述部分  \n4. **批复文号及金额、日期**：澄发改演示〔2027〕06号。批准概算48600万元。批准日2027-02-18，文件形成日2027-02-20。  \n   - 依据：资料 A-APPROVAL@page1，区域为批复核心信息部分  \n5. **批复范围**：范围：南岸路雨污管网及路面更新；附属景观提升不在本次批复列明范围。  \n   - 依据：资料 A-APPROVAL@page1，区域为范围说明部分  \n6. **元数据信息**：id=APP-1；type=approval；subject=初步设计概算；amount=48600；unit=万元；date=2027-02-18；dateRole=批准日；budget=48600；label=演示模拟数据；recordSubtype=approval；locator=第1页／记录1  \n   - 依据：资料 A-APPROVAL@page1，区域为文档末尾元数据部分  \n\n\n### 说明  \n- 所有内容均基于资料 A-APPROVAL@page1 的可见文字提取，未对金额、日期、印章真实性等做主观判断，需人工核验原始资料以确认有效性。  \n- 文档中“演示模拟数据”标注表明内容为模拟场景，实际审计中需结合真实资料验证。",
+            "transcriptConfirmed": false,
+            "locator": "第 1 页",
+            "sourceDocumentId": "A-APPROVAL"
+          }
+        ],
+        "parseStatus": "parsed",
+        "recordOrigin": "model-candidate",
+        "parentDocumentId": "A-APPROVAL",
+        "parentLocator": "第 1 页",
+        "createdAt": "2026-11-14T09:08:24.793Z",
+        "simulation": "演示模拟数据",
+        "model": {
+          "text": "\n### 派生记录（待人工核验）  \n1. **标题**：初步设计与投资概算批复节选  \n   - 依据：资料 A-APPROVAL@page1，区域为文档标题位置  \n2. **标注“演示模拟数据”**  \n   - 依据：资料 A-APPROVAL@page1，区域为标题下方  \n3. **项目信息**：项目：澄川市南岸片区雨污分流与道路更新工程；编号：DEMO-AUDIT-2027-006  \n   - 依据：资料 A-APPROVAL@page1，区域为项目描述部分  \n4. **批复文号及金额、日期**：澄发改演示〔2027〕06号。批准概算48600万元。批准日2027-02-18，文件形成日2027-02-20。  \n   - 依据：资料 A-APPROVAL@page1，区域为批复核心信息部分  \n5. **批复范围**：范围：南岸路雨污管网及路面更新；附属景观提升不在本次批复列明范围。  \n   - 依据：资料 A-APPROVAL@page1，区域为范围说明部分  \n6. **元数据信息**：id=APP-1；type=approval；subject=初步设计概算；amount=48600；unit=万元；date=2027-02-18；dateRole=批准日；budget=48600；label=演示模拟数据；recordSubtype=approval；locator=第1页／记录1  \n   - 依据：资料 A-APPROVAL@page1，区域为文档末尾元数据部分  \n\n\n### 说明  \n- 所有内容均基于资料 A-APPROVAL@page1 的可见文字提取，未对金额、日期、印章真实性等做主观判断，需人工核验原始资料以确认有效性。  \n- 文档中“演示模拟数据”标注表明内容为模拟场景，实际审计中需结合真实资料验证。",
+          "model": "glm-4.6v",
+          "provider": "glm",
+          "sources": [
+            "A-APPROVAL@page1"
+          ],
+          "usage": {
+            "completion_tokens": 981,
+            "completion_tokens_details": {
+              "reasoning_tokens": 539
+            },
+            "prompt_tokens": 3189,
+            "prompt_tokens_details": {
+              "cached_tokens": 182
+            },
+            "total_tokens": 4170
+          },
+          "mode": "vision",
+          "generatedAt": "2026-11-14T09:08:24.792Z",
+          "status": "pending-review"
+        }
+      }
+    },
+    {
+      "action": "transcribe",
+      "sourceDocumentId": "B-AUDIO",
+      "run": {
+        "id": "run_8824d311-f03",
+        "scenarioId": "B08",
+        "input": {
+          "action": "transcribe",
+          "documentId": "B-AUDIO"
+        },
+        "status": "succeeded",
+        "engine": "speech-model",
+        "startedAt": "2026-11-14T09:08:25.278Z",
+        "label": "演示模拟数据",
+        "finishedAt": "2026-11-14T09:08:26.935Z",
+        "documentId": "doc_fbac41a3-5d7"
+      },
+      "document": {
+        "id": "doc_fbac41a3-5d7",
+        "name": "合成访谈录音.wav.转写.json",
+        "logicalId": "合成访谈录音.wav.转写.json",
+        "version": 1,
+        "status": "pending",
+        "kind": "media",
+        "source": "真实 ASR glm/glm-asr-2512；来源 B-AUDIO v1",
+        "mimeType": "application/json",
+        "sha256": "84efeb3960afd55d3f58b62b769340b1c590a648dcb59c2521f0e31545175adf",
+        "size": 1390,
+        "text": "{\"records\":[{\"id\":\"B-AUDIO-transcript\",\"type\":\"media\",\"transcript\":\"演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。\\n是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作\\n作为事实认定\",\"transcriptConfirmed\":false,\"locator\":\"模型返回分段时间码\",\"segments\":[{\"start\":0,\"end\":25,\"text\":\"演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。\"},{\"start\":25,\"end\":50,\"text\":\"是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作\"},{\"start\":50,\"end\":51.266938,\"text\":\"作为事实认定\"}],\"sourceDocumentId\":\"B-AUDIO\"}]}",
+        "records": [
+          {
+            "id": "B-AUDIO-transcript",
+            "type": "media",
+            "transcript": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。\n是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作\n作为事实认定",
+            "transcriptConfirmed": false,
+            "locator": "模型返回分段时间码",
+            "segments": [
+              {
+                "start": 0,
+                "end": 25,
+                "text": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。"
+              },
+              {
+                "start": 25,
+                "end": 50,
+                "text": "是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作"
+              },
+              {
+                "start": 50,
+                "end": 51.266938,
+                "text": "作为事实认定"
+              }
+            ],
+            "sourceDocumentId": "B-AUDIO"
+          }
+        ],
+        "parseStatus": "parsed",
+        "recordOrigin": "model-candidate",
+        "parentDocumentId": "B-AUDIO",
+        "parentLocator": "ASR 分段时间码",
+        "createdAt": "2026-11-14T09:08:26.935Z",
+        "simulation": "演示模拟数据",
+        "model": {
+          "text": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。\n是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作\n作为事实认定",
+          "segments": [
+            {
+              "start": 0,
+              "end": 25,
+              "text": "演示模拟数据，这是一段合成访谈，不是真实人员录音，记录员问，南岸路一号管段5月和6月的计量范围分别是什么？施工资料员答，5月申报从桩号0加000到0加360，6月申报从0加240到0加600。"
+            },
+            {
+              "start": 25,
+              "end": 50,
+              "text": "是否属于同一管线，需要核对图纸和签证，记录员问现场是否已经完成全部回填，施工资料员答我记得已经完成，但6月30日现场记录注明局部沟槽可见，具体时间和部位还需要复核，记录员说以上仅为模拟陈述，不作"
+            },
+            {
+              "start": 50,
+              "end": 51.266938,
+              "text": "作为事实认定"
+            }
+          ],
+          "model": "glm-asr-2512",
+          "provider": "glm",
+          "status": "pending-review",
+          "warning": "时间码为实际音频分段范围，并非逐词对齐；转写内容、说话人及分段边界处断句须人工核验。"
+        }
+      }
+    }
+  ],
+  "passed": true
+}

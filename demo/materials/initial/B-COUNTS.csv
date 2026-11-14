@@ -1,0 +1,3 @@
+﻿id,type,itemId,item,actualQuantity,quantity,unit,photoIds,countMethod,date,label,recordSubtype,assetId,confirmed,conversionFactor,conversionConfirmed,locator
+COUNT-PIPE,count,PIPE-A,DN600短管,10,10,件,"PHOTO-A,PHOTO-A-DUP",模拟人工复点,2027-07-03,演示模拟数据,count,PIPE-A,False,1,False,第2行
+COUNT-SEAL,count,SEAL-B,密封圈,50,50,件,,模拟人工逐件清点,2027-07-03,演示模拟数据,count,SEAL-B,False,0.1,False,第3行

@@ -1,0 +1,20 @@
+{
+  "localEqualsDeployment": true,
+  "sha256": {
+    "packages/server/index.js": "97e09b269a59775474199adc38bace4b4bfbe871cc4cdb8c959dd976334ee3b8",
+    "packages/server/core.js": "0cc95fe437abc7c7d48ac81931f4dd00ea6fb7365a5d18ff8c228fcf442dd9b6",
+    "packages/server/service.js": "696cbeac747951ce3576c9d9b919256716ee6cf157282d4acfbbfbd45d6054d3",
+    "packages/server/scenarios.js": "37381b40da8b884f4b0f40c380b1d1f73224130f1890d5b80ed4fb9f7238472d",
+    "packages/models/index.js": "fb1eccc76c4d479ac187e3f876297f65e6461ec204537ac4764e982835dc1043",
+    "packages/parsers/index.js": "7836969bdf1337eafcddf76b347c2968c5667e0508bcf32f56a3b461ae59268e",
+    "packages/parsers/export.js": "2c76471a23040b7b3384beb4a77d9cfcb191c4b4b99835c2500dfb8dd17c6265",
+    "packages/dsh-bridge/index.js": "fef10c93b4efcc2188cddec3d0e7e7d37f6d4f9dc90be5adaba5ef793a2d96b5",
+    "packages/dsh-bridge/client.js": "9dc7510455f8ad7540f1d805f70a30137f313f20d08e57ecfed6ec2e15994ee4",
+    "demo/manifest.json": "7b97fb96b8654454cb03a286a095496d002fe5484723022f28fee98b6ab20a56",
+    "deploy/cordis.patch.yml": "583e07b2c2c3e58cf46e2a89bdd71280777efa0cdf320506d48a29355c0cb95f",
+    "deploy/openaudit.service": "2c5469e5f5c87437fc4e948263bcc96e33b62ba6ea5141a239b3f07d829d9c0d",
+    "packages/client/dist/index.html": "ef19d87c554b8e606fc603e826948220385f3412e722150d46c1025128458058",
+    "packages/client/dist/assets/index-D81vYRfM.js": "3f4fdaf685fc9624efe739fb34006cba8bdf4724c39d639c860241d811b87972",
+    "packages/client/dist/assets/index-DOVIdJPE.css": "b9188f6ce97f35ae430dcc8bc5d35aeae8753418744a98e7e0ee4622207f9589"
+  }
+}

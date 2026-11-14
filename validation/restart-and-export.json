@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-14T09:10:18.375Z",
+  "label": "演示模拟数据",
+  "documents": 59,
+  "artifacts": 28,
+  "runs": 30,
+  "successfulRuns": 30,
+  "first24Retained": true,
+  "exportFindingsSheetAmount": 216000,
+  "resultRows": 3,
+  "sourceRows": 3,
+  "xlsxNoDuplicateFindings": true,
+  "passed": true
+}

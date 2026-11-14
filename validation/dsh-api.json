@@ -1,0 +1,217 @@
+{
+  "at": "2026-11-14T09:05:37.388Z",
+  "label": "演示模拟数据",
+  "deployment": "isolated DSH 0.2.2-rc.1",
+  "checks": [
+    {
+      "path": "/api/audit/state",
+      "unauthenticatedStatus": 401
+    },
+    {
+      "path": "/audit/",
+      "unauthenticatedStatus": 401
+    },
+    {
+      "export": "md",
+      "bytes": 3487
+    },
+    {
+      "export": "json",
+      "bytes": 29612
+    },
+    {
+      "export": "csv",
+      "bytes": 11897
+    },
+    {
+      "export": "docx",
+      "bytes": 4554
+    },
+    {
+      "export": "xlsx",
+      "bytes": 15439
+    },
+    {
+      "unexpectedOriginStatus": 403
+    },
+    {
+      "unexpectedHostStatus": 403
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "A01",
+      "runId": "run_b5d418c1-989",
+      "artifactId": "artifact_0fbfa10e-d8f",
+      "rows": 54,
+      "sources": 54
+    },
+    {
+      "id": "A02",
+      "runId": "run_4e810060-548",
+      "artifactId": "artifact_9086ad3f-f1e",
+      "rows": 14,
+      "sources": 14
+    },
+    {
+      "id": "A03",
+      "runId": "run_ccbad3b7-03d",
+      "artifactId": "artifact_a3ef9863-774",
+      "rows": 9,
+      "sources": 5
+    },
+    {
+      "id": "B01",
+      "runId": "run_15e5fa3f-7f4",
+      "artifactId": "artifact_322a22f7-df1",
+      "rows": 5,
+      "sources": 12
+    },
+    {
+      "id": "B02",
+      "runId": "run_fd9f0cdf-a48",
+      "artifactId": "artifact_8c7c41e9-dc8",
+      "rows": 27,
+      "sources": 27
+    },
+    {
+      "id": "B03",
+      "runId": "run_e6271c83-e35",
+      "artifactId": "artifact_9fe9e10f-9ff",
+      "rows": 13,
+      "sources": 13
+    },
+    {
+      "id": "B04",
+      "runId": "run_cbdc5af6-663",
+      "artifactId": "artifact_2491f214-15b",
+      "rows": 54,
+      "sources": 15
+    },
+    {
+      "id": "B05",
+      "runId": "run_d6fad116-a65",
+      "artifactId": "artifact_855ce45d-69f",
+      "rows": 8,
+      "sources": 16
+    },
+    {
+      "id": "B06",
+      "runId": "run_584ebac7-f1c",
+      "artifactId": "artifact_34946c73-2f5",
+      "rows": 3,
+      "sources": 6
+    },
+    {
+      "id": "B07",
+      "runId": "run_ceedef76-0a0",
+      "artifactId": "artifact_6067475b-ded",
+      "rows": 2,
+      "sources": 6
+    },
+    {
+      "id": "B08",
+      "runId": "run_cb6977f4-170",
+      "artifactId": "artifact_6e884e32-d53",
+      "rows": 9,
+      "sources": 9
+    },
+    {
+      "id": "B09",
+      "runId": "run_3a922761-09c",
+      "artifactId": "artifact_fae5053a-489",
+      "rows": 24,
+      "sources": 24
+    },
+    {
+      "id": "C01",
+      "runId": "run_2a609b5c-276",
+      "artifactId": "artifact_f8673032-5f6",
+      "rows": 2,
+      "sources": 10
+    },
+    {
+      "id": "C02",
+      "runId": "run_b12ea5f2-783",
+      "artifactId": "artifact_4692ccf5-c91",
+      "rows": 6,
+      "sources": 6
+    },
+    {
+      "id": "D01",
+      "runId": "run_831ceeb4-46e",
+      "artifactId": "artifact_2f51c970-ac7",
+      "rows": 4,
+      "sources": 7
+    },
+    {
+      "id": "D02",
+      "runId": "run_d7bbbead-372",
+      "artifactId": "artifact_935a1bac-6b5",
+      "rows": 2,
+      "sources": 10
+    },
+    {
+      "id": "D03",
+      "runId": "run_37e0df56-36e",
+      "artifactId": "artifact_cfa4ff75-2bf",
+      "rows": 2,
+      "sources": 12
+    },
+    {
+      "id": "D04",
+      "runId": "run_38f2e97b-740",
+      "artifactId": "artifact_fbe9d4a9-f1c",
+      "rows": 4,
+      "sources": 4
+    },
+    {
+      "id": "E01",
+      "runId": "run_72c6120e-c5b",
+      "artifactId": "artifact_ba6d8f57-738",
+      "rows": 4,
+      "sources": 29
+    },
+    {
+      "id": "F01",
+      "runId": "run_8a35f545-d28",
+      "artifactId": "artifact_7f7acb4b-326",
+      "rows": 2,
+      "sources": 4
+    },
+    {
+      "id": "F02",
+      "runId": "run_a977f02f-ba4",
+      "artifactId": "artifact_cdd2f8f6-0f1",
+      "rows": 2,
+      "sources": 5
+    },
+    {
+      "id": "F03",
+      "runId": "run_95dc80ca-371",
+      "artifactId": "artifact_069444bd-2f6",
+      "rows": 2,
+      "sources": 10
+    },
+    {
+      "id": "F04",
+      "runId": "run_1730f9b8-ddf",
+      "artifactId": "artifact_84a876bb-f18",
+      "rows": 4,
+      "sources": 6
+    },
+    {
+      "id": "F05",
+      "runId": "run_19b4effb-f9e",
+      "artifactId": "artifact_0a6e50d7-0a9",
+      "rows": 3,
+      "sources": 5
+    }
+  ],
+  "project": {
+    "documents": 57,
+    "facts": 103,
+    "artifacts": 24
+  },
+  "passed": true
+}

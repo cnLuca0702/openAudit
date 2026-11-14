@@ -1,0 +1,1 @@
+{"name":"@openaudit/parsers","version":"0.1.0","private":true,"type":"module","exports":"./index.js","scripts":{"test":"node --test test/*.test.js"},"dependencies":{"mammoth":"1.13.0","exceljs":"4.4.0","fflate":"0.8.2"},"engines":{"node":">=22"}}

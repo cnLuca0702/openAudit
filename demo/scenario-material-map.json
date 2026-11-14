@@ -1,0 +1,369 @@
+[
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "A01",
+    "title": "资料与版本",
+    "documentIds": [
+      "A-PLAN",
+      "A-APPROVAL",
+      "A-LEDGER-V1",
+      "A-LEDGER-V2",
+      "B-CONTRACT-C01-V1",
+      "B-CONTRACT-C01-V2",
+      "A-DECLARATION",
+      "A-DECLARATION-SUPP"
+    ],
+    "action": "接收/比较/人工选择版本/冻结",
+    "acceptance": "旧版保留；重复影像同指纹；V2不自动适用",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "A02",
+    "title": "调查与全景",
+    "documentIds": [
+      "A-PLAN",
+      "A-LEDGER-V2",
+      "A-HANDOVER",
+      "B-TENDER"
+    ],
+    "action": "选择台账V2，关系和投资口径核查",
+    "acceptance": "概算48600与台账50200差1600万元待核；移交清单缺口有来源",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "A03",
+    "title": "审前文书",
+    "documentIds": [
+      "A-PLAN",
+      "A-TEMPLATES",
+      "A-REQUESTS"
+    ],
+    "action": "增加合同变更重点并生成文书包",
+    "acceptance": "实施方案/通知/资料清单同源，审批及文号待确认",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B01",
+    "title": "一张表",
+    "documentIds": [
+      "B-CONTRACT-C01-V1",
+      "B-PAYMENTS",
+      "B-FINANCE",
+      "B-PAY-REQUEST",
+      "B-INVOICE",
+      "B-INVOICE-SCAN",
+      "B-ACCEPTANCE"
+    ],
+    "action": "按交易ID映射并修改金额单位",
+    "acceptance": "51.84万元=518400元；银行与账簿不重复汇总；单元格有来源",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B02",
+    "title": "时间轴",
+    "documentIds": [
+      "A-APPROVAL",
+      "B-LOG",
+      "B-PREWORK",
+      "B-CONTRACT-C01-V1",
+      "B-PAYMENTS"
+    ],
+    "action": "区分准备日、正式开工日和批复日期",
+    "acceptance": "日期语义更改后重新排序，不以文件日代替发生日",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B03",
+    "title": "跨事项比对",
+    "documentIds": [
+      "B-TENDER",
+      "B-CONTRACT-C01-V1",
+      "B-CONTRACT-C02",
+      "B-MEASUREMENTS"
+    ],
+    "action": "按管线标识/区间/单价核对",
+    "acceptance": "NA-WS-01交集120米、216000元；不同管线不合并",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B04",
+    "title": "法规辅助",
+    "documentIds": [
+      "LAW-REGISTER",
+      "A-PLAN",
+      "A-APPROVAL",
+      "B-TENDER"
+    ],
+    "action": "逐条打开官方原文与适用条件",
+    "acceptance": "九项法律资料保持待人工核验，金额差不自动定性",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B05",
+    "title": "合同履约",
+    "documentIds": [
+      "B-CONTRACT-C01-V1",
+      "B-CONTRACT-C01-V2",
+      "B-CONTRACT-C03",
+      "B-PAYMENTS",
+      "B-REVERSAL",
+      "B-ACCEPTANCE"
+    ],
+    "action": "分别选择合同V1/V2并关联冲回链",
+    "acceptance": "80%/85%条件可见；冲回重付净额300000元；六月验收缺口",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B06",
+    "title": "图纸与计价",
+    "documentIds": [
+      "B-DRAWING-NOTES",
+      "drawing-plan-SVG",
+      "drawing-plan-PNG",
+      "B-MEASUREMENTS"
+    ],
+    "action": "选择图纸区域并人工核定参数",
+    "acceptance": "清晰长度待确认；标高不清不入计算；不得按图像比例测量",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B07",
+    "title": "盘点盘库",
+    "documentIds": [
+      "B-INVENTORY",
+      "B-COUNTS",
+      "B-ISSUE",
+      "inventory-a-PNG",
+      "inventory-a-DUP"
+    ],
+    "action": "确认计数、单位换算和领用单",
+    "acceptance": "重复图不能累计20件；5箱与50件须确认换算；已领用2件保留账务事项",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B08",
+    "title": "多模态",
+    "documentIds": [
+      "B-VIDEO",
+      "B-AUDIO",
+      "B-TRANSCRIPT",
+      "B-LOG",
+      "drawing-plan-PNG"
+    ],
+    "action": "播放真实文件、运行模型、核对人工脚本",
+    "acceptance": "合成媒体标识；视频00:04—00:08可定位；ASR误差待人工修订",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "B09",
+    "title": "过程文书",
+    "documentIds": [
+      "B-WORKPAPER-TPL",
+      "B-MEASUREMENTS",
+      "B-LOG",
+      "B-PAYMENTS"
+    ],
+    "action": "记录转取证单/底稿并核对来源",
+    "acceptance": "未确认事实保留限定，金额与证据不丢失",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "C01",
+    "title": "结果文书",
+    "documentIds": [
+      "C-WORKPAPER",
+      "C-REPORT-V1",
+      "B-WORKPAPER-TPL"
+    ],
+    "action": "底稿转换与金额汇总",
+    "acceptance": "潜在计量21.6万元不等同多付或损失；未决口径保留",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "C02",
+    "title": "审计组质量内控",
+    "documentIds": [
+      "C-TEAM-MEETING",
+      "C-FEEDBACK",
+      "C-EVIDENCE-SUPP",
+      "C-REPORT-V1"
+    ],
+    "action": "拆分反馈并作采纳处理",
+    "acceptance": "简称可排除、计量补证、投资待核分别追踪；回复不等于落实",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "D01",
+    "title": "送审材料",
+    "documentIds": [
+      "D-SUBMISSION",
+      "C-REPORT-V1",
+      "E-REPORT-V2",
+      "C-FEEDBACK"
+    ],
+    "action": "对照指定稿和送审目录",
+    "acceptance": "缺经审底稿/落实说明、反馈错版可定位",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "D02",
+    "title": "部门复核",
+    "documentIds": [
+      "C-WORKPAPER",
+      "E-REPORT-V2",
+      "B-MEASUREMENTS"
+    ],
+    "action": "逐问题复核证据及样本范围",
+    "acceptance": "全部管网超出两期抽查；证据链接不能断裂",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "D03",
+    "title": "适用复核",
+    "documentIds": [
+      "LAW-REGISTER",
+      "E-REPORT-V2",
+      "B-CONTRACT-C01-V1"
+    ],
+    "action": "核对行为期、法律版本和定性条件",
+    "acceptance": "不以最新版本自动适用；保留待审理缺口",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "D04",
+    "title": "复核质量",
+    "documentIds": [
+      "D-REVIEW",
+      "D-REVIEW-MEETING",
+      "E-REPORT-V2"
+    ],
+    "action": "回复后逐条检查修改位置与证据",
+    "acceptance": "RV-02只有回复不能关闭；业务复核会议与C02组内讨论分开",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "E01",
+    "title": "出具前确认",
+    "documentIds": [
+      "E-REPORT-V2",
+      "C-WORKPAPER",
+      "B-ACCEPTANCE",
+      "D-REVIEW"
+    ],
+    "action": "检查四类问题，修订后重检",
+    "acceptance": "216000万元误写、全部范围、05-03与05-30日期冲突；确认按版本失效",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "F01",
+    "title": "整改材料闭环",
+    "documentIds": [
+      "F-REQUIREMENTS",
+      "F-CLAIM",
+      "F-WRONG-PROOF",
+      "F-VALID-PROOF"
+    ],
+    "action": "按轮次选择证明核验",
+    "acceptance": "缺凭证→错主体→冲减对账待核；无自动销号",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "F02",
+    "title": "效果复查",
+    "documentIds": [
+      "F-REQUIREMENTS",
+      "F-VALID-PROOF",
+      "F-FOLLOWUP"
+    ],
+    "action": "核对后期数据和人工复查",
+    "acceptance": "新期10米交集触发反弹任务；投资差异不关闭",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "F03",
+    "title": "公告候选",
+    "documentIds": [
+      "F-PUBLIC-TPL",
+      "C-REPORT-V1",
+      "F-CLAIM",
+      "F-FOLLOWUP"
+    ],
+    "action": "设置公开范围并核对限定",
+    "acceptance": "自报不能改成已核实；公开审批待人工",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "F04",
+    "title": "归档审查",
+    "documentIds": [
+      "F-ARCHIVE",
+      "D-SUBMISSION",
+      "D-REVIEW",
+      "C-FEEDBACK",
+      "F-VALID-PROOF"
+    ],
+    "action": "比较应有实有及指定版本",
+    "acceptance": "最终签发和落实说明缺件保持；归档不关闭整改",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  },
+  {
+    "label": "演示模拟数据",
+    "scenarioId": "F05",
+    "title": "三库与复用",
+    "documentIds": [
+      "F-REUSE",
+      "B-MEASUREMENTS",
+      "B-REVERSAL",
+      "F-SECOND-PROJECT"
+    ],
+    "action": "候选入库、测试、人工发布、第二项目适配",
+    "acceptance": "公里口径需适配，连续区间无交集，不复制21.6万元",
+    "status": "待业务端到端实测",
+    "truthAccessibleToBusiness": false
+  }
+]

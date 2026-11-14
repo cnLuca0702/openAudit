@@ -1,0 +1,20 @@
+[Unit]
+Description=openAudit audit workbench on isolated DeepSeek Harness
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/dsh-v2/workspace
+Environment=DSH_HOME=/opt/dsh-v2/home
+EnvironmentFile=/opt/dsh-v2/secrets/dsh.env
+ExecStart=/usr/local/bin/dsh2 web --patch /opt/dsh-v2/openaudit/deploy/cordis.patch.yml --no-open --host 10.8.0.2 --port 3090 --trusted-host audit-demo.myfangzhou.com 127.0.0.1:13090 localhost:13090
+Restart=on-failure
+RestartSec=5
+UMask=0077
+StandardOutput=append:/opt/dsh-v2/openaudit-service.log
+StandardError=append:/opt/dsh-v2/openaudit-service.log
+
+[Install]
+WantedBy=multi-user.target

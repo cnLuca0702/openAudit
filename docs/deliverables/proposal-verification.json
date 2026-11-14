@@ -1,0 +1,41 @@
+{
+  "label": "演示模拟数据",
+  "originalV2Sha256": "5dd2c9fd76132d7018ff33424dde5f152fb7c6df2a2ef4dfb01c80a34e2d2d12",
+  "originalPreserved": true,
+  "sceneCount": 24,
+  "sceneIds": [
+    "A01",
+    "A02",
+    "A03",
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "C01",
+    "C02",
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "E01",
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05"
+  ],
+  "word": "政府投资项目审计全流程AI赋能演示方案-V3.docx",
+  "pdf": "政府投资项目审计全流程AI赋能演示方案-V3.pdf",
+  "verification": [
+    "Word reopened",
+    "24 unique scenario headings",
+    "original V2 hash unchanged",
+    "PDF generated independently for reading; not a pixel-identical Word render"
+  ],
+  "limitation": "Word page layout has not been rendered with Microsoft Word/LibreOffice; PDF is separately typeset"
+}

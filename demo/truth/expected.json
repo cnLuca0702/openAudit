@@ -1,0 +1,82 @@
+{
+  "label": "演示模拟数据",
+  "notBusinessInput": true,
+  "cases": [
+    {
+      "id": "duplicate-measurement",
+      "sources": [
+        "MEAS-05",
+        "MEAS-06"
+      ],
+      "expectedOverlapM": 120,
+      "expectedAmountYuan": 216000,
+      "expectedAmountWan": 21.6,
+      "formula": "max(0,min(360,600)-max(0,240))*1800",
+      "limit": "潜在重复计量金额；不直接推定已多付或损失"
+    },
+    {
+      "id": "different-pipe-negative",
+      "sources": [
+        "MEAS-06",
+        "MEAS-06-R"
+      ],
+      "expectedDuplicate": false
+    },
+    {
+      "id": "investment-unresolved",
+      "expectedDifferenceWan": 1600,
+      "expectedStatus": "待核实",
+      "forbidden": "自动认定超概算"
+    },
+    {
+      "id": "payment-reversal",
+      "sources": [
+        "PAY-071",
+        "PAY-072",
+        "PAY-073"
+      ],
+      "expectedNetYuan": 300000,
+      "expectedDuplicate": false
+    },
+    {
+      "id": "project-alias",
+      "expectedStatusAfterEvidence": "可人工排除"
+    },
+    {
+      "id": "inventory-duplicate",
+      "expectedCount": 10,
+      "forbidden": "重复图片累计20件"
+    },
+    {
+      "id": "inventory-unit",
+      "expectedPieces": 50
+    },
+    {
+      "id": "contract-version",
+      "v1Rate": 0.8,
+      "v2Rate": 0.85,
+      "expected": "旧成果保留；相关确认失效，V2不自动生效"
+    },
+    {
+      "id": "report-errors",
+      "expectedErrors": [
+        "万元与元差10000倍",
+        "全部表述超出抽查范围",
+        "验收日期不一致"
+      ]
+    },
+    {
+      "id": "rectification",
+      "round1": "缺证明",
+      "round2": "主体不匹配",
+      "round3": "具备复查条件但需人工销号",
+      "investment": "仍待核实"
+    },
+    {
+      "id": "reuse-project",
+      "expectedOverlap": 0,
+      "unit": "公里",
+      "forbidden": "复制21.6万元结论"
+    }
+  ]
+}

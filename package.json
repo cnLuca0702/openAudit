@@ -1,0 +1,13 @@
+{
+  "name":"openaudit","version":"0.1.0","private":true,"type":"module",
+  "description":"政府投资项目审计全流程 AI 赋能演示工作台 — DSH 0.2.2-rc.1 插件",
+  "scripts":{
+    "setup":"npm ci --prefix packages/parsers && npm ci --prefix packages/client",
+    "build":"npm run build --prefix packages/client",
+    "test":"node --test packages/models/test/*.test.js packages/parsers/test/*.test.js packages/server/test/*.test.js",
+    "test:models":"node --test packages/models/test/*.test.js",
+    "test:parsers":"node --test packages/parsers/test/*.test.js"
+  },
+  "engines":{"node":">=22"},
+  "devDependencies":{"@playwright/test":"^1.58.0"}
+}

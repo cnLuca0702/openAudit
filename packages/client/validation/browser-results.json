@@ -1,0 +1,281 @@
+{
+  "label": "演示模拟数据",
+  "generatedAt": "2026-11-14T09:06:51.347465+00:00",
+  "testEnvironment": "Real local AuditService, persisted demo/manifest inputs, Chromium, loopback only; DSH authentication excluded",
+  "testCommand": "npm --prefix packages/client run test:e2e",
+  "testResult": "4 passed (1.5m)",
+  "runtimePageErrors": 0,
+  "scenarios": [
+    {
+      "scenarioId": "A01",
+      "title": "审计资料及版本智慧管理",
+      "successfulRunId": "run_d76d8486-e4d",
+      "artifactId": "artifact_5f785439-fff",
+      "rows": 54,
+      "sources": 54,
+      "missingInputRunId": "run_0c383c03-20c",
+      "missingInputError": "场景 A01 缺少 project 资料"
+    },
+    {
+      "scenarioId": "A02",
+      "title": "审前调查与项目全景",
+      "successfulRunId": "run_a7c9b09c-3d1",
+      "artifactId": "artifact_c23a8196-45f",
+      "rows": 14,
+      "sources": 14,
+      "missingInputRunId": "run_e8e58687-9d1",
+      "missingInputError": "场景 A02 缺少 project 资料"
+    },
+    {
+      "scenarioId": "A03",
+      "title": "审前工作资料协同准备",
+      "successfulRunId": "run_9f5a2a80-0aa",
+      "artifactId": "artifact_7d695e68-ee0",
+      "rows": 9,
+      "sources": 5,
+      "missingInputRunId": "run_df802d27-737",
+      "missingInputError": "场景 A03 缺少 project 资料"
+    },
+    {
+      "scenarioId": "B01",
+      "title": "多源资料汇成一张审计表",
+      "successfulRunId": "run_91389d9e-70d",
+      "artifactId": "artifact_a6bf3ec6-04d",
+      "rows": 5,
+      "sources": 12,
+      "missingInputRunId": "run_05b1a0b9-aaf",
+      "missingInputError": "场景 B01 缺少 contract 资料"
+    },
+    {
+      "scenarioId": "B02",
+      "title": "多源资料审计时间轴",
+      "successfulRunId": "run_d854d70d-81c",
+      "artifactId": "artifact_bef14f23-54c",
+      "rows": 27,
+      "sources": 27,
+      "missingInputRunId": "run_eb1b9f32-7e2",
+      "missingInputError": "场景 B02 缺少 approval 资料"
+    },
+    {
+      "scenarioId": "B03",
+      "title": "跨文件多事项比对",
+      "successfulRunId": "run_252fbc2d-a94",
+      "artifactId": "artifact_45d18754-094",
+      "rows": 13,
+      "sources": 13,
+      "missingInputRunId": "run_7db9d93c-2c0",
+      "missingInputError": "场景 B03 缺少 measurement 资料"
+    },
+    {
+      "scenarioId": "B04",
+      "title": "法律法规辅助审查",
+      "successfulRunId": "run_342c674c-8bc",
+      "artifactId": "artifact_2e83be6d-dce",
+      "rows": 54,
+      "sources": 15,
+      "missingInputRunId": "run_6e97a2ac-711",
+      "missingInputError": "场景 B04 缺少 law 资料"
+    },
+    {
+      "scenarioId": "B05",
+      "title": "合同履约与支付审查",
+      "successfulRunId": "run_e30d7334-1e0",
+      "artifactId": "artifact_c85a4e96-d6b",
+      "rows": 8,
+      "sources": 16,
+      "missingInputRunId": "run_7dc89e05-611",
+      "missingInputError": "场景 B05 缺少 contract 资料"
+    },
+    {
+      "scenarioId": "B06",
+      "title": "图纸知识与工程量计价",
+      "successfulRunId": "run_c27e3338-bd1",
+      "artifactId": "artifact_e0da15ab-98a",
+      "rows": 3,
+      "sources": 6,
+      "missingInputRunId": "run_fc3d0ca3-df8",
+      "missingInputError": "场景 B06 缺少 drawing 资料"
+    },
+    {
+      "scenarioId": "B07",
+      "title": "盘点盘库与资产流转",
+      "successfulRunId": "run_3dcbdce5-93c",
+      "artifactId": "artifact_0209dd7e-046",
+      "rows": 2,
+      "sources": 6,
+      "missingInputRunId": "run_7d2c8df3-86a",
+      "missingInputError": "场景 B07 缺少 inventory 资料"
+    },
+    {
+      "scenarioId": "B08",
+      "title": "多模态现场取证",
+      "successfulRunId": "run_d4b3c1c8-d85",
+      "artifactId": "artifact_809e8efb-6de",
+      "rows": 9,
+      "sources": 9,
+      "missingInputRunId": "run_543abdd4-bfe",
+      "missingInputError": "场景 B08 缺少 media 资料"
+    },
+    {
+      "scenarioId": "B09",
+      "title": "过程资料编制与转换",
+      "successfulRunId": "run_12371184-3e6",
+      "artifactId": "artifact_136b8962-c70",
+      "rows": 24,
+      "sources": 24,
+      "missingInputRunId": "run_ee75f25a-dd3",
+      "missingInputError": "场景 B09 缺少 measurement 资料"
+    },
+    {
+      "scenarioId": "C01",
+      "title": "结果资料编制与审查",
+      "successfulRunId": "run_fd8f2ef8-ffb",
+      "artifactId": "artifact_74fcadcc-426",
+      "rows": 2,
+      "sources": 10,
+      "missingInputRunId": "run_b3a71a7b-44d",
+      "missingInputError": "场景 C01 缺少 report 资料"
+    },
+    {
+      "scenarioId": "C02",
+      "title": "审计质量内部控制",
+      "successfulRunId": "run_12631cf0-478",
+      "artifactId": "artifact_66ba60f1-ed2",
+      "rows": 6,
+      "sources": 6,
+      "missingInputRunId": "run_8e0d22c4-54f",
+      "missingInputError": "场景 C02 缺少 feedback 资料"
+    },
+    {
+      "scenarioId": "D01",
+      "title": "送审材料完整性与版本",
+      "successfulRunId": "run_b3448622-421",
+      "artifactId": "artifact_769686cd-a5a",
+      "rows": 4,
+      "sources": 7,
+      "missingInputRunId": "run_f177d1bf-76b",
+      "missingInputError": "场景 D01 缺少 requirement 资料"
+    },
+    {
+      "scenarioId": "D02",
+      "title": "部门复核与证据链",
+      "successfulRunId": "run_4365babe-e7f",
+      "artifactId": "artifact_0c1dc8fe-1d1",
+      "rows": 2,
+      "sources": 10,
+      "missingInputRunId": "run_047ef852-99a",
+      "missingInputError": "场景 D02 缺少 report 资料"
+    },
+    {
+      "scenarioId": "D03",
+      "title": "法规标准合同适用复核",
+      "successfulRunId": "run_914e44ce-f2f",
+      "artifactId": "artifact_f616eac0-5e8",
+      "rows": 2,
+      "sources": 12,
+      "missingInputRunId": "run_e332dd70-0d0",
+      "missingInputError": "场景 D03 缺少 law 资料"
+    },
+    {
+      "scenarioId": "D04",
+      "title": "复核工作质量管理",
+      "successfulRunId": "run_e48edecd-758",
+      "artifactId": "artifact_ccdb5876-2f9",
+      "rows": 4,
+      "sources": 4,
+      "missingInputRunId": "run_c35f2b63-8d3",
+      "missingInputError": "场景 D04 缺少 review 资料"
+    },
+    {
+      "scenarioId": "E01",
+      "title": "出具前重要事项审核确认",
+      "successfulRunId": "run_aa671b8a-e10",
+      "artifactId": "artifact_abae99fa-03e",
+      "rows": 4,
+      "sources": 29,
+      "missingInputRunId": "run_f400e7ba-5f5",
+      "missingInputError": "场景 E01 缺少 report 资料"
+    },
+    {
+      "scenarioId": "F01",
+      "title": "整改任务与证明核验",
+      "successfulRunId": "run_09680e9e-bff",
+      "artifactId": "artifact_169fda74-fd4",
+      "rows": 2,
+      "sources": 4,
+      "missingInputRunId": "run_f607d0b6-da8",
+      "missingInputError": "场景 F01 缺少 rectification 资料"
+    },
+    {
+      "scenarioId": "F02",
+      "title": "整改效果复查与销号建议",
+      "successfulRunId": "run_6fcb319c-a75",
+      "artifactId": "artifact_a55cc7d6-c6e",
+      "rows": 2,
+      "sources": 5,
+      "missingInputRunId": "run_ebd523dd-3ff",
+      "missingInputError": "场景 F02 缺少 rectification 资料"
+    },
+    {
+      "scenarioId": "F03",
+      "title": "公告草案与公开审查",
+      "successfulRunId": "run_09abeddf-1af",
+      "artifactId": "artifact_c7375b3b-8a1",
+      "rows": 2,
+      "sources": 10,
+      "missingInputRunId": "run_a10a8844-bc4",
+      "missingInputError": "场景 F03 缺少 report 资料"
+    },
+    {
+      "scenarioId": "F04",
+      "title": "归档清单与缺件审查",
+      "successfulRunId": "run_766654ad-95d",
+      "artifactId": "artifact_28bfd7a6-e0b",
+      "rows": 4,
+      "sources": 6,
+      "missingInputRunId": "run_90fe21a6-97a",
+      "missingInputError": "场景 F04 缺少 requirement 资料"
+    },
+    {
+      "scenarioId": "F05",
+      "title": "三库沉淀与跨项目复用",
+      "successfulRunId": "run_e3a5a105-9bd",
+      "artifactId": "artifact_3fcbb873-2c4",
+      "rows": 3,
+      "sources": 5,
+      "missingInputRunId": "run_a9d08a46-307",
+      "missingInputError": "场景 F05 缺少 measurement 资料"
+    }
+  ],
+  "buildAssets": [
+    "index-D81vYRfM.js",
+    "index-DOVIdJPE.css"
+  ],
+  "browserAssertions": [
+    "24 successful UI business executions",
+    "24 empty-input 409 failures persisted",
+    "source evidence panel and immutable file downloads",
+    "B03 output card shows 120 and 216000",
+    "browser upload survives reload",
+    "amount edit updates record and re-computes 155000 yuan",
+    "contract payment ratio 0.8 -> 0.7 changes ceiling 800000 -> 700000",
+    "previous version confirmation invalidates",
+    "comparison and frozen snapshot",
+    "legal applicability human confirmation",
+    "reply state distinct from implementation",
+    "E01 blocking confirmation rejects",
+    "model error produces no substitute artifact",
+    "real DOCX and XLSX ZIP-format downloads",
+    "capability actual tests, human publication and new-project adaptation",
+    "mobile 390px no document overflow",
+    "image zoom 200% and persisted source pixel highlight",
+    "OCR and ASR error states persist failed runs",
+    "manual persisted segments seek actual original audio"
+  ],
+  "notClaimed": [
+    "Local test harness does not validate DSH authentication",
+    "Local browser tests intentionally use unconfigured models for failure paths; no claim of live text/vision/ASR success here",
+    "Manual transcript playback fixture is explicitly human-entered test data",
+    "Presence/provenance checks for all scenarios do not independently establish every business/legal judgment"
+  ]
+}

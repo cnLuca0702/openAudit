@@ -1,0 +1,8 @@
+{
+  "label": "演示模拟数据",
+  "checkedFiles": 75,
+  "changedFiles": [],
+  "sameEnvironmentByteReproducible": true,
+  "caveat": "云TTS原件保留，未重新生成；测试报告与交付总结自身排除",
+  "pdfFonts": "嵌入中文TrueType，全部8份PDF通过本机Poppler文字提取且无语言包错误"
+}
