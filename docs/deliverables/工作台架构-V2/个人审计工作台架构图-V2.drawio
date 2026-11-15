@@ -892,7 +892,7 @@
         <mxCell id="tree-edge-FA-FACT" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#89AAA0;fontSize=13;endArrow=block;" edge="1" parent="1" source="tree-FA" target="tree-FA-FACT">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="tree-M11" value="&lt;b&gt;M11｜项目管理与切换&lt;/b&gt;&lt;br&gt;&lt;br&gt;新建、调整或删除项目，四个中心随当前项目切换；项目删除后停止普通访问，既有资料和办理记录保留备查。&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#58716B&quot;&gt;已实现&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=14;fillColor=#FFFFFF;strokeColor=#CADBD4;fontColor=#203A35;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="tree-M11" value="&lt;b&gt;M11｜项目管理与切换&lt;/b&gt;&lt;br&gt;&lt;br&gt;新建、调整或删除项目，四个中心随当前项目切换；删除前告知将一并永久清除全部资料、成果和办理记录，勾选确认并输入项目名称后清除项目目录与缓存；系统管理日志、个人已导出文件及独立运维备份除外。&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#58716B&quot;&gt;已实现&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=14;fillColor=#FFFFFF;strokeColor=#CADBD4;fontColor=#203A35;fontSize=14;" vertex="1" parent="1">
           <mxGeometry x="1185" y="5245" width="490" height="155" as="geometry" />
         </mxCell>
         <mxCell id="tree-edge-M11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#89AAA0;fontSize=13;endArrow=block;" edge="1" parent="1" source="tree-M" target="tree-M11">
@@ -1306,7 +1306,7 @@
         <mxCell id="edge-W02" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#89AAA0;fontSize=13;endArrow=block;" edge="1" parent="1" source="parent-M" target="W02">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="M11" value="&lt;b&gt;M11｜项目管理与切换&lt;/b&gt;&lt;br&gt;&lt;br&gt;新建、调整或删除项目，四个中心随当前项目切换；项目删除后停止普通访问，既有资料和办理记录保留备查。&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#58716B&quot;&gt;已实现 · 项目共享&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=14;fillColor=#FFFFFF;strokeColor=#CADBD4;fontColor=#203A35;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="M11" value="&lt;b&gt;M11｜项目管理与切换&lt;/b&gt;&lt;br&gt;&lt;br&gt;新建、调整或删除项目，四个中心随当前项目切换；删除前告知将一并永久清除全部资料、成果和办理记录，勾选确认并输入项目名称后清除项目目录与缓存；系统管理日志、个人已导出文件及独立运维备份除外。&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#58716B&quot;&gt;已实现 · 项目共享&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=14;fillColor=#FFFFFF;strokeColor=#CADBD4;fontColor=#203A35;fontSize=16;" vertex="1" parent="1">
           <mxGeometry x="55" y="435" width="480" height="195" as="geometry" />
         </mxCell>
         <mxCell id="edge-M11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#89AAA0;fontSize=13;endArrow=block;" edge="1" parent="1" source="parent-M" target="M11">
