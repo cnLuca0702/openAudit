@@ -27,6 +27,7 @@ import {
 } from "./components";
 import { AssetView, ReviewLists, dateText } from "./App";
 import {
+  apiUrl,
   operationNames,
   display,
   isStale,
@@ -131,10 +132,14 @@ export function ScenarioView({
   const [tab, setTab] = useState("structured");
   const [localError, setError] = useState("");
   const [auxResult, setAuxResult] = useState<any>(null);
-  const artifacts = state.artifacts.filter((a) => a.scenarioId === scenario.id);
+  const artifacts = state.artifacts.filter(
+    (a) => a.scenarioId === scenario.id && !a.productKind,
+  );
   const current =
     artifacts.find((a) => a.id === selectedId) || artifacts.at(-1);
-  const runs = state.runs.filter((r) => r.scenarioId === scenario.id);
+  const runs = state.runs.filter(
+    (r) => r.scenarioId === scenario.id && !r.productKind,
+  );
   const lastRun = runs.at(-1);
   const persistedFindings = state.findings.filter(
     (f) => f.artifactId === current?.id,
@@ -622,41 +627,41 @@ export function ScenarioView({
                   className="icon-button"
                   title="下载文本稿（Markdown）"
                   aria-label="下载文本稿（Markdown）"
-                  href={
-                    "/api/audit/export?artifactId=" +
-                    encodeURIComponent(current.id) +
-                    "&format=md"
-                  }
+                  href={apiUrl(
+                    "/export?artifactId=" +
+                      encodeURIComponent(current.id) +
+                      "&format=md",
+                  )}
                 >
                   <Download size={17} />
                 </a>
                 <a
                   className="text-button small"
-                  href={
-                    "/api/audit/export?artifactId=" +
-                    encodeURIComponent(current.id) +
-                    "&format=csv"
-                  }
+                  href={apiUrl(
+                    "/export?artifactId=" +
+                      encodeURIComponent(current.id) +
+                      "&format=csv",
+                  )}
                 >
                   数据表（CSV）
                 </a>
                 <a
                   className="text-button small"
-                  href={
-                    "/api/audit/export?artifactId=" +
-                    encodeURIComponent(current.id) +
-                    "&format=docx"
-                  }
+                  href={apiUrl(
+                    "/export?artifactId=" +
+                      encodeURIComponent(current.id) +
+                      "&format=docx",
+                  )}
                 >
                   导出 Word
                 </a>
                 <a
                   className="text-button small"
-                  href={
-                    "/api/audit/export?artifactId=" +
-                    encodeURIComponent(current.id) +
-                    "&format=xlsx"
-                  }
+                  href={apiUrl(
+                    "/export?artifactId=" +
+                      encodeURIComponent(current.id) +
+                      "&format=xlsx",
+                  )}
                 >
                   导出 Excel
                 </a>

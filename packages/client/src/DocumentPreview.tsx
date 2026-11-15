@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
-import type { Row } from "./model";
+import { apiUrl, type Row } from "./model";
 export function supportsPreview(doc?: Row) {
   return (
     !!doc &&
@@ -43,7 +43,7 @@ export function DocumentPreview({ doc }: { doc: Row }) {
     (async () => {
       try {
         const response = await fetch(
-          "/api/audit/preview?id=" + encodeURIComponent(doc.id),
+          apiUrl("/preview?id=" + encodeURIComponent(doc.id)),
           { signal: controller.signal },
         );
         if (!response.ok) {

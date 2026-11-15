@@ -25,7 +25,7 @@ function markdownBlocks(content){
  return blocks.join('');
 }
 export function createWord(artifact){
- const body=paragraph(artifact.title,1)+paragraph('演示模拟数据 — 辅助分析成果，须人工复核')+paragraph(`版本：${artifact.version}；状态：${artifact.status}；生成时间：${artifact.createdAt}`)+markdownBlocks(artifact.content)+paragraph('来源索引',2)+(artifact.sources??[]).map(s=>paragraph(`${s.documentId} v${s.version} ${s.locator} ${s.factId??''} ${s.quote??''}`)).join('');
+ const body=paragraph(artifact.title,1)+paragraph('演示模拟数据 — 辅助分析成果，须人工复核')+paragraph(`版本：${artifact.version}；状态：${artifact.status}；生成时间：${artifact.createdAt}`)+markdownBlocks(artifact.content)+paragraph('来源索引',2)+(artifact.sources??[]).map(s=>paragraph(`${s.documentId ?? s.artifactId ?? s.factId ?? '待定位'} v${s.version} ${s.locator} ${s.factId??''} ${s.quote??''}`)).join('');
  const document=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr></w:body></w:document>`;
  return Buffer.from(zipSync({
   '[Content_Types].xml':strToU8('<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'),

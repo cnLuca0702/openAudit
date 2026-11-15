@@ -1,3 +1,4 @@
+import { isReportArtifact } from "./centers.js";
 import { readFileSync } from "node:fs";
 import { date, number, requireThat, id, now, check } from "./core.js";
 
@@ -147,7 +148,7 @@ const active = (s, kind) =>
   );
 const report = (s, reportId) =>
   s.documents.find((d) => d.id === reportId && d.kind === "report") ??
-  s.artifacts.find((a) => a.id === reportId && a.scenarioId === "C01");
+  s.artifacts.find((a) => a.id === reportId && isReportArtifact(a));
 export function validWorkflowRecord(s, r) {
   return (
     !r.supersededBy &&

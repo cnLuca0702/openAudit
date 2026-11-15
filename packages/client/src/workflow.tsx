@@ -7,18 +7,28 @@ export function WorkflowView({
   busy,
   act,
   onSource,
+  kinds,
 }: {
+  kinds?: string[];
   state: State;
   busy: boolean;
   act: (action: string, payload?: Record<string, any>) => Promise<any>;
   onSource: (source: any) => void;
 }) {
-  const workflow = state.workflow;
+  const workflow = state.workflow && {
+    ...state.workflow,
+    forms: state.workflow.forms.filter(
+      (f: any) => !kinds || kinds.includes(f.kind),
+    ),
+    records: state.workflow.records.filter(
+      (r: any) => !kinds || kinds.includes(r.kind),
+    ),
+  };
   const [tab, setTab] = useState("current");
   const [editing, setEditing] = useState<any>(null);
-  const [kind, setKind] = useState("subject");
+  const [kind, setKind] = useState(kinds?.[0] || "subject");
   const [recordFilter, setRecordFilter] = useState("all");
-  if (!workflow) return <p>流程台账加载中，请刷新。</p>;
+  if (!workflow) return <p>办理记录加载中，请刷新。</p>;
   const reference = workflow.reference;
   return (
     <div className="workflow">
@@ -27,7 +37,7 @@ export function WorkflowView({
           className={"button " + (tab === "current" ? "primary" : "secondary")}
           onClick={() => setTab("current")}
         >
-          当前项目台账
+          本中心办理记录
         </button>
         <button
           className={
@@ -104,7 +114,7 @@ export function WorkflowView({
           </details>
           <section className="card padded">
             <div className="section-heading">
-              <h2>登记流程与文书</h2>
+              <h2>登记实际办理情况</h2>
               <span>第 {workflow.revision} 次登记更新</span>
             </div>
             <div className="workflow-toolbar">
@@ -134,14 +144,16 @@ export function WorkflowView({
               先在审计资料上传原件并确认适用版本，再登记回证、签字及文书索引。这里记录人工核对结果，不代替外部签章。
             </p>
           </section>
-          <section className="card padded">
-            <h2>逐单位送达与期限</h2>
-            {workflow.receipts.length ? (
-              <DataView value={workflow.receipts} onSource={onSource} />
-            ) : (
-              <p>尚未登记被审计单位。涉及多家单位时，分别登记并取得回证。</p>
-            )}
-          </section>
+          {(!kinds || kinds.includes("receipt")) && (
+            <section className="card padded">
+              <h2>逐单位送达与期限</h2>
+              {workflow.receipts.length ? (
+                <DataView value={workflow.receipts} onSource={onSource} />
+              ) : (
+                <p>尚未登记被审计单位。涉及多家单位时，分别登记并取得回证。</p>
+              )}
+            </section>
+          )}
           <section className="card padded">
             <h2>按四类材料整理案卷</h2>
             <DataView value={workflow.archive} onSource={onSource} />
@@ -251,7 +263,10 @@ function WorkflowForm({ state, initial, busy, act, close, onSource }: any) {
   const reports = [
     ...documents.filter((d: any) => d.kind === "report"),
     ...state.artifacts.filter(
-      (a: any) => a.scenarioId === "C01" && a.status === "confirmed",
+      (a: any) =>
+        a.scenarioId === "C01" &&
+        (!a.productKind || a.productKind === "report") &&
+        a.status === "confirmed",
     ),
   ];
   const set = (key: string, v: any) =>

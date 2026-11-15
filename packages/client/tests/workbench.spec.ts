@@ -253,7 +253,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
     .getByRole("navigation", { name: "主导航" })
     .getByRole("button", { name: /审计资料/ })
     .click();
-  await expect(page.getByRole("heading", { name: "审计资料" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "审计资料中心" })).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

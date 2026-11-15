@@ -99,14 +99,17 @@ export function createHandlers(service, connection) {
   const api = guard(async (req, res) => {
     const url = new URL(req.url, "http://audit.invalid");
     const path = url.pathname;
+    const scopedService = await service.forProject(
+      url.searchParams.get("projectId"),
+    );
     if (path === "/api/audit/state") {
       requireThat(req.method === "GET", "仅支持 GET", 405);
-      json(res, 200, service.state());
+      json(res, 200, scopedService.state());
       return;
     }
     if (path === "/api/audit/action") {
       requireThat(req.method === "POST", "仅支持 POST", 405);
-      json(res, 200, await service.action(await body(req)));
+      json(res, 200, await scopedService.action(await body(req)));
       return;
     }
     if (path === "/api/audit/export") {
@@ -117,7 +120,7 @@ export function createHandlers(service, connection) {
       );
       download(
         res,
-        await service.export(
+        await scopedService.export(
           url.searchParams.get("artifactId"),
           url.searchParams.get("format") ?? "md",
         ),
@@ -133,7 +136,7 @@ export function createHandlers(service, connection) {
       );
       download(
         res,
-        await service.preview(url.searchParams.get("id")),
+        await scopedService.preview(url.searchParams.get("id")),
         req.method === "HEAD",
         true,
       );
@@ -147,7 +150,7 @@ export function createHandlers(service, connection) {
       );
       download(
         res,
-        await service.original(url.searchParams.get("id")),
+        await scopedService.original(url.searchParams.get("id")),
         req.method === "HEAD",
       );
       return;

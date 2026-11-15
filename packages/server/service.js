@@ -1,3 +1,4 @@
+import { PRODUCTS, saveProduct } from "./centers.js";
 import { DocumentPreview } from "./preview.js";
 import { readFile, realpath } from "node:fs/promises";
 import { resolve, join, extname, sep } from "node:path";
@@ -203,7 +204,18 @@ export class AuditService {
       clientDist: resolve(ROOT, "packages/client/dist"),
       ...config,
     };
-    this.store = new Store(this.config.dataDir, initial);
+    this.rootService = config.rootService ?? this;
+    this.projectServices = new Map();
+    this.store = new Store(this.config.dataDir, () => {
+      const s = initial();
+      if (config.projectMetadata)
+        s.project = {
+          ...config.projectMetadata,
+          datasetVersion: 0,
+          label: LABEL,
+        };
+      return s;
+    });
     this.previewRenderer = new DocumentPreview(config.previewConverter);
     this.parser = config.parser;
     this.model = config.model;
@@ -262,9 +274,109 @@ export class AuditService {
     }
     return this;
   }
+  projectCatalog() {
+    const root = this.rootService.store.read();
+    return [
+      { ...root.project, isDefault: true },
+      ...(root.projectCatalog ?? []),
+    ];
+  }
+  async forProject(projectId) {
+    const root = this.rootService;
+    if (!projectId || projectId === root.store.read().project.id) return root;
+    const metadata = root
+      .projectCatalog()
+      .find((p) => p.id === projectId && !p.deletedAt);
+    requireThat(metadata, "项目不存在或已删除", 404);
+    if (!root.projectServices.has(projectId)) {
+      const promise = AuditService.create({
+        ...root.config,
+        dataDir: join(root.config.dataDir, "projects", projectId),
+        rootService: root,
+        projectMetadata: metadata,
+        model: root.model,
+        parser: root.parser,
+      });
+      root.projectServices.set(projectId, promise);
+      promise.catch(() => root.projectServices.delete(projectId));
+    }
+    return root.projectServices.get(projectId);
+  }
+  async manageProject(p) {
+    const root = this.rootService;
+    human(p);
+    const response = await root.store.transaction((s) => {
+      s.projectCatalog ??= [];
+      if (p.operation === "create") {
+        requireThat(
+          typeof p.name === "string" && p.name.trim() && p.name.length <= 160,
+          "项目名称须为 1–160 字",
+        );
+        const project = {
+          id: id("project"),
+          name: p.name.trim(),
+          unit: String(p.unit ?? "").slice(0, 160),
+          createdAt: now(),
+          actor: p.actor,
+        };
+        s.projectCatalog.push(project);
+        event(
+          s,
+          "project-created",
+          { projectId: project.id, name: project.name },
+          p.actor,
+        );
+        return { projectId: project.id };
+      }
+      const project =
+        s.project.id === p.projectId
+          ? s.project
+          : s.projectCatalog.find((x) => x.id === p.projectId && !x.deletedAt);
+      requireThat(project, "项目不存在", 404);
+      const before = structuredClone(project);
+      if (p.operation === "delete") {
+        requireThat(
+          project !== s.project,
+          "演示主项目请通过演示资料管理重置；其他项目可以删除",
+        );
+        requireThat(
+          p.confirmation === project.name,
+          "请准确输入项目名称确认删除",
+        );
+        project.deletedAt = now();
+      } else {
+        requireThat(p.operation === "update", "未知项目操作");
+        requireThat(
+          typeof p.name === "string" && p.name.trim() && p.name.length <= 160,
+          "项目名称须为 1–160 字",
+        );
+        project.name = p.name.trim();
+        project.unit = String(p.unit ?? "").slice(0, 160);
+      }
+      event(
+        s,
+        "project-" + p.operation,
+        {
+          projectId: project.id,
+          reason: p.reason,
+          before,
+          after: structuredClone(project),
+        },
+        p.actor,
+      );
+      return { projectId: project.id };
+    });
+    return { state: root.state(), result: response.result };
+  }
   state() {
     const s = this.store.read();
     s.scenarios = SCENARIOS;
+    s.projects = this.projectCatalog().filter((p) => !p.deletedAt);
+    s.project = {
+      ...s.project,
+      ...s.projects.find((p) => p.id === s.project.id),
+    };
+    s.products = PRODUCTS;
     s.workflow = workflowView(s);
     s.capabilities = {
       model: this.model?.capabilities?.() ?? {},
@@ -787,8 +899,149 @@ export class AuditService {
       p && typeof p === "object" && !Array.isArray(p),
       "payload 必须是对象",
     );
+    if (action === "project-manage") return this.manageProject(p);
     const response = await this.store.transaction(async (s) => {
+      if (this.rootService !== this) {
+        const metadata = this.projectCatalog().find(
+          (p) => p.id === s.project.id && !p.deletedAt,
+        );
+        requireThat(metadata, "项目已删除", 404);
+        s.project.name = metadata.name;
+        s.project.unit = metadata.unit;
+      }
       switch (action) {
+        case "finding-register": {
+          human(p);
+          requireThat(
+            typeof p.title === "string" &&
+              p.title.trim() &&
+              p.title.length <= 160,
+            "请填写问题疑点名称（最多 160 字）",
+          );
+          requireThat(
+            typeof p.detail === "string" && p.detail.trim(),
+            "请填写问题疑点情况",
+          );
+          requireThat(
+            Array.isArray(p.documentIds) && p.documentIds.length,
+            "请选取问题疑点的来源资料",
+          );
+          const documents = p.documentIds.map((key) =>
+            s.documents.find((d) => d.id === key),
+          );
+          requireThat(documents.every(Boolean), "来源资料不属于当前项目");
+          const finding = {
+            id: id("finding"),
+            title: p.title.trim(),
+            detail: p.detail.trim(),
+            status: "pending",
+            version: 1,
+            sources: documents.map((d) => ({
+              documentId: d.id,
+              version: d.version,
+              locator: p.locator || "全文，具体位置待核对",
+            })),
+            createdAt: now(),
+            actor: p.actor,
+            reason: p.reason,
+            label: LABEL,
+          };
+          s.findings.push(finding);
+          event(s, "finding-registered", { findingId: finding.id }, p.actor);
+          return { finding };
+        }
+        case "finding-dispatch": {
+          human(p);
+          requireThat(
+            Array.isArray(p.findingIds) && p.findingIds.length,
+            "请选择问题疑点",
+          );
+          requireThat(
+            ["assign", "recheck"].includes(p.operation),
+            "请选择分发或再核实",
+          );
+          requireThat(
+            typeof p.assignee === "string" && p.assignee.trim(),
+            "请填写承办人",
+          );
+          requireThat(
+            typeof p.requirement === "string" && p.requirement.trim(),
+            "请填写办理要求",
+          );
+          requireThat(
+            !p.dueDate ||
+              (/^\d{4}-\d{2}-\d{2}$/.test(p.dueDate) &&
+                !Number.isNaN(Date.parse(p.dueDate)) &&
+                new Date(p.dueDate).toISOString().slice(0, 10) === p.dueDate),
+            "办理期限格式无效",
+          );
+          const assignments = [...new Set(p.findingIds)].map((key) => {
+            const finding = s.findings.find((f) => f.id === key);
+            requireThat(finding, "问题疑点不存在", 404);
+            if (p.operation === "recheck") {
+              invalidate(s, [finding.id], "问题疑点退回再核实，引用文书需复核");
+              finding.status = "pending";
+            }
+            const assignment = {
+              id: id("assignment"),
+              findingId: finding.id,
+              operation: p.operation,
+              assignee: p.assignee.trim(),
+              requirement: p.requirement.trim(),
+              dueDate: p.dueDate || null,
+              actor: p.actor,
+              reason: p.reason,
+              at: now(),
+            };
+            (finding.assignments ??= []).push(assignment);
+            finding.assignee = assignment.assignee;
+            finding.dueDate = assignment.dueDate;
+            finding.requirement = assignment.requirement;
+            return assignment;
+          });
+          event(s, "finding-dispatched", { assignments }, p.actor);
+          return { assignments };
+        }
+        case "law-connection-save": {
+          human(p);
+          requireThat(
+            typeof p.name === "string" && p.name.length <= 160,
+            "服务名称过长",
+          );
+          if (p.endpoint) {
+            let url;
+            try {
+              url = new URL(p.endpoint);
+            } catch {
+              throw new AuditError("请填写有效的服务地址");
+            }
+            requireThat(
+              url.protocol === "https:" &&
+                !url.username &&
+                !url.password &&
+                !url.search &&
+                !url.hash,
+              "服务地址须为不含密钥或查询参数的 HTTPS 地址",
+            );
+          }
+          s.lawConnection = {
+            name: p.name.trim(),
+            endpoint: p.endpoint || "",
+            status: "pending-connection",
+            actor: p.actor,
+            updatedAt: now(),
+          };
+          event(
+            s,
+            "law-connection-settings",
+            { status: "pending-connection" },
+            p.actor,
+          );
+          return { settings: s.lawConnection };
+        }
+        case "product-save":
+          return saveProduct(this, s, p, invalidate);
+
         case "workflow-save": {
           human(p);
           const record = saveWorkflowRecord(s, p);
@@ -853,6 +1106,10 @@ export class AuditService {
           return { record };
         }
         case "seed":
+          requireThat(
+            this.rootService === this,
+            "新建项目请上传本项目资料，演示批次仅用于演示主项目",
+          );
           return this.seed(s, p);
         case "upload":
           return { document: await this.ingest(s, p) };
@@ -1478,6 +1735,11 @@ export class AuditService {
         }
         case "reset": {
           requireThat(
+            this.rootService === this,
+            "新建项目请使用项目管理，不支持演示重置",
+          );
+          const projectCatalog = s.projectCatalog;
+          requireThat(
             p.confirmation === "重置演示项目",
             "重置需要准确输入确认文字",
             409,
@@ -1485,7 +1747,10 @@ export class AuditService {
           const backup = await this.store.snapshot(s);
           const revision = s.revision;
           for (const key of Object.keys(s)) delete s[key];
-          Object.assign(s, initial(), { revision });
+          Object.assign(s, initial(), {
+            revision,
+            ...(projectCatalog ? { projectCatalog } : {}),
+          });
           event(s, "project-reset", { backup, label: LABEL });
           return { backup };
         }
@@ -1502,6 +1767,9 @@ export class AuditService {
         ),
         { runId: response.result.runId },
       );
+    response.state.projects = this.state().projects;
+    response.state.products = PRODUCTS;
+    response.state.project = this.state().project;
     response.state.scenarios = SCENARIOS;
     response.state.workflow = workflowView(response.state);
     response.state.capabilities = this.state().capabilities;
@@ -1526,6 +1794,9 @@ export class AuditService {
       ["json", "md", "csv", "docx", "xlsx"].includes(format),
       "不支持的导出格式",
     );
+    const exportTitle = a.productKind
+      ? a.title.replace(/[\x00-\x1f<>:"/\\|?*]/g, "_").slice(0, 120)
+      : a.scenarioId;
     const tabularRows = [
       ...a.rows,
       ...(a.findings ?? []).map((finding) => ({
@@ -1541,7 +1812,7 @@ export class AuditService {
     if (["docx", "xlsx"].includes(format)) {
       const exporters = await import("../parsers/export.js");
       return {
-        name: `${a.scenarioId}-v${a.version}.${format}`,
+        name: `${exportTitle}-v${a.version}.${format}`,
         mimeType: MIME[format],
         bytes:
           format === "docx"
@@ -1553,7 +1824,7 @@ export class AuditService {
     if (format === "json")
       content = JSON.stringify({ label: LABEL, ...a }, null, 2);
     else if (format === "md")
-      content = `${a.content}\n\n## 来源索引（绑定版本）\n${a.sources.map((r) => `- ${r.documentId} v${r.version} · ${r.locator}`).join("\n")}\n\n状态：${a.status}；版本：${a.version}；${LABEL}\n`;
+      content = `${a.content}\n\n## 来源索引（绑定版本）\n${a.sources.map((r) => `- ${r.documentId ?? r.artifactId ?? r.factId} v${r.version} · ${r.locator}`).join("\n")}\n\n状态：${a.status}；版本：${a.version}；${LABEL}\n`;
     else {
       const keys = unique(tabularRows.flatMap(Object.keys));
       const quote = (v) =>
@@ -1563,7 +1834,7 @@ export class AuditService {
       content = `\uFEFF${quote(LABEL)}\r\n${keys.map(quote).join(",")}\r\n${tabularRows.map((r) => keys.map((k) => quote(r[k])).join(",")).join("\r\n")}`;
     }
     return {
-      name: `${a.scenarioId}-v${a.version}.${format}`,
+      name: `${exportTitle}-v${a.version}.${format}`,
       mimeType:
         format === "json"
           ? "application/json; charset=utf-8"

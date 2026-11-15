@@ -1,3 +1,4 @@
+import { isReportArtifact, isAuditNarrative } from "./centers.js";
 import { calculateDeadline, qualityChecks, workflowView } from "./workflow.js";
 import {
   LABEL,
@@ -287,9 +288,7 @@ function canonicalPayments(c) {
   }));
 }
 function reportRows(c) {
-  const selected = c.selectedArtifacts.filter((a) =>
-    ["C01", "B09"].includes(a.scenarioId),
-  );
+  const selected = c.selectedArtifacts.filter((a) => isAuditNarrative(a));
   let rows;
   if (selected.length)
     rows = selected.flatMap((a) =>
@@ -443,9 +442,7 @@ function reportChecks(c, reports) {
         ),
       );
   }
-  for (const a of c.selectedArtifacts.filter((a) =>
-    ["C01", "B09"].includes(a.scenarioId),
-  )) {
+  for (const a of c.selectedArtifacts.filter((a) => isAuditNarrative(a))) {
     const rows = reports.filter((r) => r.artifactId === a.id);
     const allowed = unique(
       [
@@ -1570,7 +1567,7 @@ const handlers = {
     const reports = reportRows(c);
     const checks = reportChecks(c, reports);
     const reportIds = c.selectedArtifacts
-      .filter((a) => a.scenarioId === "C01")
+      .filter(isReportArtifact)
       .map((a) => a.id);
     if (!reportIds.length)
       reportIds.push(
@@ -1588,9 +1585,7 @@ const handlers = {
       })),
     );
     const relevant = c.selectedArtifacts.length
-      ? c.selectedArtifacts.filter(
-          (a) => !["C01", "B09"].includes(a.scenarioId),
-        )
+      ? c.selectedArtifacts.filter((a) => !isAuditNarrative(a))
       : [
           ...group(
             c.state.artifacts.filter(
@@ -1946,9 +1941,7 @@ export function executeScenario(state, scenarioId, payload = {}) {
     requireThat(
       (kind === "report" &&
         (payload.artifactIds ?? []).some((id) =>
-          state.artifacts.some(
-            (a) => a.id === id && ["B09", "C01"].includes(a.scenarioId),
-          ),
+          state.artifacts.some((a) => a.id === id && isAuditNarrative(a)),
         )) ||
         documents.some((d) => d.kind === kind),
       `场景 ${scenarioId} 缺少 ${kind} 资料`,

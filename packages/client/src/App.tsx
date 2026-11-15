@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import {
   request,
+  selectedProject,
+  selectProject,
   label,
   stages,
   operationNames,
@@ -49,7 +51,7 @@ import {
 } from "./components";
 import { ActionDialog, UploadDialog } from "./dialogs";
 import { ScenarioView } from "./scenario";
-import { WorkflowView } from "./workflow";
+import { CenterView, ProjectChooser } from "./centers";
 import { PersonalHome, StageWork, useWorkspace } from "./workspace";
 type Modal = { action: string; targetType?: string; row?: Row; title?: string };
 export default function App() {
@@ -77,7 +79,15 @@ export default function App() {
       const s = await request("/state");
       setState(s.state || s);
     } catch (e) {
-      setError((e as Error).message);
+      if (selectedProject() && (e as Error).message.includes("项目不存在")) {
+        selectProject("");
+        try {
+          const fresh = await request("/state");
+          setState(fresh.state || fresh);
+        } catch (next) {
+          setError((next as Error).message);
+        }
+      } else setError((e as Error).message);
     } finally {
       setLoading(false);
     }
@@ -96,6 +106,7 @@ export default function App() {
     }
   }, [toast]);
   const navigate = (v: string) => {
+    if (v === "workflow") v = "review-center";
     setView(v);
     location.hash = v;
     setSidebar(false);
@@ -187,8 +198,11 @@ export default function App() {
     {
       overview: "我的工作台",
       catalog: "查找办理事项",
-      workflow: "文书办理台账",
-      documents: "审计资料",
+      workflow: "复核审理中心",
+      documents: "审计资料中心",
+      evidence: "审计取证中心",
+      workpapers: "审计底稿中心",
+      "review-center": "复核审理中心",
       facts: "事实核对台账",
       review: "项目待核事项",
       history: "办理记录",
@@ -231,23 +245,23 @@ export default function App() {
             onClick={() => navigate("documents")}
           >
             <FolderOpen size={17} />
-            审计资料
+            审计资料中心
             <span className="count">{state?.documents.length ?? "—"}</span>
           </button>
-          <button
-            className={"nav-main " + (view === "facts" ? "active" : "")}
-            onClick={() => navigate("facts")}
-          >
-            <Database size={17} />
-            事实核对
-          </button>
-          <button
-            className={"nav-main " + (view === "workflow" ? "active" : "")}
-            onClick={() => navigate("workflow")}
-          >
-            <ClipboardCheck size={17} />
-            文书办理台账
-          </button>
+          {[
+            ["evidence", "审计取证中心"],
+            ["workpapers", "审计底稿中心"],
+            ["review-center", "复核审理中心"],
+          ].map(([id, title]) => (
+            <button
+              key={id}
+              className={"nav-main " + (view === id ? "active" : "")}
+              onClick={() => navigate(id)}
+            >
+              <ClipboardCheck size={17} />
+              {title}
+            </button>
+          ))}
           <div className="nav-section-label">按审计阶段查找</div>
           {stages.map((s, i) => (
             <button
@@ -356,7 +370,25 @@ export default function App() {
         <main>
           <div className="project-strip">
             <span className="project-dot" />
-            <span>{state?.project?.name || "连接审计项目中"}</span>
+            {state ? (
+              <ProjectChooser
+                state={state}
+                busy={!!busy || loading}
+                act={act}
+                change={(id) => {
+                  selectProject(id);
+                  setSource(null);
+                  setModal(null);
+                  setUpload(false);
+                  setSearch("");
+                  setResult(null);
+                  setState(null);
+                  void load();
+                }}
+              />
+            ) : (
+              <span>连接审计项目中</span>
+            )}
             <span className="project-version">
               资料更新批次 {state?.project?.datasetVersion ?? "—"}
             </span>
@@ -496,7 +528,7 @@ export default function App() {
                       </button>
                     </section>
                   </details>
-                  {!state.documents.length && (
+                  {!state.documents.length && state.project.isDefault && (
                     <section className="notice warning">
                       <div>
                         <strong>项目尚无输入资料</strong>
@@ -569,7 +601,7 @@ export default function App() {
                           <button
                             key={a.id}
                             className="artifact-row"
-                            onClick={() => navigate(a.scenarioId)}
+                            onClick={() => navigate(a.center || a.scenarioId)}
                           >
                             <span className="file-tile">
                               <FileCheck2 size={20} />
@@ -613,16 +645,26 @@ export default function App() {
                   navigate={navigate}
                 />
               )}
+              {[
+                "documents",
+                "evidence",
+                "workpapers",
+                "review-center",
+                "workflow",
+              ].includes(view) && (
+                <CenterView
+                  key={state.project.id + view}
+                  center={view === "workflow" ? "review-center" : view}
+                  state={state}
+                  busy={!!busy}
+                  act={act}
+                  navigate={navigate}
+                  onSource={setSource}
+                  onAction={openAction}
+                />
+              )}
               {view === "documents" && (
                 <>
-                  <div className="notice">
-                    <div>
-                      <strong>按需查找和核对项目资料</strong>
-                      <p>
-                        项目资料由参与人员共用。可关注自己正在使用的资料，选择“我关注的资料”快速查找。关注仅保存在当前浏览器。
-                      </p>
-                    </div>
-                  </div>
                   <div className="toolbar">
                     <SearchBox
                       value={search}
@@ -962,14 +1004,6 @@ export default function App() {
                   onAction={openAction}
                 />
               )}
-              {view === "workflow" && (
-                <WorkflowView
-                  state={state}
-                  busy={!!busy}
-                  act={act}
-                  onSource={setSource}
-                />
-              )}
               {view === "review" && (
                 <>
                   <div className="notice warning">
@@ -987,7 +1021,7 @@ export default function App() {
                         <button
                           className="artifact-row"
                           key={a.id}
-                          onClick={() => navigate(a.scenarioId)}
+                          onClick={() => navigate(a.center || a.scenarioId)}
                         >
                           <RefreshCw size={20} />
                           <div>
@@ -1076,7 +1110,12 @@ export default function App() {
                         {r.artifactId && (
                           <button
                             className="text-button"
-                            onClick={() => navigate(r.scenarioId)}
+                            onClick={() =>
+                              navigate(
+                                state.products?.[r.productKind]?.center ||
+                                  r.scenarioId,
+                              )
+                            }
                           >
                             查看办理结果 <ArrowRight size={14} />
                           </button>
@@ -1096,7 +1135,12 @@ export default function App() {
                   </section>
                 </>
               )}
-              {view === "settings" && (
+              {view === "settings" && !state.project.isDefault && (
+                <div className="notice">
+                  演示资料管理仅用于演示主项目。当前项目请在资料中心上传资料，或通过页面顶部调整项目。
+                </div>
+              )}
+              {view === "settings" && state.project.isDefault && (
                 <section className="card settings-card">
                   <h2>分批导入演示资料</h2>
                   <p className="muted">

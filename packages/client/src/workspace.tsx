@@ -351,9 +351,19 @@ export function StageWork({
         </div>
         <button
           className="button secondary"
-          onClick={() => navigate("workflow")}
+          onClick={() =>
+            navigate(
+              stageId === "A"
+                ? "documents"
+                : stageId === "B"
+                  ? "evidence"
+                  : ["C", "F"].includes(stageId)
+                    ? "workpapers"
+                    : "review-center",
+            )
+          }
         >
-          登记文书办理情况
+          进入对应业务中心
         </button>
       </div>
       <label className="stage-search">

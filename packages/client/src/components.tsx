@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import {
+  apiUrl,
   display,
   statuses,
   label,
@@ -582,7 +583,7 @@ export function EvidencePanel({
             )}
             <a
               className="button secondary full"
-              href={"/api/audit/file?id=" + encodeURIComponent(doc.id)}
+              href={apiUrl("/file?id=" + encodeURIComponent(doc.id))}
               target="_blank"
               rel="noreferrer"
             >
@@ -701,7 +702,7 @@ export function Media({
   locator?: string;
   segments?: { start: number; end: number; text: string }[];
 }) {
-  const url = "/api/audit/file?id=" + encodeURIComponent(doc.id);
+  const url = apiUrl("/file?id=" + encodeURIComponent(doc.id));
   const [zoom, setZoom] = useState(100);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const audioRef = useRef<HTMLAudioElement>(null);

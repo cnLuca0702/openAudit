@@ -1,0 +1,119 @@
+{
+  "at": "2026-11-15T08:15:55.724Z",
+  "label": "演示模拟数据，隔离验证",
+  "cases": [
+    {
+      "kind": "extract",
+      "title": "资料摘录",
+      "model": "deepseek-flash",
+      "characters": 258,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "plan",
+      "title": "审计实施方案",
+      "model": "deepseek-flash",
+      "characters": 298,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "request",
+      "title": "提供资料清单",
+      "model": "deepseek-flash",
+      "characters": 262,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "interview",
+      "title": "谈话大纲",
+      "model": "deepseek-flash",
+      "characters": 332,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "evidence",
+      "title": "审计取证单",
+      "model": "deepseek-flash",
+      "characters": 385,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "workpaper",
+      "title": "审计工作底稿",
+      "model": "deepseek-flash",
+      "characters": 282,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "management",
+      "title": "重要管理事项记录",
+      "model": "deepseek-flash",
+      "characters": 257,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "progress",
+      "title": "审计项目进展报告",
+      "model": "deepseek-flash",
+      "characters": 252,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "report",
+      "title": "审计报告初稿",
+      "model": "deepseek-flash",
+      "characters": 286,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "adoption",
+      "title": "采纳情况说明",
+      "model": "deepseek-flash",
+      "characters": 289,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "department",
+      "title": "部门复核意见书",
+      "model": "deepseek-flash",
+      "characters": 319,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "meeting",
+      "title": "业务会议纪要",
+      "model": "deepseek-flash",
+      "characters": 321,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "legal",
+      "title": "法规处审理意见书",
+      "model": "deepseek-flash",
+      "characters": 284,
+      "status": "draft",
+      "sourceBound": true
+    },
+    {
+      "kind": "reply",
+      "title": "复核审理意见回复",
+      "model": "deepseek-flash",
+      "characters": 263,
+      "status": "draft",
+      "sourceBound": true
+    }
+  ],
+  "passed": true
+}

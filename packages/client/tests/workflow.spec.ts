@@ -44,13 +44,22 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
   ]);
   await page.goto("/audit/#workflow");
   await expect(
-    page.getByRole("heading", { name: "文书办理台账", exact: true }),
+    page.getByRole("heading", { name: "复核审理中心", exact: true }),
   ).toBeVisible();
   const add = async (
     kind: string,
     fields: Record<string, string>,
     proofIds: string[] = [proof],
   ) => {
+    const center = ["subject", "milestone"].includes(kind)
+      ? "documents"
+      : ["redline", "archive"].includes(kind)
+        ? "workpapers"
+        : "review-center";
+    await page.goto("/audit/#" + center);
+    await page
+      .getByRole("button", { name: "相关登记与办理记录", exact: true })
+      .click();
     await page.getByLabel("登记类型", { exact: true }).selectOption(kind);
     await page.getByRole("button", { name: "新增记录", exact: true }).click();
     const dialog = page.getByRole("dialog");
@@ -170,6 +179,9 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
     .click();
   await expect(dialog).toHaveCount(0);
   await page.reload();
+  await page
+    .getByRole("button", { name: "相关登记与办理记录", exact: true })
+    .click();
   await page
     .locator(".workflow-record")
     .filter({ hasText: "修改留痕稿与定稿" })

@@ -804,11 +804,33 @@ export const isStale = (row: any) =>
   !!row?.invalidatedAt ||
   row?.stale === true ||
   /stale|invalid|needs_review/.test(row?.status || "");
+let currentProject: string | undefined;
+export function selectedProject() {
+  if (typeof window === "undefined") return "";
+  return (currentProject ??=
+    sessionStorage.getItem("openaudit:current-project") ??
+    localStorage.getItem("openaudit:current-project") ??
+    "");
+}
+export function selectProject(id: string) {
+  currentProject = id;
+  sessionStorage.setItem("openaudit:current-project", id);
+  localStorage.setItem("openaudit:current-project", id);
+}
+export function apiUrl(path: string) {
+  const url = new URL(
+    path.startsWith("/api/audit") ? path : "/api/audit" + path,
+    location.origin,
+  );
+  const projectId = selectedProject();
+  if (projectId) url.searchParams.set("projectId", projectId);
+  return url.pathname + url.search;
+}
 export async function request(path: string, init?: RequestInit) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 180000);
   try {
-    const res = await fetch("/api/audit" + path, {
+    const res = await fetch(apiUrl(path), {
       credentials: "include",
       ...init,
       signal: controller.signal,
@@ -852,4 +874,17 @@ Object.assign(statuses, {
   "asr-model": "录音转文字模型",
   recognize: "原件文字识别",
   transcribe: "录音转文字",
+});
+
+Object.assign(labels, {
+  productKind: "文书类型",
+  center: "所属中心",
+  assignee: "承办人",
+  findingIds: "问题疑点",
+  sourceSnapshot: "引用内容留存",
+  assignments: "分发记录",
+  operation: "办理方式",
+  previousId: "前一版本",
+  documentIds: "选取资料",
+  artifactIds: "引用文书",
 });
