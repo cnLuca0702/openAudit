@@ -8,6 +8,11 @@ export const inject = ["webServer", "connection"];
 const MAX_BODY = 15 * 1024 * 1024;
 const STATIC_MIME = {
   ".html": "text/html; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".wasm": "application/wasm",
+  ".bcmap": "application/octet-stream",
+  ".ttf": "font/ttf",
+  ".pfb": "application/octet-stream",
   ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".json": "application/json",
@@ -44,10 +49,10 @@ async function body(req) {
     throw new AuditError("JSON 请求格式错误");
   }
 }
-function download(res, file, head = false) {
+function download(res, file, head = false, inline = false) {
   res.writeHead(200, {
     "content-type": file.mimeType,
-    "content-disposition": `attachment; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+    "content-disposition": `${inline ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(file.name)}`,
     "content-length": file.bytes.length,
     "cache-control": "no-store",
     "x-content-type-options": "nosniff",
@@ -120,6 +125,20 @@ export function createHandlers(service, connection) {
       );
       return;
     }
+    if (path === "/api/audit/preview") {
+      requireThat(
+        req.method === "GET" || req.method === "HEAD",
+        "仅支持 GET/HEAD",
+        405,
+      );
+      download(
+        res,
+        await service.preview(url.searchParams.get("id")),
+        req.method === "HEAD",
+        true,
+      );
+      return;
+    }
     if (path === "/api/audit/file") {
       requireThat(
         req.method === "GET" || req.method === "HEAD",
@@ -177,7 +196,7 @@ export function createHandlers(service, connection) {
       "x-content-type-options": "nosniff",
       "referrer-policy": "same-origin",
       "content-security-policy":
-        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; frame-ancestors 'self'; object-src 'none'; base-uri 'self'",
+        "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; font-src 'self' blob:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'",
     });
     res.end(req.method === "HEAD" ? undefined : bytes);
   });

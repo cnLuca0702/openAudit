@@ -1,0 +1,422 @@
+
+> openaudit@0.1.0 test
+> node --test packages/models/test/*.test.js packages/parsers/test/*.test.js packages/server/test/*.test.js
+
+TAP version 13
+# Subtest: unconfigured AI fails explicitly and capabilities contain no secrets
+ok 1 - unconfigured AI fails explicitly and capabilities contain no secrets
+  ---
+  duration_ms: 11.607867
+  type: 'test'
+  ...
+# Subtest: only source-bound inputs sent; successful result remains pending human review
+ok 2 - only source-bound inputs sent; successful result remains pending human review
+  ---
+  duration_ms: 72.40638
+  type: 'test'
+  ...
+# Subtest: vision attaches actual image bytes and requires an image
+ok 3 - vision attaches actual image bytes and requires an image
+  ---
+  duration_ms: 4.122432
+  type: 'test'
+  ...
+# Subtest: provider failures and truncated output cannot become successful artifacts
+ok 4 - provider failures and truncated output cannot become successful artifacts
+  ---
+  duration_ms: 2.112024
+  type: 'test'
+  ...
+# Subtest: speech sends multipart original bytes and does not invent timestamps
+ok 5 - speech sends multipart original bytes and does not invent timestamps
+  ---
+  duration_ms: 3.213789
+  type: 'test'
+  ...
+# Subtest: exported Word roundtrips source, numbers and escaped content
+ok 6 - exported Word roundtrips source, numbers and escaped content
+  ---
+  duration_ms: 127.266253
+  type: 'test'
+  ...
+# Subtest: exported XLSX keeps numeric amounts and source worksheet
+ok 7 - exported XLSX keeps numeric amounts and source worksheet
+  ---
+  duration_ms: 214.692466
+  type: 'test'
+  ...
+# Subtest: Office exports retain actionable findings, checks and native table structure
+ok 8 - Office exports retain actionable findings, checks and native table structure
+  ---
+  duration_ms: 97.412103
+  type: 'test'
+  ...
+# Subtest: xlsx preserves worksheet/row provenance, numbers and cached formulas
+ok 9 - xlsx preserves worksheet/row provenance, numbers and cached formulas
+  ---
+  duration_ms: 362.400111
+  type: 'test'
+  ...
+# Subtest: zip traversal rejected and ordinary entries available without disk extraction
+ok 10 - zip traversal rejected and ordinary entries available without disk extraction
+  ---
+  duration_ms: 7.08912
+  type: 'test'
+  ...
+# Subtest: binary image requires real multimodal processing, no invented extracted content
+ok 11 - binary image requires real multimodal processing, no invented extracted content
+  ---
+  duration_ms: 0.664203
+  type: 'test'
+  ...
+# Subtest: actual PDF pages become actual PNG bytes; invalid page ranges fail without silently omitting pages
+ok 12 - actual PDF pages become actual PNG bytes; invalid page ranges fail without silently omitting pages
+  ---
+  duration_ms: 769.042112
+  type: 'test'
+  ...
+# Subtest: actual 55-document manifest parses, all scenarios run, payment identities and E01 errors are derived
+ok 13 - actual 55-document manifest parses, all scenarios run, payment identities and E01 errors are derived
+  ---
+  duration_ms: 11349.079979
+  type: 'test'
+  ...
+# Subtest: B09 becomes C01 with no report upload, and E01 detects revised report row and prose
+ok 14 - B09 becomes C01 with no report upload, and E01 detects revised report row and prose
+  ---
+  duration_ms: 199.296672
+  type: 'test'
+  ...
+# Subtest: corrected artifact can undergo E01 recheck then human confirmation
+ok 15 - corrected artifact can undergo E01 recheck then human confirmation
+  ---
+  duration_ms: 148.783922
+  type: 'test'
+  ...
+# Subtest: same-transaction contradictory amounts remain unknown until mapped by human
+ok 16 - same-transaction contradictory amounts remain unknown until mapped by human
+  ---
+  duration_ms: 136.192876
+  type: 'test'
+  ...
+# Subtest: noncash offset needs confirmation and zero-money requirement remains open
+ok 17 - noncash offset needs confirmation and zero-money requirement remains open
+  ---
+  duration_ms: 180.312843
+  type: 'test'
+  ...
+# Subtest: AI adapter receives actual bytes and speech; narrower source context; errors persist
+ok 18 - AI adapter receives actual bytes and speech; narrower source context; errors persist
+  ---
+  duration_ms: 210.000922
+  type: 'test'
+  ...
+# Subtest: real PDF parser failure rolls back an invalid original
+ok 19 - real PDF parser failure rolls back an invalid original
+  ---
+  duration_ms: 33.889698
+  type: 'test'
+  ...
+# Subtest: PDF recognition rasterizes actual pages, persists candidate lineage, and does not alter original
+ok 20 - PDF recognition rasterizes actual pages, persists candidate lineage, and does not alter original
+  ---
+  duration_ms: 663.781363
+  type: 'test'
+  ...
+# Subtest: review reply cannot be considered implementation with nonexistent evidence IDs
+ok 21 - review reply cannot be considered implementation with nonexistent evidence IDs
+  ---
+  duration_ms: 146.936729
+  type: 'test'
+  ...
+# Subtest: model sees actual rule findings and explicit document/fact confirmation state
+ok 22 - model sees actual rule findings and explicit document/fact confirmation state
+  ---
+  duration_ms: 155.571801
+  type: 'test'
+  ...
+# Subtest: calculated finding is visible in every export and flows B03→B09→C01 without copying an answer
+ok 23 - calculated finding is visible in every export and flows B03→B09→C01 without copying an answer
+  ---
+  duration_ms: 289.599369
+  type: 'test'
+  ...
+# Subtest: PDF preview preserves bytes; Office cache coalesces requests and never mutates original
+ok 24 - PDF preview preserves bytes; Office cache coalesces requests and never mutates original
+  ---
+  duration_ms: 62.195484
+  type: 'test'
+  ...
+# Subtest: failed conversions can retry; concurrent conversion work is bounded
+ok 25 - failed conversions can retry; concurrent conversion work is bounded
+  ---
+  duration_ms: 3.301926
+  type: 'test'
+  ...
+# Subtest: preview endpoint authenticates, validates IDs, serves PDF inline and leaves state/originals intact
+ok 26 - preview endpoint authenticates, validates IDs, serves PDF inline and leaves state/originals intact
+  ---
+  duration_ms: 378.262048
+  type: 'test'
+  ...
+# Subtest: A01 computes persisted inputs, sources, reload and missing-input failure
+ok 27 - A01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 392.762547
+  type: 'test'
+  ...
+# Subtest: A02 computes persisted inputs, sources, reload and missing-input failure
+ok 28 - A02 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 448.696637
+  type: 'test'
+  ...
+# Subtest: A03 computes persisted inputs, sources, reload and missing-input failure
+ok 29 - A03 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 269.545772
+  type: 'test'
+  ...
+# Subtest: B01 computes persisted inputs, sources, reload and missing-input failure
+ok 30 - B01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 273.52285
+  type: 'test'
+  ...
+# Subtest: B02 computes persisted inputs, sources, reload and missing-input failure
+ok 31 - B02 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 296.796376
+  type: 'test'
+  ...
+# Subtest: B03 computes persisted inputs, sources, reload and missing-input failure
+ok 32 - B03 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 202.587639
+  type: 'test'
+  ...
+# Subtest: B04 computes persisted inputs, sources, reload and missing-input failure
+ok 33 - B04 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 209.834951
+  type: 'test'
+  ...
+# Subtest: B05 computes persisted inputs, sources, reload and missing-input failure
+ok 34 - B05 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 221.242981
+  type: 'test'
+  ...
+# Subtest: B06 computes persisted inputs, sources, reload and missing-input failure
+ok 35 - B06 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 219.783009
+  type: 'test'
+  ...
+# Subtest: B07 computes persisted inputs, sources, reload and missing-input failure
+ok 36 - B07 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 289.857571
+  type: 'test'
+  ...
+# Subtest: B08 computes persisted inputs, sources, reload and missing-input failure
+ok 37 - B08 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 349.625372
+  type: 'test'
+  ...
+# Subtest: B09 computes persisted inputs, sources, reload and missing-input failure
+ok 38 - B09 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 353.39134
+  type: 'test'
+  ...
+# Subtest: C01 computes persisted inputs, sources, reload and missing-input failure
+ok 39 - C01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 320.267053
+  type: 'test'
+  ...
+# Subtest: C02 computes persisted inputs, sources, reload and missing-input failure
+ok 40 - C02 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 244.752301
+  type: 'test'
+  ...
+# Subtest: D01 computes persisted inputs, sources, reload and missing-input failure
+ok 41 - D01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 247.258808
+  type: 'test'
+  ...
+# Subtest: D02 computes persisted inputs, sources, reload and missing-input failure
+ok 42 - D02 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 284.046807
+  type: 'test'
+  ...
+# Subtest: D03 computes persisted inputs, sources, reload and missing-input failure
+ok 43 - D03 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 168.774724
+  type: 'test'
+  ...
+# Subtest: D04 computes persisted inputs, sources, reload and missing-input failure
+ok 44 - D04 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 274.883028
+  type: 'test'
+  ...
+# Subtest: E01 computes persisted inputs, sources, reload and missing-input failure
+ok 45 - E01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 235.539083
+  type: 'test'
+  ...
+# Subtest: F01 computes persisted inputs, sources, reload and missing-input failure
+ok 46 - F01 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 204.23486
+  type: 'test'
+  ...
+# Subtest: F02 computes persisted inputs, sources, reload and missing-input failure
+ok 47 - F02 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 206.835523
+  type: 'test'
+  ...
+# Subtest: F03 computes persisted inputs, sources, reload and missing-input failure
+ok 48 - F03 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 165.612992
+  type: 'test'
+  ...
+# Subtest: F04 computes persisted inputs, sources, reload and missing-input failure
+ok 49 - F04 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 202.800939
+  type: 'test'
+  ...
+# Subtest: F05 computes persisted inputs, sources, reload and missing-input failure
+ok 50 - F05 computes persisted inputs, sources, reload and missing-input failure
+  ---
+  duration_ms: 189.571083
+  type: 'test'
+  ...
+# Subtest: interval calculations change with inputs and preserve original bytes
+ok 51 - interval calculations change with inputs and preserve original bytes
+  ---
+  duration_ms: 213.543298
+  type: 'test'
+  ...
+# Subtest: contract versions invalidate only linked checks and confirmations
+ok 52 - contract versions invalidate only linked checks and confirmations
+  ---
+  duration_ms: 278.993717
+  type: 'test'
+  ...
+# Subtest: unit and date corrections recalculate rather than overwrite
+ok 53 - unit and date corrections recalculate rather than overwrite
+  ---
+  duration_ms: 292.687262
+  type: 'test'
+  ...
+# Subtest: E01 confirmation invalidates when a referenced report fact changes
+ok 54 - E01 confirmation invalidates when a referenced report fact changes
+  ---
+  duration_ms: 375.890613
+  type: 'test'
+  ...
+# Subtest: low quality drawing, duplicate image, ASR uncertainty, feedback reply gates
+ok 55 - low quality drawing, duplicate image, ASR uncertainty, feedback reply gates
+  ---
+  duration_ms: 212.777838
+  type: 'test'
+  ...
+# Subtest: rectification effects and archive are independent; closure requires evidence
+ok 56 - rectification effects and archive are independent; closure requires evidence
+  ---
+  duration_ms: 246.082033
+  type: 'test'
+  ...
+# Subtest: capability publication needs executed tests; reuse copies no facts; source revision withdraws
+ok 57 - capability publication needs executed tests; reuse copies no facts; source revision withdraws
+  ---
+  duration_ms: 393.361872
+  type: 'test'
+  ...
+# Subtest: model errors persisted, malformed uploads rollback, resets explicit, concurrent writes durable
+ok 58 - model errors persisted, malformed uploads rollback, resets explicit, concurrent writes durable
+  ---
+  duration_ms: 218.823631
+  type: 'test'
+  ...
+# Subtest: HTTP authentication applies to API and every static resource; methods and exports
+ok 59 - HTTP authentication applies to API and every static resource; methods and exports
+  ---
+  duration_ms: 365.756412
+  type: 'test'
+  ...
+# Subtest: DSH actual registration interface and disposer ownership
+ok 60 - DSH actual registration interface and disposer ownership
+  ---
+  duration_ms: 33.292599
+  type: 'test'
+  ...
+# Subtest: reference preserves original SHA, 19 nodes including future deadline, 15 issues and 54 archive entries
+ok 61 - reference preserves original SHA, 19 nodes including future deadline, 15 issues and 54 archive entries
+  ---
+  duration_ms: 43.843107
+  type: 'test'
+  ...
+# Subtest: deadlines distinguish calendar days, working days, incomplete calendar and invalid inputs
+ok 62 - deadlines distinguish calendar days, working days, incomplete calendar and invalid inputs
+  ---
+  duration_ms: 2.805556
+  type: 'test'
+  ...
+# Subtest: separate recipients, no dates fabricated for missing receipts, custom deadlines and persistent revision history
+ok 63 - separate recipients, no dates fabricated for missing receipts, custom deadlines and persistent revision history
+  ---
+  duration_ms: 1397.056362
+  type: 'test'
+  ...
+# Subtest: issuance requires all three signed gates bound to one report, eight answers, and prior dates; changed proof revokes validity
+ok 64 - issuance requires all three signed gates bound to one report, eight answers, and prior dates; changed proof revokes validity
+  ---
+  duration_ms: 190.904309
+  type: 'test'
+  ...
+# Subtest: four-layer evidence requires distinct source, evidence sheet, workpaper and report; redline cannot reuse final original
+ok 65 - four-layer evidence requires distinct source, evidence sheet, workpaper and report; redline cannot reuse final original
+  ---
+  duration_ms: 121.607991
+  type: 'test'
+  ...
+# Subtest: archive exact document match cannot be satisfied by another report, and archive leaves rectification open
+ok 66 - archive exact document match cannot be satisfied by another report, and archive leaves rectification open
+  ---
+  duration_ms: 118.457372
+  type: 'test'
+  ...
+# Subtest: C02 uses consultation service date rather than feedback arrival and handles reasoned no-change separately
+ok 67 - C02 uses consultation service date rather than feedback arrival and handles reasoned no-change separately
+  ---
+  duration_ms: 109.366007
+  type: 'test'
+  ...
+# Subtest: upgrade invalidates affected historical results once without resetting documents or facts
+ok 68 - upgrade invalidates affected historical results once without resetting documents or facts
+  ---
+  duration_ms: 104.818268
+  type: 'test'
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14029.108007

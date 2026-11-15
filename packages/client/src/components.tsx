@@ -17,6 +17,7 @@ import {
   type Row,
   type State,
 } from "./model";
+import { DocumentPreview, supportsPreview } from "./DocumentPreview";
 export function Badge({ value }: { value: any }) {
   const s = String(value ?? "pending");
   const tone = /stale|invalid|fail|error|blocked/.test(s)
@@ -481,7 +482,10 @@ export function EvidencePanel({
     }
   }
   return (
-    <aside className="evidence-panel" aria-label="来源证据面板">
+    <aside
+      className={`evidence-panel ${supportsPreview(doc) && tab === "text" ? "with-original" : ""}`}
+      aria-label="来源证据面板"
+    >
       <header>
         <div>
           <span className="eyebrow">SOURCE EVIDENCE</span>
@@ -576,6 +580,15 @@ export function EvidencePanel({
                 />
               </label>
             )}
+            <a
+              className="button secondary full"
+              href={"/api/audit/file?id=" + encodeURIComponent(doc.id)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <ArrowUpRight size={15} />
+              下载原始资料
+            </a>
             <div className="tabs">
               <button
                 className={tab === "text" ? "active" : ""}
@@ -583,6 +596,14 @@ export function EvidencePanel({
               >
                 原文
               </button>
+              {supportsPreview(doc) && (
+                <button
+                  className={tab === "excerpt" ? "active" : ""}
+                  onClick={() => setTab("excerpt")}
+                >
+                  文字摘录
+                </button>
+              )}
               <button
                 className={tab === "records" ? "active" : ""}
                 onClick={() => setTab("records")}
@@ -596,7 +617,11 @@ export function EvidencePanel({
                 接收信息
               </button>
             </div>
-            {tab === "text" && (
+            {tab === "text" && supportsPreview(doc) && (
+              <DocumentPreview key={doc.id} doc={doc} />
+            )}
+            {(tab === "excerpt" ||
+              (tab === "text" && !supportsPreview(doc))) && (
               <>
                 <Media
                   doc={parent || doc}
@@ -609,7 +634,7 @@ export function EvidencePanel({
                 {doc.text ? (
                   <pre className="source-text">{doc.text}</pre>
                 ) : (
-                  <Empty title="暂无可读原文">
+                  <Empty title="暂无文字摘录">
                     原件已保留，请下载核验；解析结果不代表原件真实性。
                   </Empty>
                 )}
@@ -628,15 +653,6 @@ export function EvidencePanel({
                 onSource={onSource}
               />
             )}
-            <a
-              className="button secondary full"
-              href={"/api/audit/file?id=" + encodeURIComponent(doc.id)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <ArrowUpRight size={15} />
-              下载原始资料
-            </a>
           </>
         )}
         {!doc && item && <DataView value={item} onSource={onSource} />}

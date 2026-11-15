@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-15T01:51:43.962Z",
+  "checks": [
+    {
+      "name": "初步设计与投资概算批复节选.pdf",
+      "pages": 1,
+      "renderedNonWhitePixels": 19879
+    },
+    {
+      "name": "年度审计项目计划节选.docx",
+      "pages": 1,
+      "renderedNonWhitePixels": 29301
+    },
+    {
+      "name": "演示模拟数据-DOC格式验证.doc",
+      "pages": 2,
+      "renderedNonWhitePixels": 58720
+    },
+    {
+      "name": "演示模拟数据-WPS格式验证.wps",
+      "pages": 7,
+      "renderedNonWhitePixels": 24965
+    },
+    {
+      "name": "演示模拟数据-DOCX格式验证.docx",
+      "pages": 1,
+      "renderedNonWhitePixels": 29301
+    },
+    {
+      "name": "演示模拟数据-PDF格式验证.pdf",
+      "pages": 1,
+      "renderedNonWhitePixels": 19879
+    },
+    {
+      "name": "演示模拟数据-WPS格式验证.wps",
+      "pages": 7,
+      "renderedNonWhitePixels": 3884
+    }
+  ],
+  "before": "54c8439ef9cc426535ed3d89a284467a6515b60c0a821d530d7643e577f43fd4",
+  "after": "54c8439ef9cc426535ed3d89a284467a6515b60c0a821d530d7643e577f43fd4",
+  "status": "passed"
+}

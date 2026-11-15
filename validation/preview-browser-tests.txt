@@ -1,0 +1,22 @@
+
+> @openaudit/client@0.1.0 test:e2e
+> playwright test
+
+[WebServer] (node:3380165) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:3380269) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/workbench.spec.ts:3:1 › real persisted project: 24 scenario runs, provenance, review, changes, exports, errors and mobile (44.9s)
+  ✓  2 tests/workbench.spec.ts:279:1 › human workflows: contract revision, freeze, legal applicability, resolution, governed reuse and Office export (24.4s)
+  ✓  3 tests/workbench.spec.ts:508:1 › source media: original-image zoom and visible OCR / ASR failures without model configuration (4.8s)
+  ✓  4 tests/workbench.spec.ts:566:1 › persisted manual transcript segments seek the actual original audio (3.9s)
+  ✓  5 tests/workflow.spec.ts:2:1 › tracking workflow: source reference, two receipts, signed gates, redline and archive are persisted (26.9s)
+  ✓  6 tests/z-personal.spec.ts:3:1 › personal workspace: all roles and 24 tasks, personal plan, bookmarks, document focus and mobile (7.3s)
+  ✓  7 tests/z-personal.spec.ts:110:1 › personal material intake: find all tasks and register a new version by choosing its name (3.9s)
+  ✓  8 tests/zz-preview.spec.ts:31:1 › original PDF pages, zoom, excerpts, original download and small screens (5.2s)
+  ✓  9 tests/zz-preview.spec.ts:109:1 › damaged WPS shows recoverable error and original download remains available (1.5s)
+
+  9 passed (2.1m)

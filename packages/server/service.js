@@ -1,3 +1,4 @@
+import { DocumentPreview } from "./preview.js";
 import { readFile, realpath } from "node:fs/promises";
 import { resolve, join, extname, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -203,6 +204,7 @@ export class AuditService {
       ...config,
     };
     this.store = new Store(this.config.dataDir, initial);
+    this.previewRenderer = new DocumentPreview(config.previewConverter);
     this.parser = config.parser;
     this.model = config.model;
   }
@@ -276,7 +278,10 @@ export class AuditService {
       "文件名须为 1–240 字符",
     );
     requireThat(!/[\x00-\x1f]/.test(p.name), "文件名包含控制字符");
-    const mime = p.mimeType ?? MIME[extname(p.name).slice(1).toLowerCase()];
+    const extension = extname(p.name).slice(1).toLowerCase();
+    const mime = ["doc", "docx", "wps", "rtf", "odt"].includes(extension)
+      ? MIME[extension]
+      : (p.mimeType ?? MIME[extension]);
     requireThat(
       Object.values(MIME).includes(mime) ||
         [
@@ -1501,6 +1506,9 @@ export class AuditService {
     response.state.workflow = workflowView(response.state);
     response.state.capabilities = this.state().capabilities;
     return response;
+  }
+  async preview(documentId) {
+    return this.previewRenderer.open(await this.original(documentId));
   }
   async original(documentId) {
     const d = this.store.read().documents.find((d) => d.id === documentId);

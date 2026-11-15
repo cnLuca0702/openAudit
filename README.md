@@ -16,7 +16,7 @@
 
 ## 开发与验证
 
-需要 Node.js 24、`poppler-utils`（PDF 文本/转图）和 `ffmpeg` / `ffprobe`（视频抽帧、录音分段）。
+需要 Node.js 24、`poppler-utils`（PDF 文本/转图）和 `ffmpeg` / `ffprobe`（视频抽帧、录音分段）。DOC/DOCX/WPS/RTF/ODT 原件预览另需 Linux 上的 LibreOffice Writer、bubblewrap、util-linux（prlimit）及中文字体；转换使用隔离环境，不调用外部在线服务。PDF 分页查看无需 LibreOffice。详见 [原件预览说明](docs/deliverables/原件预览说明.md)。
 
 ```sh
 npm ci

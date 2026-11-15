@@ -8,6 +8,7 @@
 - `POST /api/audit/action`，JSON `{action,scenarioId?,payload?}` → `{state,result}`。
 - `GET /api/audit/export?artifactId=ID&format=json|md|csv|docx|xlsx` → 带来源与模拟标识的成果附件（默认 md）。
 - `GET /api/audit/file?id=ID` → 不可变原件下载。
+- `GET|HEAD /api/audit/preview?id=ID` → 鉴权后的 `application/pdf` 分页预览（inline、no-store）。PDF 返回原字节；DOC/DOCX/WPS/RTF/ODT 经本机隔离转换。预览不修改业务状态，不生成资料版本。422 表示损坏、加密或不兼容，429 表示转换繁忙，503 表示缺少转换组件；失败仍可通过 `/file` 下载原件。
 - 错误：非 2xx `{error,code?}`；输入错误 400，缺资料/状态冲突 409，不存在 404，超限 413，不支持类型 415。失败运行保留 runs，不能用预置答案替代。
 
 ## State
