@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, stat, rename, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { AuditService } from "../service.js";
@@ -51,7 +51,7 @@ const save = (service, p) =>
     },
   });
 
-test("project isolation, rename, persisted registry, soft delete, and reset preserve other projects", async (t) => {
+test("project isolation, rename, persisted registry, permanent delete, and reset preserve other projects", async (t) => {
   const service = await fixture(t);
   const original = await upload(service);
   const created = await service.action({
@@ -91,6 +91,16 @@ test("project isolation, rename, persisted registry, soft delete, and reset pres
     (await service.forProject(projectId)).state().documents.length,
     1,
   );
+  await child.store.snapshot(child.store.read());
+  const siblingId = (
+    await service.action({
+      action: "project-manage",
+      payload: { ...human, operation: "create", name: "保留项目" },
+    })
+  ).result.projectId;
+  const sibling = await service.forProject(siblingId);
+  const siblingDocument = await upload(sibling, "第二项目独立原件");
+  const siblingState = sibling.store.read();
   await service.action({
     action: "project-manage",
     payload: {
@@ -98,11 +108,227 @@ test("project isolation, rename, persisted registry, soft delete, and reset pres
       operation: "delete",
       projectId,
       confirmation: "调整后的项目",
+      deleteContents: true,
     },
   });
-  assert.equal(service.state().projects.length, 1);
+  assert.equal(service.state().projects.length, 2);
   await assert.rejects(service.forProject(projectId), /已删除/);
-  assert.equal(child.store.read().documents[0].id, own.id);
+  await assert.rejects(stat(child.config.dataDir), { code: "ENOENT" });
+  assert.throws(() => child.store.read(), /已删除/);
+  await assert.rejects(upload(child), /已删除/);
+  assert.equal(service.projectServices.has(projectId), false);
+  assert.deepEqual(sibling.store.read(), siblingState);
+  assert.equal(
+    (await sibling.original(siblingDocument.id)).bytes.toString(),
+    "第二项目独立原件",
+  );
+  const restarted = await AuditService.create({
+    dataDir: service.config.dataDir,
+  });
+  await assert.rejects(restarted.forProject(projectId), /已删除/);
+  assert.equal(
+    (await restarted.forProject(siblingId)).state().documents.length,
+    1,
+  );
+});
+
+test("permanent deletion requires new explicit consent, exact project name, and protects the main project", async (t) => {
+  const root = await fixture(t);
+  const projectId = (
+    await root.action({
+      action: "project-manage",
+      payload: { ...human, operation: "create", name: "删除确认测试" },
+    })
+  ).result.projectId;
+  const child = await root.forProject(projectId);
+  const document = await upload(child);
+  const payload = {
+    ...human,
+    operation: "delete",
+    projectId,
+    confirmation: "删除确认测试",
+  };
+  for (const extra of [
+    {},
+    { deleteContents: false },
+    { deleteContents: "true" },
+    { deleteContents: true, confirmation: "错误项目名" },
+  ]) {
+    await assert.rejects(
+      root.action({
+        action: "project-manage",
+        payload: { ...payload, ...extra },
+      }),
+      /确认/,
+    );
+    assert.equal((await child.original(document.id)).bytes.length > 0, true);
+    assert.equal(root.state().projects.length, 2);
+  }
+  await assert.rejects(
+    root.action({
+      action: "project-manage",
+      payload: {
+        ...payload,
+        projectId: root.state().project.id,
+        deleteContents: true,
+        confirmation: root.state().project.name,
+      },
+    }),
+    /演示主项目/,
+  );
+});
+
+test("deletion waits for existing writes, closes stale handles, and removes their resulting files", async (t) => {
+  const root = await fixture(t);
+  const projectId = (
+    await root.action({
+      action: "project-manage",
+      payload: { ...human, operation: "create", name: "并发删除测试" },
+    })
+  ).result.projectId;
+  const child = await root.forProject(projectId);
+  const started = Promise.withResolvers();
+  const release = Promise.withResolvers();
+  const closing = Promise.withResolvers();
+  const originalClose = child.store.close.bind(child.store);
+  child.store.close = () => {
+    closing.resolve();
+    return originalClose();
+  };
+  const writing = child.store.transaction(async (s) => {
+    started.resolve();
+    await release.promise;
+    await child.store.put(Buffer.from("尚在处理的资料原件"));
+    await child.store.snapshot(s);
+  });
+  await started.promise;
+  const deleting = root.action({
+    action: "project-manage",
+    payload: {
+      ...human,
+      operation: "delete",
+      projectId,
+      confirmation: "并发删除测试",
+      deleteContents: true,
+    },
+  });
+  await closing.promise;
+  try {
+    await assert.rejects(root.forProject(projectId), /已删除/);
+    await assert.rejects(upload(child), /删除/);
+    assert((await stat(child.config.dataDir)).isDirectory());
+  } finally {
+    release.resolve();
+  }
+  await writing;
+  await deleting;
+  await assert.rejects(stat(child.config.dataDir), { code: "ENOENT" });
+});
+
+test("failed purge is not reported as success and restart resumes only confirmed permanent deletions", async (t) => {
+  const root = await fixture(t);
+  const make = async (name) =>
+    (
+      await root.action({
+        action: "project-manage",
+        payload: { ...human, operation: "create", name },
+      })
+    ).result.projectId;
+  const projectId = await make("待完成删除");
+  const legacyId = await make("旧版保留项目");
+  const child = await root.forProject(projectId);
+  const legacy = await root.forProject(legacyId);
+  await upload(child);
+  const retained = await upload(legacy);
+  await root.store.transaction((s) => {
+    s.projectCatalog.find((p) => p.id === legacyId).deletedAt =
+      new Date().toISOString();
+  });
+  const directory = join(root.config.dataDir, "projects");
+  const moved = join(root.config.dataDir, "held-projects");
+  await rename(directory, moved);
+  await symlink(moved, directory, "dir");
+  await assert.rejects(
+    root.action({
+      action: "project-manage",
+      payload: {
+        ...human,
+        operation: "delete",
+        projectId,
+        confirmation: "待完成删除",
+        deleteContents: true,
+      },
+    }),
+    /删除尚未完成/,
+  );
+  assert((await stat(join(moved, projectId, "state.json"))).isFile());
+  await assert.rejects(root.forProject(projectId), /已删除/);
+  await rm(directory);
+  await rename(moved, directory);
+  const restarted = await AuditService.create({ dataDir: root.config.dataDir });
+  await assert.rejects(stat(child.config.dataDir), { code: "ENOENT" });
+  assert(
+    (
+      await stat(join(legacy.config.dataDir, "objects", retained.sha256))
+    ).isFile(),
+  );
+  assert.equal(
+    restarted.store.read().projectCatalog.some((p) => p.id === projectId),
+    false,
+  );
+  assert.equal(
+    restarted.store.read().projectCatalog.some((p) => p.id === legacyId),
+    true,
+  );
+});
+
+test("permanent deletion waits for preview conversion and clears its cached content", async (t) => {
+  const root = await fixture(t);
+  const projectId = (
+    await root.action({
+      action: "project-manage",
+      payload: { ...human, operation: "create", name: "预览清除测试" },
+    })
+  ).result.projectId;
+  const child = await root.forProject(projectId);
+  const conversion = Promise.withResolvers();
+  const closing = Promise.withResolvers();
+  child.previewRenderer.converter = () => conversion.promise;
+  const preview = child.previewRenderer.open({
+    name: "测试.docx",
+    bytes: Buffer.from("PK-test-office"),
+    mimeType: "application/octet-stream",
+  });
+  const originalClose = child.previewRenderer.close.bind(child.previewRenderer);
+  child.previewRenderer.close = () => {
+    closing.resolve();
+    return originalClose();
+  };
+  const deleting = root.action({
+    action: "project-manage",
+    payload: {
+      ...human,
+      operation: "delete",
+      projectId,
+      confirmation: "预览清除测试",
+      deleteContents: true,
+    },
+  });
+  await closing.promise;
+  assert((await stat(child.config.dataDir)).isDirectory());
+  conversion.resolve(Buffer.from("%PDF-1.4\npreview fixture"));
+  await preview;
+  await deleting;
+  assert.equal(child.previewRenderer.cache.size, 0);
+  assert.equal(child.previewRenderer.pending.size, 0);
+  await assert.rejects(
+    child.previewRenderer.open({
+      name: "测试.pdf",
+      bytes: Buffer.from("%PDF-1.4"),
+    }),
+    /已删除/,
+  );
+  await assert.rejects(stat(child.config.dataDir), { code: "ENOENT" });
 });
 
 test("one finding splits into evidence sheets; multiple findings merge; workpaper/report lineage invalidates after recheck", async (t) => {

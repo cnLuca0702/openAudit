@@ -205,13 +205,59 @@ test("personal centers: project, finding dispatch, split evidence, merged workpa
   ).toBeTruthy();
   await page.getByRole("button", { name: "删除项目", exact: true }).click();
   dialog = page.getByRole("dialog");
+  await expect(
+    dialog.getByText("删除项目时，将一并永久删除全部资料，删除后无法撤销。", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  const deleteButton = dialog.getByRole("button", {
+    name: "确认删除项目及全部资料",
+  });
+  await expect(deleteButton).toBeDisabled();
+  const legacyDelete = await request.post(
+    "/api/audit/action?projectId=" + projectId,
+    {
+      data: {
+        action: "project-manage",
+        payload: {
+          operation: "delete",
+          projectId,
+          confirmation: state.project.name,
+          actor: "测试主审",
+          reason: "验证旧版请求不能触发永久删除",
+        },
+      },
+    },
+  );
+  expect(legacyDelete.status()).toBe(400);
+  await dialog.getByRole("button", { name: "关闭弹窗" }).click();
+  expect(
+    (await request.get("/api/audit/state?projectId=" + projectId)).status(),
+  ).toBe(200);
+  await page.getByRole("button", { name: "删除项目", exact: true }).click();
   await dialog
     .getByLabel(/输入项目名称确认/)
     .fill("演示模拟数据 · 中心验收项目");
+  await expect(deleteButton).toBeDisabled();
+  await dialog.getByRole("checkbox", { name: /我已知晓并确认/ }).check();
   await dialog
     .getByLabel("办理说明", { exact: true })
-    .fill("验收完成，保留历史备查");
-  await dialog.getByRole("button", { name: "保存项目设置" }).click();
+    .fill("验收完成，确认永久删除项目及全部资料");
+  await expect(deleteButton).toBeEnabled();
+  await page.evaluate(
+    (id) =>
+      localStorage.setItem(
+        "openaudit:personal-workspace:v1:" + id,
+        JSON.stringify({
+          role: "member",
+          pins: [],
+          documents: [],
+          arrangements: [],
+        }),
+      ),
+    projectId,
+  );
+  await deleteButton.click();
   await expect(dialog).toHaveCount(0);
   await expect(page.getByLabel("当前项目", { exact: true })).not.toHaveValue(
     projectId,
@@ -223,5 +269,11 @@ test("personal centers: project, finding dispatch, split evidence, merged workpa
       )
     ).status(),
   ).toBe(404);
+  expect(
+    await page.evaluate(
+      (id) => localStorage.getItem("openaudit:personal-workspace:v1:" + id),
+      projectId,
+    ),
+  ).toBeNull();
   expect(errors).toEqual([]);
 });

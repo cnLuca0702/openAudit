@@ -138,6 +138,7 @@ export function ProjectChooser({
   );
   const [reason, setReason] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  const [deleteContents, setDeleteContents] = useState(false);
   const [error, setError] = useState("");
   return (
     <>
@@ -188,6 +189,7 @@ export function ProjectChooser({
             setOperation("delete");
             setError("");
             setConfirmation("");
+            setDeleteContents(false);
           }}
         >
           删除项目
@@ -216,7 +218,17 @@ export function ProjectChooser({
                   actor,
                   reason,
                   confirmation,
+                  deleteContents: operation === "delete" && deleteContents,
                 });
+                if (operation === "delete") {
+                  try {
+                    localStorage.removeItem(
+                      "openaudit:personal-workspace:v1:" + state.project.id,
+                    );
+                  } catch {
+                    /* Browser storage restrictions do not undo server deletion. */
+                  }
+                }
                 sessionStorage.setItem("audit-reviewer", actor);
                 setOperation("");
                 change(
@@ -231,7 +243,28 @@ export function ProjectChooser({
           >
             {operation === "delete" ? (
               <>
-                <p>删除后不再显示该项目，既有资料和办理记录保留备查。</p>
+                <div className="notice error" role="alert">
+                  <strong>
+                    删除项目时，将一并永久删除全部资料，删除后无法撤销。
+                  </strong>
+                  <p>
+                    包括上传原件及历史版本、资料摘录、问题疑点、取证单、审计底稿、报告、复核审理文书、办理记录，以及本项目的数据快照和预览缓存。其他项目不受影响。
+                  </p>
+                </div>
+                <small>
+                  本次清除系统中的项目数据；已下载、导出的文件及独立运维备份不在清除范围内。系统保留必要的项目管理操作日志。
+                </small>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={deleteContents}
+                    onChange={(e) => setDeleteContents(e.target.checked)}
+                  />
+                  <span>
+                    我已知晓并确认一并永久删除该项目的全部资料、成果及办理记录
+                  </span>
+                </label>
                 <label>
                   输入项目名称确认：{state.project.name}
                   <input
@@ -283,8 +316,21 @@ export function ProjectChooser({
                 {error}
               </p>
             )}
-            <button className="button primary" disabled={busy}>
-              保存项目设置
+            <button
+              className={
+                operation === "delete" ? "button danger" : "button primary"
+              }
+              disabled={
+                busy ||
+                (operation === "delete" &&
+                  (!deleteContents || confirmation !== state.project.name))
+              }
+            >
+              {operation === "delete"
+                ? busy
+                  ? "正在删除，请稍候…"
+                  : "确认删除项目及全部资料"
+                : "保存项目设置"}
             </button>
           </form>
         </Dialog>

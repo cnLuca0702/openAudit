@@ -1,6 +1,6 @@
 import { PRODUCTS, saveProduct } from "./centers.js";
 import { DocumentPreview } from "./preview.js";
-import { readFile, realpath } from "node:fs/promises";
+import { readFile, realpath, lstat, rm } from "node:fs/promises";
 import { resolve, join, extname, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
@@ -206,6 +206,7 @@ export class AuditService {
     };
     this.rootService = config.rootService ?? this;
     this.projectServices = new Map();
+    this.projectDeletions = new Map();
     this.store = new Store(this.config.dataDir, () => {
       const s = initial();
       if (config.projectMetadata)
@@ -222,6 +223,13 @@ export class AuditService {
   }
   async init() {
     await this.store.init();
+    // Only explicitly confirmed permanent deletions are resumed after a crash.
+    // Older soft-deleted projects remain untouched.
+    if (this.rootService === this) {
+      for (const project of this.store.read().projectCatalog ?? []) {
+        if (project.deletionPending) await this.purgeProject(project.id);
+      }
+    }
     if (this.store.read().workflowRulesVersion !== 1) {
       await this.store.transaction((s) => {
         const changed = s.artifacts.filter(
@@ -300,11 +308,125 @@ export class AuditService {
       root.projectServices.set(projectId, promise);
       promise.catch(() => root.projectServices.delete(projectId));
     }
-    return root.projectServices.get(projectId);
+    const service = await root.projectServices.get(projectId);
+    requireThat(
+      root.projectCatalog().some((p) => p.id === projectId && !p.deletedAt),
+      "项目不存在或已删除",
+      404,
+    );
+    return service;
+  }
+  async deleteProject(p) {
+    const root = this.rootService;
+    await root.store.transaction((s) => {
+      requireThat(
+        p.projectId !== s.project.id,
+        "演示主项目请通过演示资料管理重置；其他项目可以删除",
+      );
+      const project = (s.projectCatalog ?? []).find(
+        (x) => x.id === p.projectId && (!x.deletedAt || x.deletionPending),
+      );
+      requireThat(project, "项目不存在或已删除", 404);
+      requireThat(
+        p.confirmation === project.name,
+        "请准确输入项目名称确认删除",
+      );
+      requireThat(
+        p.deleteContents === true,
+        "请确认一并永久删除项目全部资料、成果及办理记录，删除后无法撤销",
+      );
+      requireThat(
+        /^project_[a-f0-9]{8}-[a-f0-9]{3}$/.test(project.id),
+        "项目存储编号无效",
+        500,
+      );
+      project.deletedAt ??= now();
+      project.deletionPending = true;
+      project.deletionActor = p.actor;
+      project.deletionReason = p.reason;
+    });
+    // The durable marker denies new access before any files are removed.
+    await root.purgeProject(p.projectId);
+    return {
+      state: root.state(),
+      result: { projectId: p.projectId, permanentlyDeleted: true },
+    };
+  }
+  async purgeProject(projectId) {
+    if (this.projectDeletions.has(projectId))
+      return this.projectDeletions.get(projectId);
+    const job = (async () => {
+      requireThat(
+        /^project_[a-f0-9]{8}-[a-f0-9]{3}$/.test(projectId),
+        "项目存储编号无效",
+        500,
+      );
+      const metadata = this.store
+        .read()
+        .projectCatalog?.find((p) => p.id === projectId && p.deletionPending);
+      requireThat(metadata, "项目未确认永久删除", 409);
+      const pending = this.projectServices.get(projectId);
+      if (pending) {
+        const service = await pending;
+        await service.store.close();
+        await service.previewRenderer.close();
+      }
+      const rootPath = await realpath(this.config.dataDir);
+      const projectsPath = join(rootPath, "projects");
+      const info = await lstat(projectsPath).catch((error) => {
+        if (error.code === "ENOENT") return null;
+        throw error;
+      });
+      if (info) {
+        requireThat(
+          info.isDirectory() && !info.isSymbolicLink(),
+          "项目资料目录异常，已停止删除",
+          500,
+        );
+        await rm(join(projectsPath, projectId), {
+          recursive: true,
+          force: true,
+        });
+      }
+      this.projectServices.delete(projectId);
+      await this.store.transaction((s) => {
+        const project = s.projectCatalog?.find(
+          (p) => p.id === projectId && p.deletionPending,
+        );
+        requireThat(project, "项目删除状态异常", 409);
+        s.projectCatalog = s.projectCatalog.filter((p) => p.id !== projectId);
+        event(
+          s,
+          "project-delete",
+          {
+            projectId,
+            name: project.name,
+            reason: project.deletionReason,
+            permanentlyDeleted: true,
+          },
+          project.deletionActor,
+        );
+      });
+    })();
+    const completion = job
+      .catch((error) => {
+        throw new AuditError(
+          "项目删除尚未完成，请重试；剩余资料已停止访问。" +
+            (error instanceof AuditError
+              ? error.message
+              : "请检查服务器存储状态。"),
+          503,
+          "PROJECT_DELETE_INCOMPLETE",
+        );
+      })
+      .finally(() => this.projectDeletions.delete(projectId));
+    this.projectDeletions.set(projectId, completion);
+    return completion;
   }
   async manageProject(p) {
     const root = this.rootService;
     human(p);
+    if (p.operation === "delete") return root.deleteProject(p);
     const response = await root.store.transaction((s) => {
       s.projectCatalog ??= [];
       if (p.operation === "create") {
@@ -334,25 +456,13 @@ export class AuditService {
           : s.projectCatalog.find((x) => x.id === p.projectId && !x.deletedAt);
       requireThat(project, "项目不存在", 404);
       const before = structuredClone(project);
-      if (p.operation === "delete") {
-        requireThat(
-          project !== s.project,
-          "演示主项目请通过演示资料管理重置；其他项目可以删除",
-        );
-        requireThat(
-          p.confirmation === project.name,
-          "请准确输入项目名称确认删除",
-        );
-        project.deletedAt = now();
-      } else {
-        requireThat(p.operation === "update", "未知项目操作");
-        requireThat(
-          typeof p.name === "string" && p.name.trim() && p.name.length <= 160,
-          "项目名称须为 1–160 字",
-        );
-        project.name = p.name.trim();
-        project.unit = String(p.unit ?? "").slice(0, 160);
-      }
+      requireThat(p.operation === "update", "未知项目操作");
+      requireThat(
+        typeof p.name === "string" && p.name.trim() && p.name.length <= 160,
+        "项目名称须为 1–160 字",
+      );
+      project.name = p.name.trim();
+      project.unit = String(p.unit ?? "").slice(0, 160);
       event(
         s,
         "project-" + p.operation,

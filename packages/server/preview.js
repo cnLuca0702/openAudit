@@ -144,6 +144,7 @@ export class DocumentPreview {
     this.size = 0;
   }
   async open(file) {
+    requireThat(!this.closed, "项目已删除", 404);
     const extension = extname(file.name).toLowerCase();
     if (extension === ".pdf" || file.mimeType === "application/pdf") {
       requireThat(
@@ -209,5 +210,11 @@ export class DocumentPreview {
       bytes: pdf,
       converted: true,
     };
+  }
+  async close() {
+    this.closed = true;
+    await Promise.allSettled(this.pending.values());
+    this.cache.clear();
+    this.size = 0;
   }
 }

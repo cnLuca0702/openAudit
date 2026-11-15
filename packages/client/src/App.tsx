@@ -130,9 +130,11 @@ export default function App() {
       });
       setState(response.state);
       setToast(
-        action === "run"
-          ? "已形成办理结果，请核对事实、证据及适用依据。"
-          : "已保存，可继续办理。",
+        response.result?.permanentlyDeleted
+          ? "项目及全部资料已删除。"
+          : action === "run"
+            ? "已形成办理结果，请核对事实、证据及适用依据。"
+            : "已保存，可继续办理。",
       );
       return response.result;
     } catch (e) {

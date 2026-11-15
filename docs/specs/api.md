@@ -4,6 +4,8 @@
 
 ## 请求
 
+- `POST /api/audit/action` 的 `project-manage` / `operation: "delete"`：必须提供经办人 `actor`、办理说明 `reason`、精确匹配项目名称的 `confirmation` 和布尔值 `deleteContents: true`。先持久化待清除标记并停止该项目访问，等待已开始的写入和预览结束，清除项目目录（原件、版本、资料及成果记录、快照）和缓存后移除目录项。成功返回 `permanentlyDeleted: true`；清除失败返回 503 / `PROJECT_DELETE_INCOMPLETE`，可再次确认重试，重启也会继续已确认的清除。其他项目、系统项目管理日志、已导出文件和独立运维备份不受影响。旧版软删除记录不自动清除。演示主项目仍使用专用重置入口。
+
 - `GET /api/audit/state` → State。
 - `POST /api/audit/action`，JSON `{action,scenarioId?,payload?}` → `{state,result}`。
 - `GET /api/audit/export?artifactId=ID&format=json|md|csv|docx|xlsx` → 带来源与模拟标识的成果附件（默认 md）。

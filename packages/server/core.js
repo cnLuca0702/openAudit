@@ -96,7 +96,14 @@ export class Store {
     return this;
   }
   read() {
+    requireThat(!this.closed, "项目已删除", 404);
     return structuredClone(this.state);
+  }
+  async close() {
+    this.closing = true;
+    await this.queue;
+    this.closed = true;
+    this.state = undefined;
   }
   async persist(state) {
     const dest = join(this.dir, "state.json");
@@ -117,6 +124,8 @@ export class Store {
     }
   }
   transaction(fn) {
+    if (this.closing)
+      return Promise.reject(new AuditError("项目正在删除或已删除", 404));
     const job = this.queue.then(async () => {
       const draft = this.read();
       const result = await fn(draft);
@@ -129,6 +138,7 @@ export class Store {
     return job;
   }
   async put(bytes) {
+    requireThat(!this.closed, "项目已删除", 404);
     const fingerprint = hash(bytes);
     try {
       await writeFile(join(this.dir, "objects", fingerprint), bytes, {
@@ -141,6 +151,7 @@ export class Store {
     return fingerprint;
   }
   async bytes(fingerprint) {
+    requireThat(!this.closed, "项目已删除", 404);
     requireThat(/^[a-f0-9]{64}$/.test(fingerprint), "原件指纹无效");
     return readFile(join(this.dir, "objects", fingerprint));
   }

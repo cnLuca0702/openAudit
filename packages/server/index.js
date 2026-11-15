@@ -99,17 +99,24 @@ export function createHandlers(service, connection) {
   const api = guard(async (req, res) => {
     const url = new URL(req.url, "http://audit.invalid");
     const path = url.pathname;
+    // Project management belongs to the catalog. This also lets a confirmed
+    // deletion retry after its project has been made inaccessible.
+    if (path === "/api/audit/action") {
+      requireThat(req.method === "POST", "仅支持 POST", 405);
+      const input = await body(req);
+      const scopedService =
+        input?.action === "project-manage"
+          ? service
+          : await service.forProject(url.searchParams.get("projectId"));
+      json(res, 200, await scopedService.action(input));
+      return;
+    }
     const scopedService = await service.forProject(
       url.searchParams.get("projectId"),
     );
     if (path === "/api/audit/state") {
       requireThat(req.method === "GET", "仅支持 GET", 405);
       json(res, 200, scopedService.state());
-      return;
-    }
-    if (path === "/api/audit/action") {
-      requireThat(req.method === "POST", "仅支持 POST", 405);
-      json(res, 200, await scopedService.action(await body(req)));
       return;
     }
     if (path === "/api/audit/export") {
