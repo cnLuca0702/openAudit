@@ -1,0 +1,348 @@
+{
+  "nodeCount": 144,
+  "scenarioCount": 24,
+  "workflowForms": 8,
+  "referenceNodes": 19,
+  "slides": 30,
+  "drawioPages": 31,
+  "inputFields": 118,
+  "operations": 162,
+  "baselineCommit": "52bb7cb",
+  "allNodesHaveDescription": true,
+  "allNodesHaveEditableShapes": true,
+  "packageIntegrity": "passed",
+  "pages": [
+    {
+      "page": 2,
+      "parent": "ROOT",
+      "nodes": [
+        "P",
+        "M",
+        "FA",
+        "ST",
+        "W",
+        "R",
+        "L",
+        "H",
+        "SET"
+      ]
+    },
+    {
+      "page": 3,
+      "parent": "ROOT",
+      "nodes": [
+        "U",
+        "SYS",
+        "NEXT"
+      ]
+    },
+    {
+      "page": 4,
+      "parent": "P",
+      "nodes": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07"
+      ]
+    },
+    {
+      "page": 5,
+      "parent": "P01",
+      "nodes": [
+        "ROLE-member",
+        "ROLE-lead",
+        "ROLE-review",
+        "ROLE-legal",
+        "ROLE-followup"
+      ]
+    },
+    {
+      "page": 6,
+      "parent": "M",
+      "nodes": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07",
+        "M08",
+        "M09"
+      ]
+    },
+    {
+      "page": 7,
+      "parent": "M",
+      "nodes": [
+        "M10"
+      ]
+    },
+    {
+      "page": 8,
+      "parent": "M03",
+      "nodes": [
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06"
+      ]
+    },
+    {
+      "page": 9,
+      "parent": "FA",
+      "nodes": [
+        "FA01",
+        "FA02",
+        "FA03",
+        "FA04"
+      ]
+    },
+    {
+      "page": 10,
+      "parent": "ST",
+      "nodes": [
+        "ST-A",
+        "ST-B",
+        "ST-C",
+        "ST-D",
+        "ST-E",
+        "ST-F"
+      ]
+    },
+    {
+      "page": 11,
+      "parent": "ST-A",
+      "nodes": [
+        "A01",
+        "A02",
+        "A03"
+      ]
+    },
+    {
+      "page": 12,
+      "parent": "ST-B",
+      "nodes": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09"
+      ]
+    },
+    {
+      "page": 13,
+      "parent": "ST-C",
+      "nodes": [
+        "C01",
+        "C02"
+      ]
+    },
+    {
+      "page": 14,
+      "parent": "ST-D",
+      "nodes": [
+        "D01",
+        "D02",
+        "D03",
+        "D04"
+      ]
+    },
+    {
+      "page": 15,
+      "parent": "ST-E",
+      "nodes": [
+        "E01"
+      ]
+    },
+    {
+      "page": 16,
+      "parent": "ST-F",
+      "nodes": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05"
+      ]
+    },
+    {
+      "page": 17,
+      "parent": "W",
+      "nodes": [
+        "W01",
+        "W02",
+        "W03",
+        "W04",
+        "W05",
+        "W06",
+        "W07",
+        "W08",
+        "W09"
+      ]
+    },
+    {
+      "page": 18,
+      "parent": "W",
+      "nodes": [
+        "W10"
+      ]
+    },
+    {
+      "page": 19,
+      "parent": "W10",
+      "nodes": [
+        "REF01",
+        "REF02",
+        "REF03",
+        "REF04",
+        "REF05",
+        "REF06",
+        "REF07",
+        "REF08",
+        "REF09"
+      ]
+    },
+    {
+      "page": 20,
+      "parent": "W10",
+      "nodes": [
+        "REF10",
+        "REF11",
+        "REF12",
+        "REF13",
+        "REF14",
+        "REF15",
+        "REF16",
+        "REF17",
+        "REF18"
+      ]
+    },
+    {
+      "page": 21,
+      "parent": "W10",
+      "nodes": [
+        "REF19"
+      ]
+    },
+    {
+      "page": 22,
+      "parent": "R",
+      "nodes": [
+        "R01",
+        "R02",
+        "R03",
+        "R04"
+      ]
+    },
+    {
+      "page": 23,
+      "parent": "L",
+      "nodes": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05",
+        "L06"
+      ]
+    },
+    {
+      "page": 24,
+      "parent": "H",
+      "nodes": [
+        "H01",
+        "H02"
+      ]
+    },
+    {
+      "page": 25,
+      "parent": "SET",
+      "nodes": [
+        "SET01",
+        "SET02"
+      ]
+    },
+    {
+      "page": 26,
+      "parent": "U",
+      "nodes": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09"
+      ]
+    },
+    {
+      "page": 27,
+      "parent": "U",
+      "nodes": [
+        "U10"
+      ]
+    },
+    {
+      "page": 28,
+      "parent": "SYS",
+      "nodes": [
+        "SYS01",
+        "SYS02",
+        "SYS03",
+        "SYS04",
+        "SYS05",
+        "SYS06",
+        "SYS07"
+      ]
+    },
+    {
+      "page": 29,
+      "parent": "NEXT",
+      "nodes": [
+        "N01",
+        "N02",
+        "N03",
+        "N04",
+        "N05",
+        "N06",
+        "N07",
+        "N08",
+        "N09"
+      ]
+    }
+  ],
+  "powerPointNativeShapesOnly": true,
+  "xlsxReload": {
+    "sheets": 9,
+    "nodeRows": 144,
+    "inputFieldRows": 118,
+    "operationRows": 162,
+    "protectedSheets": 0
+  },
+  "drawioFullTreeNodes": 144,
+  "drawioEdgeReferences": "passed",
+  "rendering": {
+    "renderer": "LibreOffice Impress 7.3.7.2",
+    "pages": 30,
+    "nodeDescriptionsFoundInRenderedText": 144,
+    "visualInspection": "overview and long reference-node pages checked; no title/description overlap"
+  },
+  "files": {
+    "个人审计工作台架构图-V1.drawio": "feab67f1f434da7ccebdbe808c6b12be40599b18f86b4fa5be023a28a5cb91f7",
+    "个人审计工作台架构图-V1.pptx": "3279cc7c25f6fd0c77167730a3e7d014268d87e1b9afffcd1a93f3582e57d719",
+    "工作台功能清单与调整表-V1.xlsx": "00b58c442a29b56ff8b6cc67a2c4a980d1ce2b776425993b2ad55c8c7d87d360"
+  }
+}
