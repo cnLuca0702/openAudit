@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import {
   display,
+  statuses,
   label,
   list,
   sourceList,
@@ -54,9 +55,7 @@ export function SourceButton({
   return (
     <button className="source-link" onClick={() => onSource(source)}>
       <Link2 size={12} />
-      {typeof source === "string"
-        ? source
-        : source.locator || source.documentId || source.factId || "查看依据"}
+      {typeof source === "string" ? source : source.locator || "查看资料出处"}
       {source.version ? ` · V${source.version}` : ""}
     </button>
   );
@@ -200,7 +199,7 @@ export function DataTable({
               {more.length > 0 && (
                 <td>
                   <details>
-                    <summary>更多字段</summary>
+                    <summary>更多明细</summary>
                     <DataView
                       value={Object.fromEntries(more.map((k) => [k, r[k]]))}
                       onSource={onSource}
@@ -364,6 +363,39 @@ export function RecordEditor({
               value={v}
               onChange={(x) => onChange({ ...value, [k]: x })}
             />
+          ) : ["type", "kind", "recordType"].includes(k) &&
+            typeof v === "string" ? (
+            <select
+              value={v}
+              onChange={(e) => onChange({ ...value, [k]: e.target.value })}
+            >
+              {[
+                ...new Set([
+                  v,
+                  "project",
+                  "approval",
+                  "contract",
+                  "payment",
+                  "measurement",
+                  "drawing",
+                  "inventory",
+                  "count",
+                  "media",
+                  "feedback",
+                  "review",
+                  "report",
+                  "rectification",
+                  "requirement",
+                  "law",
+                  "template",
+                  "handover",
+                ]),
+              ].map((key) => (
+                <option key={key} value={key}>
+                  {statuses[key] || key}
+                </option>
+              ))}
+            </select>
           ) : typeof v === "boolean" ? (
             <select
               value={String(v)}
@@ -497,7 +529,7 @@ export function EvidencePanel({
           <>
             {busy && (
               <div className="notice processing" role="status">
-                服务端正在处理原件，请稍候；完成后保存待核派生记录。
+                正在提取原件内容，请稍候；完成后请核对摘录。
               </div>
             )}
             {sourceError && (
@@ -522,7 +554,7 @@ export function EvidencePanel({
                   disabled={busy}
                   onClick={() => void derive("transcribe")}
                 >
-                  真实语音转写
+                  录音转文字
                 </button>
               )}
               {parent && (

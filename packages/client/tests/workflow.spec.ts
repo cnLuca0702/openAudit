@@ -39,12 +39,12 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
       evidenceIds: [proof],
     },
   ]);
-  const draft = await document("流程花脸稿.json", "template", [
+  const draft = await document("流程修改留痕稿.json", "template", [
     { text: "修改前" },
   ]);
   await page.goto("/audit/#workflow");
   await expect(
-    page.getByRole("heading", { name: "流程与文书台账", exact: true }),
+    page.getByRole("heading", { name: "文书办理台账", exact: true }),
   ).toBeVisible();
   const add = async (
     kind: string,
@@ -60,10 +60,13 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
         await control.selectOption(value);
       else await control.fill(value);
     }
-    if (kind !== "subject")
-      await dialog
-        .getByLabel("签章 / 办理证明原件", { exact: true })
-        .selectOption(proofIds);
+    if (kind !== "subject") {
+      for (const id of proofIds)
+        await dialog
+          .getByRole("group", { name: /签章 \/ 办理证明原件/ })
+          .locator(`input[value="${id}"]`)
+          .check();
+    }
     await dialog.getByLabel("登记人", { exact: true }).fill(person.actor);
     await dialog
       .getByLabel("核验依据与登记说明", { exact: true })
@@ -150,8 +153,14 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
   await dialog
     .getByLabel("修改依据与意见编号", { exact: true })
     .fill("反馈意见1");
-  await dialog.getByLabel("花脸稿原件", { exact: true }).selectOption(draft);
-  await dialog.getByLabel("定稿原件", { exact: true }).selectOption(report);
+  await dialog
+    .getByRole("group", { name: /修改留痕稿原件/ })
+    .locator(`input[value="${draft}"]`)
+    .check();
+  await dialog
+    .getByRole("group", { name: /定稿原件/ })
+    .locator(`input[value="${report}"]`)
+    .check();
   await dialog.getByLabel("登记人", { exact: true }).fill(person.actor);
   await dialog
     .getByLabel("核验依据与登记说明", { exact: true })
@@ -163,7 +172,7 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
   await page.reload();
   await page
     .locator(".workflow-record")
-    .filter({ hasText: "花脸稿与定稿" })
+    .filter({ hasText: "修改留痕稿与定稿" })
     .locator("summary")
     .first()
     .click();
@@ -174,9 +183,7 @@ test("tracking workflow: source reference, two receipts, signed gates, redline a
     path: testInfo.outputPath("tracking-workflow.png"),
     fullPage: true,
   });
-  await page
-    .getByRole("button", { name: "参考文件逐项对照", exact: true })
-    .click();
+  await page.getByRole("button", { name: "办理流程参考", exact: true }).click();
   await expect(
     page.getByText("期限节点，非已完成事项", { exact: true }),
   ).toBeVisible();

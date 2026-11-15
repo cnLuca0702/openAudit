@@ -17,6 +17,7 @@ export function WorkflowView({
   const [tab, setTab] = useState("current");
   const [editing, setEditing] = useState<any>(null);
   const [kind, setKind] = useState("subject");
+  const [recordFilter, setRecordFilter] = useState("all");
   if (!workflow) return <p>流程台账加载中，请刷新。</p>;
   const reference = workflow.reference;
   return (
@@ -34,7 +35,7 @@ export function WorkflowView({
           }
           onClick={() => setTab("reference")}
         >
-          参考文件逐项对照
+          办理流程参考
         </button>
       </div>
       {tab === "reference" ? (
@@ -93,17 +94,18 @@ export function WorkflowView({
         </>
       ) : (
         <>
-          <section className="notice warning">
+          <details className="card padded">
+            <summary>办理前请注意</summary>
             <div>
               {workflow.notices.map((x: string) => (
                 <p key={x}>{x}</p>
               ))}
             </div>
-          </section>
+          </details>
           <section className="card padded">
             <div className="section-heading">
               <h2>登记流程与文书</h2>
-              <span>台账修订 {workflow.revision}</span>
+              <span>第 {workflow.revision} 次登记更新</span>
             </div>
             <div className="workflow-toolbar">
               <label>
@@ -129,7 +131,7 @@ export function WorkflowView({
               </button>
             </div>
             <p className="muted">
-              先在资料与版本中心上传原件并确认适用版本，再登记回证、签字及文书索引。这里记录人工核对结果，不代替外部签章。
+              先在审计资料上传原件并确认适用版本，再登记回证、签字及文书索引。这里记录人工核对结果，不代替外部签章。
             </p>
           </section>
           <section className="card padded">
@@ -137,68 +139,91 @@ export function WorkflowView({
             {workflow.receipts.length ? (
               <DataView value={workflow.receipts} onSource={onSource} />
             ) : (
-              <p>尚未登记被审计单位。两家单位须分别登记、分别取得回证。</p>
+              <p>尚未登记被审计单位。涉及多家单位时，分别登记并取得回证。</p>
             )}
           </section>
           <section className="card padded">
-            <h2>四单元组卷</h2>
+            <h2>按四类材料整理案卷</h2>
             <DataView value={workflow.archive} onSource={onSource} />
             <p>档案接收与整改完成分别管理，移交档案不会自动销号。</p>
           </section>
           <section className="card padded">
-            <h2>已登记记录（{workflow.records.length}）</h2>
-            {!workflow.records.length && (
-              <p>尚无流程登记记录；AI 场景运行次数不代表业务节点已完成。</p>
-            )}
-            {workflow.records.map((r: Row) => (
-              <details className="workflow-record" key={r.id}>
-                <summary>
-                  {workflow.forms.find((f: any) => f.kind === r.kind)?.title} ·{" "}
-                  {r.title ||
-                    r.name ||
-                    r.documentType ||
-                    r.control ||
-                    r.documentNumber}{" "}
-                  <Badge value={r.status} />
-                </summary>
-                {r.kind === "redline" && (
-                  <div className="workflow-redline">
-                    <div>
-                      <h4>修改前</h4>
-                      <del>{r.beforeText}</del>
-                    </div>
-                    <div>
-                      <h4>修改后</h4>
-                      <ins>{r.afterText}</ins>
-                    </div>
-                  </div>
-                )}
-                <DataView
-                  value={Object.fromEntries(
-                    Object.entries(r).filter(
-                      ([key]) =>
-                        !["beforeText", "afterText", "supersededBy"].includes(
-                          key,
-                        ),
-                    ),
-                  )}
-                  onSource={onSource}
-                />
-                <button
-                  className="button secondary"
-                  disabled={busy}
-                  onClick={() =>
-                    setEditing({
-                      ...r,
-                      replacesId: r.id,
-                      evidenceIds: r.sources.map((x: any) => x.documentId),
-                    })
-                  }
+            <div className="section-heading">
+              <h2>已登记记录（{workflow.records.length}）</h2>
+              <label>
+                筛选登记记录
+                <select
+                  value={recordFilter}
+                  onChange={(e) => setRecordFilter(e.target.value)}
                 >
-                  修订并保留历史
-                </button>
-              </details>
-            ))}
+                  <option value="all">全部类型</option>
+                  {workflow.forms.map((f: any) => (
+                    <option value={f.kind} key={f.kind}>
+                      {f.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {!workflow.records.length && (
+              <p>
+                尚无流程登记记录；请在实际办理后登记；系统生成草稿不表示已签发或送达。
+              </p>
+            )}
+            {workflow.records
+              .filter(
+                (r: Row) => recordFilter === "all" || r.kind === recordFilter,
+              )
+              .map((r: Row) => (
+                <details className="workflow-record" key={r.id}>
+                  <summary>
+                    {workflow.forms.find((f: any) => f.kind === r.kind)?.title}{" "}
+                    ·{" "}
+                    {r.title ||
+                      r.name ||
+                      r.documentType ||
+                      r.control ||
+                      r.documentNumber}{" "}
+                    <Badge value={r.status} />
+                  </summary>
+                  {r.kind === "redline" && (
+                    <div className="workflow-redline">
+                      <div>
+                        <h4>修改前</h4>
+                        <del>{r.beforeText}</del>
+                      </div>
+                      <div>
+                        <h4>修改后</h4>
+                        <ins>{r.afterText}</ins>
+                      </div>
+                    </div>
+                  )}
+                  <DataView
+                    value={Object.fromEntries(
+                      Object.entries(r).filter(
+                        ([key]) =>
+                          !["beforeText", "afterText", "supersededBy"].includes(
+                            key,
+                          ),
+                      ),
+                    )}
+                    onSource={onSource}
+                  />
+                  <button
+                    className="button secondary"
+                    disabled={busy}
+                    onClick={() =>
+                      setEditing({
+                        ...r,
+                        replacesId: r.id,
+                        evidenceIds: r.sources.map((x: any) => x.documentId),
+                      })
+                    }
+                  >
+                    修订并保留历史
+                  </button>
+                </details>
+              ))}
           </section>
         </>
       )}
@@ -232,28 +257,39 @@ function WorkflowForm({ state, initial, busy, act, close, onSource }: any) {
   const set = (key: string, v: any) =>
     setValue((old: any) => ({ ...old, [key]: v }));
   const docSelect = (key: string, label: string, required = true) => (
-    <label key={key}>
-      {label}
-      <select
-        multiple
-        aria-label={label}
-        required={required}
-        value={value[key] || []}
-        onChange={(e) =>
-          set(
-            key,
-            Array.from(e.target.selectedOptions, (x) => x.value),
-          )
-        }
-      >
+    <fieldset key={key} className="document-checklist">
+      <legend>
+        {label}
+        {required ? "（必选）" : "（选填）"}
+      </legend>
+      <div className="checkbox-list">
         {documents.map((d: any) => (
-          <option key={d.id} value={d.id}>
-            {d.name} · V{d.version}
-          </option>
+          <label className="checkbox-label" key={d.id}>
+            <input
+              type="checkbox"
+              value={d.id}
+              checked={(value[key] || []).includes(d.id)}
+              onChange={(e) =>
+                set(
+                  key,
+                  e.target.checked
+                    ? [...(value[key] || []), d.id]
+                    : (value[key] || []).filter((id: string) => id !== d.id),
+                )
+              }
+            />
+            <span>
+              {d.name} · 第 {d.version} 版
+            </span>
+          </label>
         ))}
-      </select>
-      <small>仅显示已确认适用版本；可多选。</small>
-    </label>
+      </div>
+      <small>
+        {documents.length
+          ? "勾选需要引用的原件，可选多份；仅列出已确认适用的资料。"
+          : "暂无已确认适用的资料。请先在“审计资料”上传原件并确认适用版本。"}
+      </small>
+    </fieldset>
   );
   return (
     <Dialog
@@ -278,6 +314,9 @@ function WorkflowForm({ state, initial, busy, act, close, onSource }: any) {
             {error}
           </div>
         )}
+        <p className="form-hint">
+          请按实际办理情况填写。除标注“选填”的项目外均需填写；保存后可查阅并修订记录。
+        </p>
         {schema.fields.map((f: any) => {
           if (f.type === "documents") return docSelect(f.key, f.label);
           if (f.type === "answers")
@@ -329,6 +368,9 @@ function WorkflowForm({ state, initial, busy, act, close, onSource }: any) {
             return (
               <label key={f.key}>
                 {f.label}
+                {["optionalSelect", "reportOptional"].includes(f.type)
+                  ? "（选填）"
+                  : ""}
                 <select
                   aria-label={f.label}
                   required={
@@ -350,6 +392,7 @@ function WorkflowForm({ state, initial, busy, act, close, onSource }: any) {
           return (
             <label key={f.key}>
               {f.label}
+              {f.type === "optionalNumber" ? "（选填）" : ""}
               {f.type === "textarea" ? (
                 <textarea
                   aria-label={f.label}

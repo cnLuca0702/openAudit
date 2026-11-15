@@ -118,7 +118,7 @@ export function ActionDialog({
             <AlertTriangle size={18} />
             <span>
               {action === "revise"
-                ? "保存将产生新版本，并使受影响的下游确认失效。原始文件与历史版本保留。"
+                ? "保存后形成新版本，引用此内容的成果须重新核对。原件及历史版本保留。"
                 : "请核对具体版本、证据与适用范围。此操作不会替代正式审批、签发或送达。"}
             </span>
           </div>
@@ -126,7 +126,7 @@ export function ActionDialog({
         {action === "compare" && (
           <>
             <p className="muted">
-              选择两个已保存版本，服务端计算正文与结构化数据差异。
+              选择需要比较的两个版本，查看正文和明细的变化。
             </p>
             <div className="form-grid">
               <label>
@@ -184,7 +184,7 @@ export function ActionDialog({
                 </div>
                 {Object.keys(record).length > 0 && (
                   <>
-                    <h3>结构化事实字段</h3>
+                    <h3>事实明细</h3>
                     <RecordEditor
                       value={record}
                       onChange={(next) => {
@@ -206,7 +206,7 @@ export function ActionDialog({
                 <label>
                   {targetType === "artifact"
                     ? "成果正文"
-                    : "派生解析文本（不更改原件）"}
+                    : "资料摘录（原件保留）"}
                   <textarea
                     rows={12}
                     value={content}
@@ -216,7 +216,7 @@ export function ActionDialog({
                 </label>
                 {records.length > 0 && (
                   <details className="inset">
-                    <summary>编辑结构化明细（{records.length} 条）</summary>
+                    <summary>编辑业务明细（{records.length} 条）</summary>
                     {records.map((r, i) => (
                       <div className="record-block" key={i}>
                         <h4>第 {i + 1} 条</h4>
@@ -233,9 +233,9 @@ export function ActionDialog({
               </>
             )}
             <div className="inset">
-              <h3>将核对的依赖关系</h3>
+              <h3>可能受此次修改影响的成果</h3>
               <p className="small muted">
-                保存后由服务端判断具体影响。以下为当前明确引用该对象的成果：
+                保存后将标记需要重新核对的成果。以下成果引用了当前内容：
               </p>
               {state.artifacts
                 .filter(
@@ -294,7 +294,7 @@ export function ActionDialog({
             {["implemented", "closed"].includes(decision) &&
               !evidenceIds.length && (
                 <p className="form-hint error-text">
-                  落实或销号必须选择有效证据，由服务端再次核验。
+                  请先选择已核实的证明材料，再确认落实或销号。
                 </p>
               )}
           </>
@@ -332,15 +332,13 @@ export function ActionDialog({
               />
               已核验跨项目使用权限
             </label>
-            <p className="small muted">
-              能力组件须通过服务端实际测试；审核通过才进入已发布区。
-            </p>
+            <p className="small muted">审计方法须验证可用，并经审核后入库。</p>
           </>
         )}
         {action === "reuse" && (
           <>
             <div className="notice warning">
-              仅复用方法和适配条件，不复制原项目事实与结论。
+              仅复用方法和适配条件，不复制原事实核对与结论。
             </div>
             <label>
               新项目编号
@@ -381,7 +379,7 @@ export function ActionDialog({
         {action === "reset" && (
           <>
             <div className="notice error">
-              此操作清空当前模拟项目投影。请确认已导出所需成果。
+              此操作清空当前演示项目记录。请确认已导出所需成果。
             </div>
             <label>
               输入“重置演示项目”确认
@@ -396,17 +394,17 @@ export function ActionDialog({
         )}
         {action === "freeze" && (
           <p className="muted">
-            冻结将记录当前资料版本快照，供后续追溯；不代表资料真实有效或已获法律认可。
+            保存本次使用的资料目录及版本，便于后续查阅。资料真实性和适用性仍须核验。
           </p>
         )}
         {needActor && (
           <label>
-            实际操作 / 审核人
+            经办人 / 核验人
             <input
               required
               value={actor}
               onChange={(e) => setActor(e.target.value)}
-              placeholder="填写姓名或业务标识"
+              placeholder="填写实际经办人或核验人姓名"
             />
           </label>
         )}
@@ -473,10 +471,12 @@ export function ActionDialog({
 }
 export function UploadDialog({
   busy,
+  documents,
   act,
   onClose,
 }: {
   busy: boolean;
+  documents: Row[];
   act: Act;
   onClose: () => void;
 }) {
@@ -491,7 +491,7 @@ export function UploadDialog({
   const choose = (f: File | undefined) => {
     if (!f) return;
     if (f.size > 10 * 1024 * 1024) {
-      setError("单个文件不得超过 10 MiB。");
+      setError("单个文件不得超过 10 MB。");
       return;
     }
     setError("");
@@ -545,7 +545,7 @@ export function UploadDialog({
   };
   return (
     <Dialog
-      title="接收登记 · 保留原件与版本"
+      title="上传并登记审计资料"
       onClose={() => {
         if (!busy && !reading) onClose();
       }}
@@ -564,13 +564,45 @@ export function UploadDialog({
           <span>
             {file
               ? `${(file.size / 1024).toFixed(1)} KiB`
-              : "单文件最大 10 MiB · JSON / CSV / 文档 / 图像 / 音视频"}
+              : "单个文件最大 10 MB，可上传文档、表格、照片及音视频"}
           </span>
           <input
             aria-label="选择上传文件"
             type="file"
             onChange={(e) => choose(e.target.files?.[0])}
           />
+        </label>
+        <label>
+          本次上传用途
+          <select
+            aria-label="本次上传用途"
+            value={
+              documents.find((d) => d.logicalId === logicalId)?.logicalId || ""
+            }
+            onChange={(e) => {
+              setLogicalId(e.target.value);
+              const existing = documents.find(
+                (d) => d.logicalId === e.target.value,
+              );
+              if (existing) setKind(existing.kind);
+            }}
+          >
+            <option value="">登记一份新资料</option>
+            {documents
+              .filter(
+                (d, i, all) =>
+                  d.logicalId &&
+                  all.findIndex((x) => x.logicalId === d.logicalId) === i,
+              )
+              .map((d) => (
+                <option key={d.logicalId} value={d.logicalId}>
+                  登记新版本：{d.name}
+                </option>
+              ))}
+          </select>
+          <small>
+            已有同一份资料时，选择其名称登记新版本，便于比较修改内容。
+          </small>
         </label>
         <div className="form-grid">
           <label>
@@ -580,7 +612,7 @@ export function UploadDialog({
               value={kind}
               onChange={(e) => setKind(e.target.value)}
             >
-              <option value="">由服务端识别 / 未分类</option>
+              <option value="">自动识别资料类别</option>
               {Object.entries(kinds).map(([k, v]) => (
                 <option key={k} value={k}>
                   {v}
@@ -588,17 +620,20 @@ export function UploadDialog({
               ))}
             </select>
           </label>
-          <label>
-            版本链标识（选填）
-            <input
-              value={logicalId}
-              onChange={(e) => setLogicalId(e.target.value)}
-              placeholder="同一文件各版本使用同一标识"
-            />
-          </label>
+          <details className="optional-settings">
+            <summary>自行填写资料标识（选填）</summary>
+            <label>
+              同一资料标识（选填）
+              <input
+                value={logicalId}
+                onChange={(e) => setLogicalId(e.target.value)}
+                placeholder="同一文件各版本使用同一标识"
+              />
+            </label>
+          </details>
         </div>
         <label>
-          提供方 / 来源说明
+          资料提供单位及来源
           <input
             required
             value={source}
@@ -607,12 +642,12 @@ export function UploadDialog({
           />
         </label>
         <div className="notice warning">
-          保留原件；无法读取的格式会明确标为待人工解析，不以空内容冒充解析成功。新版本不会自动替换人工确认的适用版。
+          原件会完整保留。上传后请核对提取内容；无法识别的内容可人工摘录。新版本须核对后确认适用。
         </div>
         <details className="inset">
-          <summary>补充人工派生记录（选填）</summary>
+          <summary>补充人工摘录（选填）</summary>
           <p className="small muted">
-            用于明确录入图纸参数、转写或表格字段。系统记录为人工提供，不冒充自动识别。
+            可补充图纸参数、录音文字或表格内容，并填写原件页码、位置等出处。
           </p>
           {records.map((r, i) => (
             <div className="record-block" key={i}>
@@ -647,7 +682,7 @@ export function UploadDialog({
                     locator: "",
                     value: "",
                     unit: "",
-                    note: "人工提供的派生记录",
+                    note: "人工摘录",
                   },
                 ])
               }
@@ -655,12 +690,36 @@ export function UploadDialog({
               <Plus size={14} />
               添加记录
             </button>
-            <input
-              aria-label="新增结构化字段名"
-              value={fieldName}
-              onChange={(e) => setFieldName(e.target.value)}
-              placeholder="字段名，例如 amount、date"
-            />
+            <label>
+              补充摘录项目
+              <select
+                aria-label="补充摘录项目"
+                value={fieldName}
+                onChange={(e) => setFieldName(e.target.value)}
+              >
+                <option value="">请选择</option>
+                {[
+                  ["amount", "金额"],
+                  ["quantity", "数量"],
+                  ["date", "日期"],
+                  ["dateRole", "日期含义"],
+                  ["contractId", "合同编号"],
+                  ["unitPrice", "单价"],
+                  ["title", "事项名称"],
+                  ["statement", "现场记录内容"],
+                  ["length", "长度"],
+                  ["width", "宽度"],
+                  ["height", "高度"],
+                  ["parameterConfirmed", "参数已人工核验"],
+                  ["transcript", "录音文字"],
+                  ["measurement", "实测值"],
+                ].map(([key, text]) => (
+                  <option key={key} value={key}>
+                    {text}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button
               type="button"
               className="button secondary"
@@ -673,12 +732,28 @@ export function UploadDialog({
               }
               onClick={() => {
                 setRecords(
-                  records.map((r) => ({ ...r, [fieldName.trim()]: "" })),
+                  records.map((r) => ({
+                    ...r,
+                    [fieldName.trim()]:
+                      fieldName === "parameterConfirmed"
+                        ? false
+                        : [
+                              "amount",
+                              "quantity",
+                              "unitPrice",
+                              "length",
+                              "width",
+                              "height",
+                              "measurement",
+                            ].includes(fieldName)
+                          ? 0
+                          : "",
+                  })),
                 );
                 setFieldName("");
               }}
             >
-              添加字段
+              添加摘录项目
             </button>
           </div>
         </details>

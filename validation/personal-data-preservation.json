@@ -1,0 +1,17 @@
+{
+  "unchanged": true,
+  "method": "部署前后按字段排序的业务记录 SHA-256 比对，以及全部 objects 原件路径和内容摘要比对",
+  "counts": {
+    "documents": 60,
+    "facts": 105,
+    "artifacts": 39,
+    "confirmations": 4,
+    "workflowRecords": 0,
+    "events": 112,
+    "runs": 41,
+    "tasks": 28,
+    "findings": 3,
+    "assets": 3
+  },
+  "originalsSha256": "142b3c095a0cd58e3c07fa3c4f5bbbee8f72cf4746ae92821eb84b9f29386c1c"
+}

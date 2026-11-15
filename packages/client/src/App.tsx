@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import {
   request,
+  label,
   stages,
   operationNames,
   list,
@@ -49,6 +50,7 @@ import {
 import { ActionDialog, UploadDialog } from "./dialogs";
 import { ScenarioView } from "./scenario";
 import { WorkflowView } from "./workflow";
+import { PersonalHome, StageWork, useWorkspace } from "./workspace";
 type Modal = { action: string; targetType?: string; row?: Row; title?: string };
 export default function App() {
   const [state, setState] = useState<State | null>(null);
@@ -59,7 +61,9 @@ export default function App() {
   const [view, setView] = useState(
     () => decodeURIComponent(location.hash.slice(1)) || "overview",
   );
-  const [stage, setStage] = useState("A");
+  const workspace = useWorkspace(state?.project?.id || "default");
+  const selectedStage = stages.find((s) => view === "stage-" + s.id);
+  const [documentFilter, setDocumentFilter] = useState("current");
   const [sidebar, setSidebar] = useState(false);
   const [source, setSource] = useState<any>(null);
   const [modal, setModal] = useState<Modal | null>(null);
@@ -91,15 +95,11 @@ export default function App() {
       return () => clearTimeout(t);
     }
   }, [toast]);
-  useEffect(() => {
-    if (/^[A-F]\d/.test(view)) setStage(view[0]);
-  }, [view]);
   const navigate = (v: string) => {
     setView(v);
     location.hash = v;
     setSidebar(false);
     setSearch("");
-    if (/^[A-F]\d/.test(v)) setStage(v[0]);
   };
   const act = async (
     action: string,
@@ -120,8 +120,8 @@ export default function App() {
       setState(response.state);
       setToast(
         action === "run"
-          ? "运行已完成，成果仍需人工核验。"
-          : "操作已保存，状态已与服务端同步。",
+          ? "已形成办理结果，请核对事实、证据及适用依据。"
+          : "已保存，可继续办理。",
       );
       return response.result;
     } catch (e) {
@@ -149,16 +149,31 @@ export default function App() {
     title?: string,
   ) => setModal({ action, targetType, row, title });
   const scenario = state?.scenarios.find((s) => s.id === view);
-  const filteredScenarios = list(state?.scenarios).filter((s) =>
-    s.id.startsWith(stage),
-  );
   const matches = (r: Row) =>
     !search ||
-    [r.name, r.title, r.id, r.key, r.status, r.kind].some((x) =>
+    [
+      r.name,
+      r.title,
+      r.id,
+      r.key,
+      display(r.status),
+      display(r.kind),
+      r.source,
+    ].some((x) =>
       String(x || "")
         .toLowerCase()
         .includes(search.toLowerCase()),
     );
+  const documentMatches = (d: Row) =>
+    matches(d) &&
+    (documentFilter === "all" ||
+      (documentFilter === "watched"
+        ? workspace.value.documents.includes(d.id)
+        : documentFilter === "current"
+          ? d.status !== "superseded"
+          : documentFilter === "confirmed"
+            ? d.status === "confirmed"
+            : !["confirmed", "superseded"].includes(d.status)));
   const staleArtifacts = list(state?.artifacts).filter(isStale);
   const pendingFacts = list(state?.facts).filter(
     (f) => f.status !== "confirmed" && f.status !== "superseded",
@@ -168,17 +183,19 @@ export default function App() {
   );
   const pageTitle =
     scenario?.title ||
+    selectedStage?.title ||
     {
-      overview: "项目工作总览",
-      workflow: "流程与文书台账",
-      documents: "资料与版本中心",
-      facts: "项目事实台账",
-      review: "人工核验与待办",
-      history: "运行与操作记录",
-      assets: "知识库 · 能力库 · 数据库",
+      overview: "我的工作台",
+      catalog: "查找办理事项",
+      workflow: "文书办理台账",
+      documents: "审计资料",
+      facts: "事实核对台账",
+      review: "项目待核事项",
+      history: "办理记录",
+      assets: "审计参考资料",
       settings: "演示资料管理",
     }[view] ||
-    "项目工作总览";
+    "我的工作台";
   return (
     <div className={"app " + (source ? "has-evidence" : "")}>
       <aside className={"sidebar " + (sidebar ? "open" : "")}>
@@ -199,7 +216,7 @@ export default function App() {
           </button>
         </div>
         <div className="workspace-label">
-          项目工作空间 <span>DEMO</span>
+          当前审计项目 <span>DEMO</span>
         </div>
         <nav aria-label="主导航">
           <button
@@ -207,14 +224,14 @@ export default function App() {
             onClick={() => navigate("overview")}
           >
             <LayoutDashboard size={17} />
-            工作总览
+            我的工作台
           </button>
           <button
             className={"nav-main " + (view === "documents" ? "active" : "")}
             onClick={() => navigate("documents")}
           >
             <FolderOpen size={17} />
-            资料与版本
+            审计资料
             <span className="count">{state?.documents.length ?? "—"}</span>
           </button>
           <button
@@ -222,67 +239,58 @@ export default function App() {
             onClick={() => navigate("facts")}
           >
             <Database size={17} />
-            项目事实
+            事实核对
           </button>
           <button
             className={"nav-main " + (view === "workflow" ? "active" : "")}
             onClick={() => navigate("workflow")}
           >
             <ClipboardCheck size={17} />
-            流程与文书台账
+            文书办理台账
           </button>
-          <div className="nav-section-label">
-            全流程审计 <span>{state?.scenarios.length ?? 0} 个场景</span>
-          </div>
+          <div className="nav-section-label">按审计阶段查找</div>
           {stages.map((s, i) => (
-            <div className="stage-nav" key={s.id}>
-              <button
-                className={"stage-button " + (stage === s.id ? "expanded" : "")}
-                onClick={() => setStage(stage === s.id ? "" : s.id)}
-                aria-expanded={stage === s.id}
-              >
-                <span className="stage-index">0{i + 1}</span>
-                <span>{s.title}</span>
-                <ChevronRight size={14} />
-              </button>
-              {stage === s.id &&
-                list(state?.scenarios)
-                  .filter((sc) => sc.id.startsWith(s.id))
-                  .map((sc) => (
-                    <button
-                      key={sc.id}
-                      className={
-                        "scenario-nav " + (view === sc.id ? "active" : "")
-                      }
-                      onClick={() => navigate(sc.id)}
-                    >
-                      <span>{sc.id}</span>
-                      {sc.title}
-                    </button>
-                  ))}
-            </div>
+            <button
+              key={s.id}
+              className={
+                "stage-button " +
+                (selectedStage?.id === s.id || scenario?.id.startsWith(s.id)
+                  ? "expanded"
+                  : "")
+              }
+              aria-current={
+                selectedStage?.id === s.id || scenario?.id.startsWith(s.id)
+                  ? "page"
+                  : undefined
+              }
+              onClick={() => navigate("stage-" + s.id)}
+            >
+              <span className="stage-index">{i + 1}</span>
+              <span>{s.title}</span>
+              <ChevronRight size={14} />
+            </button>
           ))}
-          <div className="nav-section-label">协作与治理</div>
+          <div className="nav-section-label">项目协作与参考</div>
           <button
             className={"nav-main " + (view === "review" ? "active" : "")}
             onClick={() => navigate("review")}
           >
             <ClipboardCheck size={17} />
-            人工核验与待办<span className="count">{openTasks.length}</span>
+            项目待核事项<span className="count">{openTasks.length}</span>
           </button>
           <button
             className={"nav-main " + (view === "assets" ? "active" : "")}
             onClick={() => navigate("assets")}
           >
             <BookOpen size={17} />
-            三库资产
+            审计参考资料
           </button>
           <button
             className={"nav-main " + (view === "history" ? "active" : "")}
             onClick={() => navigate("history")}
           >
             <History size={17} />
-            运行记录
+            办理记录
           </button>
         </nav>
         <div className="sidebar-bottom">
@@ -318,14 +326,23 @@ export default function App() {
             </button>
             <span>审计工作台</span>
             <ChevronRight size={14} />
-            <strong>{scenario ? scenario.id : "项目空间"}</strong>
+            {scenario ? (
+              <button
+                className="text-button"
+                onClick={() => navigate("stage-" + scenario.id[0])}
+              >
+                {stages.find((s) => s.id === scenario.id[0])?.title}
+              </button>
+            ) : (
+              <strong>{pageTitle}</strong>
+            )}
           </div>
           <div className="topbar-actions">
             <span className="demo-label">演示模拟数据</span>
             <button
               className="icon-button"
-              aria-label="刷新服务端状态"
-              title="刷新服务端状态"
+              aria-label="刷新项目资料"
+              title="刷新项目资料"
               disabled={loading || !!busy}
               onClick={() => void load()}
             >
@@ -341,20 +358,21 @@ export default function App() {
             <span className="project-dot" />
             <span>{state?.project?.name || "连接审计项目中"}</span>
             <span className="project-version">
-              工作资料集 V{state?.project?.datasetVersion ?? "—"}
+              资料更新批次 {state?.project?.datasetVersion ?? "—"}
             </span>
           </div>
           <div className="page-heading">
             <div>
               <div className="eyebrow">
                 {scenario
-                  ? `${scenario.id} / ${stages.find((s) => s.id === scenario.id[0])?.title}`
-                  : "PROJECT WORKSPACE"}
+                  ? stages.find((s) => s.id === scenario.id[0])?.title
+                  : "个人审计工作台"}
               </div>
               <h1>{pageTitle}</h1>
               <p>
                 {scenario?.description ||
-                  "从资料到成果，每一步都有依据，每一次确认都有记录。"}
+                  selectedStage?.description ||
+                  "按岗位和工作需要选择事项，核查资料、编制文书、记录办理情况。"}
               </p>
             </div>
             <div className="heading-actions">
@@ -365,16 +383,16 @@ export default function App() {
                   onClick={() => setUpload(true)}
                 >
                   <Upload size={16} />
-                  接收资料
+                  上传资料
                 </button>
               )}
               {view === "overview" && (
                 <button
                   className="button primary"
-                  onClick={() => navigate("A01")}
+                  onClick={() => navigate("catalog")}
                   disabled={!state?.scenarios.length}
                 >
-                  进入审计工作
+                  查找办理事项
                   <ArrowRight size={16} />
                 </button>
               )}
@@ -396,8 +414,8 @@ export default function App() {
           {busy && (
             <div className="notice processing" role="status">
               <Loader2 size={17} className="spin" />
-              正在执行并保存到服务端，请稍候。
-              {busy === "run" ? "模型辅助可能需要更长时间。" : ""}
+              正在处理，请稍候。
+              {busy === "run" ? "智能辅助分析可能需要较长时间。" : ""}
             </div>
           )}
           {loading && !state ? (
@@ -415,30 +433,23 @@ export default function App() {
             <>
               {view === "overview" && (
                 <>
-                  <div className="overview-grid">
-                    <section className="welcome-card">
-                      <div className="eyebrow">全流程 · 可追溯 · 人工确认</div>
-                      <h2>
-                        以事实为起点，
-                        <br />
-                        让审计判断有据可循。
-                      </h2>
-                      <p>
-                        六个阶段贯通同一项目资料。先核验来源，再形成结论；变化保留历史，影响明确可查。
-                      </p>
-                      <button
-                        className="text-button"
-                        onClick={() => navigate("documents")}
-                      >
-                        查看当前资料集 <ArrowRight size={16} />
-                      </button>
-                      <div className="welcome-orbit">
-                        <ShieldCheck size={88} />
-                      </div>
-                    </section>
+                  <PersonalHome
+                    state={state}
+                    workspace={workspace}
+                    navigate={navigate}
+                    upload={() => setUpload(true)}
+                  />
+                  <details className="project-attention card padded">
+                    <summary>
+                      项目共用待核事项{" "}
+                      <span className="muted small">
+                        事实 {pendingFacts.length} 条 · 待办 {openTasks.length}{" "}
+                        项 · 成果待复核 {staleArtifacts.length} 份
+                      </span>
+                    </summary>
                     <section className="card priorities">
                       <div className="section-heading">
-                        <h2>当前需要关注</h2>
+                        <h2>项目待核事项</h2>
                         <span className="live-dot">实时状态</span>
                       </div>
                       <button
@@ -450,7 +461,7 @@ export default function App() {
                         </span>
                         <div>
                           <strong>事实待人工核验</strong>
-                          <small>确认口径与来源后供下游使用</small>
+                          <small>核对来源和口径，供后续审计使用</small>
                         </div>
                         <b>{pendingFacts.length}</b>
                         <ChevronRight size={15} />
@@ -484,41 +495,7 @@ export default function App() {
                         <ChevronRight size={15} />
                       </button>
                     </section>
-                  </div>
-                  <div className="stats-grid">
-                    <div className="stat">
-                      <Files />
-                      <span>已保存资料版本</span>
-                      <strong>
-                        {state.documents.length}
-                        <small>份</small>
-                      </strong>
-                    </div>
-                    <div className="stat">
-                      <Database />
-                      <span>项目事实记录</span>
-                      <strong>
-                        {state.facts.length}
-                        <small>条</small>
-                      </strong>
-                    </div>
-                    <div className="stat">
-                      <FileCheck2 />
-                      <span>已生成成果版本</span>
-                      <strong>
-                        {state.artifacts.length}
-                        <small>份</small>
-                      </strong>
-                    </div>
-                    <div className="stat">
-                      <Activity />
-                      <span>实际运行记录</span>
-                      <strong>
-                        {state.runs.length}
-                        <small>次</small>
-                      </strong>
-                    </div>
-                  </div>
+                  </details>
                   {!state.documents.length && (
                     <section className="notice warning">
                       <div>
@@ -538,9 +515,9 @@ export default function App() {
                     </section>
                   )}
                   <div className="section-heading">
-                    <h2>审计全流程</h2>
+                    <h2>按审计阶段查找</h2>
                     <span className="muted small">
-                      六阶段 · {state.scenarios.length} 个业务场景
+                      六阶段 · {state.scenarios.length} 项办理事项
                     </span>
                   </div>
                   <div className="stage-cards">
@@ -555,7 +532,7 @@ export default function App() {
                         <button
                           className="stage-card"
                           key={s.id}
-                          onClick={() => navigate(scs[0]?.id || "overview")}
+                          onClick={() => navigate("stage-" + s.id)}
                           disabled={!scs.length}
                         >
                           <div className="stage-card-top">
@@ -565,20 +542,22 @@ export default function App() {
                           <h3>{s.title}</h3>
                           <p>{s.description}</p>
                           <div className="stage-card-footer">
-                            <span>{scs.length} 个场景</span>
-                            <span>{runs.length} 次实际运行</span>
+                            <span>{scs.length} 项事项</span>
+                            <span>
+                              {runs.length ? "已有办理记录" : "尚无办理记录"}
+                            </span>
                           </div>
                         </button>
                       );
                     })}
                   </div>
                   <div className="section-heading">
-                    <h2>最近成果</h2>
+                    <h2>项目最近办理结果</h2>
                     <button
                       className="text-button"
                       onClick={() => navigate("history")}
                     >
-                      查看运行记录 <ArrowRight size={14} />
+                      查看办理记录 <ArrowRight size={14} />
                     </button>
                   </div>
                   <section className="card">
@@ -596,10 +575,13 @@ export default function App() {
                               <FileCheck2 size={20} />
                             </span>
                             <div>
-                              <strong>{a.title}</strong>
+                              <strong>
+                                {state.scenarios.find(
+                                  (s) => s.id === a.scenarioId,
+                                )?.title || a.title}
+                              </strong>
                               <small>
-                                {a.scenarioId} · V{a.version} ·{" "}
-                                {dateText(a.createdAt)}
+                                第 {a.version} 版 · {dateText(a.createdAt)}
                               </small>
                             </div>
                             <Badge value={a.status} />
@@ -608,21 +590,59 @@ export default function App() {
                         ))
                     ) : (
                       <Empty title="还没有生成成果">
-                        进入业务场景，选择已保存的资料并执行核查。
+                        选择办理事项，使用项目资料开展核查。
                       </Empty>
                     )}
                   </section>
                 </>
               )}
+              {view === "catalog" && (
+                <StageWork
+                  stageId=""
+                  state={state}
+                  workspace={workspace}
+                  navigate={navigate}
+                />
+              )}
+              {selectedStage && (
+                <StageWork
+                  key={selectedStage.id}
+                  stageId={selectedStage.id}
+                  state={state}
+                  workspace={workspace}
+                  navigate={navigate}
+                />
+              )}
               {view === "documents" && (
                 <>
+                  <div className="notice">
+                    <div>
+                      <strong>按需查找和核对项目资料</strong>
+                      <p>
+                        项目资料由参与人员共用。可关注自己正在使用的资料，选择“我关注的资料”快速查找。关注仅保存在当前浏览器。
+                      </p>
+                    </div>
+                  </div>
                   <div className="toolbar">
                     <SearchBox
                       value={search}
                       onChange={setSearch}
-                      placeholder="搜索文件名、分类或编号"
+                      placeholder="搜索资料名称、类别或来源"
                     />
                     <div className="toolbar-actions">
+                      <label>
+                        查看范围
+                        <select
+                          value={documentFilter}
+                          onChange={(e) => setDocumentFilter(e.target.value)}
+                        >
+                          <option value="current">当前资料</option>
+                          <option value="watched">我关注的资料</option>
+                          <option value="pending">待核对资料</option>
+                          <option value="confirmed">已确认适用</option>
+                          <option value="all">全部资料及历史版本</option>
+                        </select>
+                      </label>
                       <button
                         className="button secondary"
                         disabled={!!busy || state.documents.length < 2}
@@ -646,12 +666,12 @@ export default function App() {
                             "freeze",
                             undefined,
                             undefined,
-                            "冻结本次工作资料集",
+                            "留存本次资料清单",
                           )
                         }
                       >
                         <Archive size={15} />
-                        冻结资料集
+                        留存资料清单
                       </button>
                     </div>
                   </div>
@@ -660,7 +680,8 @@ export default function App() {
                       <h2>
                         资料目录{" "}
                         <span className="muted small">
-                          {state.documents.filter(matches).length} 个版本
+                          {state.documents.filter(documentMatches).length}{" "}
+                          个版本
                         </span>
                       </h2>
                       <span className="small muted">
@@ -669,13 +690,18 @@ export default function App() {
                     </div>
                     {state.documents.length ? (
                       <div className="table-scroll">
-                        <table>
+                        {!state.documents.some(documentMatches) && (
+                          <Empty title="没有符合条件的资料">
+                            请调整查看范围或搜索内容。
+                          </Empty>
+                        )}
+                        <table aria-label="审计资料目录">
                           <thead>
                             <tr>
                               <th>资料名称 / 来源</th>
                               <th>分类</th>
                               <th>版本</th>
-                              <th>解析状态</th>
+                              <th>内容提取情况</th>
                               <th>适用状态</th>
                               <th>操作</th>
                             </tr>
@@ -683,7 +709,7 @@ export default function App() {
                           <tbody>
                             {[...state.documents]
                               .reverse()
-                              .filter(matches)
+                              .filter(documentMatches)
                               .map((d) => (
                                 <tr key={d.id}>
                                   <td>
@@ -725,6 +751,34 @@ export default function App() {
                                   <td>
                                     <div className="row-actions">
                                       <button
+                                        aria-pressed={workspace.value.documents.includes(
+                                          d.id,
+                                        )}
+                                        onClick={() =>
+                                          workspace.update({
+                                            ...workspace.value,
+                                            documents:
+                                              workspace.value.documents.includes(
+                                                d.id,
+                                              )
+                                                ? workspace.value.documents.filter(
+                                                    (id) => id !== d.id,
+                                                  )
+                                                : [
+                                                    ...workspace.value
+                                                      .documents,
+                                                    d.id,
+                                                  ],
+                                          })
+                                        }
+                                      >
+                                        {workspace.value.documents.includes(
+                                          d.id,
+                                        )
+                                          ? "取消关注"
+                                          : "关注资料"}
+                                      </button>
+                                      <button
                                         onClick={() =>
                                           setSource({
                                             documentId: d.id,
@@ -754,11 +808,11 @@ export default function App() {
                                             "revise",
                                             "document",
                                             d,
-                                            "修订派生解析",
+                                            "校正资料摘录",
                                           )
                                         }
                                       >
-                                        修订解析
+                                        校正摘录
                                       </button>
                                     </div>
                                   </td>
@@ -773,10 +827,8 @@ export default function App() {
                       </Empty>
                     )}
                   </section>
-                  <section className="card margin-top">
-                    <div className="section-heading padded">
-                      <h2>变更影响与历史快照</h2>
-                    </div>
+                  <details className="card padded margin-top">
+                    <summary>资料修改及留存记录</summary>
                     <DataView
                       value={[...state.events]
                         .reverse()
@@ -788,7 +840,7 @@ export default function App() {
                         .slice(0, 15)}
                       onSource={setSource}
                     />
-                  </section>
+                  </details>
                 </>
               )}
               {view === "facts" && (
@@ -797,10 +849,10 @@ export default function App() {
                     <SearchBox
                       value={search}
                       onChange={setSearch}
-                      placeholder="搜索事实字段或编号"
+                      placeholder="搜索事实名称或编号"
                     />
                     <span className="small muted">
-                      修正单位或日期后，依赖成果需重新计算
+                      修正单位或日期后，引用该事实的成果需重新核查
                     </span>
                   </div>
                   <section className="card">
@@ -819,9 +871,13 @@ export default function App() {
                           {state.facts.filter(matches).map((f) => (
                             <tr key={f.id}>
                               <td>
-                                <strong>{f.key || f.title}</strong>
+                                <strong>
+                                  {f.record?.title ||
+                                    f.record?.name ||
+                                    label(f.key || f.title || "事实记录")}
+                                </strong>
                                 <small className="block muted">
-                                  {f.recordType} {f.unit}
+                                  {display(f.recordType)} {f.unit}
                                 </small>
                               </td>
                               <td>
@@ -831,7 +887,7 @@ export default function App() {
                                 />
                                 {f.record && (
                                   <details>
-                                    <summary>结构化字段</summary>
+                                    <summary>事实明细</summary>
                                     <DataView
                                       value={f.record}
                                       onSource={setSource}
@@ -859,7 +915,7 @@ export default function App() {
                                         "confirm",
                                         "fact",
                                         f,
-                                        "确认项目事实",
+                                        "确认事实核对",
                                       )
                                     }
                                   >
@@ -935,7 +991,11 @@ export default function App() {
                         >
                           <RefreshCw size={20} />
                           <div>
-                            <strong>{a.title}</strong>
+                            <strong>
+                              {state.scenarios.find(
+                                (s) => s.id === a.scenarioId,
+                              )?.title || a.title}
+                            </strong>
                             <small>
                               {a.staleReason ||
                                 a.invalidationReason ||
@@ -979,9 +1039,9 @@ export default function App() {
                 <>
                   <section className="card">
                     <div className="section-heading padded">
-                      <h2>实际运行记录</h2>
+                      <h2>办理记录</h2>
                       <span className="muted small">
-                        失败运行保留；不会替换为预制成果
+                        处理失败时可查看原因并重新办理
                       </span>
                     </div>
                     {[...state.runs].reverse().map((r) => (
@@ -992,7 +1052,7 @@ export default function App() {
                             {r.input?.action === "recognize"
                               ? "原件文字识别"
                               : r.input?.action === "transcribe"
-                                ? "真实语音转写"
+                                ? "录音转文字"
                                 : operationNames[r.scenarioId] || r.scenarioId}
                           </strong>
                           <Badge value={r.status} />
@@ -1010,7 +1070,7 @@ export default function App() {
                           <div className="notice error">{display(r.error)}</div>
                         )}
                         <details>
-                          <summary>输入与运行详情</summary>
+                          <summary>本次使用的资料与处理详情</summary>
                           <DataView value={r} onSource={setSource} />
                         </details>
                         {r.artifactId && (
@@ -1018,12 +1078,12 @@ export default function App() {
                             className="text-button"
                             onClick={() => navigate(r.scenarioId)}
                           >
-                            打开对应场景成果 <ArrowRight size={14} />
+                            查看办理结果 <ArrowRight size={14} />
                           </button>
                         )}
                       </div>
                     ))}
-                    {!state.runs.length && <Empty title="尚无运行记录" />}
+                    {!state.runs.length && <Empty title="尚无办理记录" />}
                   </section>
                   <section className="card margin-top">
                     <div className="section-heading padded">
@@ -1040,7 +1100,7 @@ export default function App() {
                 <section className="card settings-card">
                   <h2>分批导入演示资料</h2>
                   <p className="muted">
-                    全部为演示模拟数据。每个资料包实际保存至服务端，重复导入由服务端幂等处理。
+                    全部为演示模拟数据。按需导入各批资料，同一批资料不会重复登记。
                   </p>
                   <div className="batch-grid">
                     {[
@@ -1079,7 +1139,7 @@ export default function App() {
                     <div>
                       <h3>重置当前模拟项目</h3>
                       <p>
-                        清空项目投影，需输入确认文字。请先导出需要保留的成果。
+                        清空演示项目记录，需输入确认文字。请先导出需要保留的成果。
                       </p>
                     </div>
                     <button
@@ -1134,6 +1194,7 @@ export default function App() {
       {upload && (
         <UploadDialog
           busy={!!busy}
+          documents={state?.documents || []}
           act={act}
           onClose={() => setUpload(false)}
         />
@@ -1286,9 +1347,9 @@ export function AssetView({
   return (
     <div className="library-grid">
       {[
-        ["knowledge", "知识库", "经核验的知识、案例与适用边界"],
-        ["capability", "能力库", "规则、方法、模板及实际测试"],
-        ["data", "数据库", "结构化字段、口径与脱敏样本"],
+        ["knowledge", "审计案例库", "经核验的知识、案例与适用边界"],
+        ["capability", "审计方法库", "规则、方法、模板及实际测试"],
+        ["data", "参考数据资料", "事实明细、口径与脱敏样本"],
       ].map(([kind, title, desc]) => (
         <section className="card library" key={kind}>
           <div className="library-heading">
@@ -1318,13 +1379,13 @@ export function AssetView({
                           .catch(() => {})
                       }
                     >
-                      实际测试能力
+                      验证审计方法
                     </button>
                   )}
                   <button
                     disabled={busy || a.status === "published"}
                     onClick={() =>
-                      onAction("publish", "asset", a, "审核发布到三库")
+                      onAction("publish", "asset", a, "审核参考资料入库")
                     }
                   >
                     审核入库
@@ -1341,8 +1402,8 @@ export function AssetView({
               </article>
             ))}
           {!state.assets.some((a) => a.library === kind) && (
-            <Empty title="暂无候选资产">
-              执行 F05 从已保存成果中提取候选。
+            <Empty title="暂无待审核参考资料">
+              请到“审计经验与方法整理”提取待审核资料。
             </Empty>
           )}
         </section>

@@ -29,12 +29,12 @@ export const WORKFLOW_FORMS = [
       field("stage", "工作阶段", "select", REFERENCE.stages),
       field("date", "办理日期", "date"),
       field("responsible", "责任主体"),
-      field("outcome", "完成情况与产出"),
+      field("outcome", "完成情况及形成材料"),
     ],
   },
   {
     kind: "receipt",
-    title: "逐单位送达回证",
+    title: "送达回证",
     fields: [
       field("subjectId", "签收单位", "subject"),
       field("documentType", "送达文种", "select", [
@@ -61,7 +61,7 @@ export const WORKFLOW_FORMS = [
     kind: "quality",
     title: "签发前质量控制",
     fields: [
-      field("control", "质控关口", "select", QUALITY),
+      field("control", "审核环节", "select", QUALITY),
       field("reportId", "被审核报告版本", "report"),
       field("date", "签字日期", "date"),
       field("signedBy", "签字责任人 / 会议参加人"),
@@ -71,7 +71,7 @@ export const WORKFLOW_FORMS = [
   },
   {
     kind: "evidenceChain",
-    title: "四层证据链",
+    title: "方案、证据、底稿与报告对应关系",
     fields: [
       field("planItem", "实施方案事项序号"),
       field("issueId", "报告问题序号"),
@@ -93,7 +93,7 @@ export const WORKFLOW_FORMS = [
   },
   {
     kind: "redline",
-    title: "花脸稿与定稿",
+    title: "修改留痕稿与定稿",
     fields: [
       field("documentType", "文书类型", "select", [
         "审计通知书",
@@ -105,7 +105,7 @@ export const WORKFLOW_FORMS = [
       field("beforeText", "修改前原文", "textarea"),
       field("afterText", "修改后原文", "textarea"),
       field("changeBasis", "修改依据与意见编号"),
-      field("draftIds", "花脸稿原件", "documents"),
+      field("draftIds", "修改留痕稿原件", "documents"),
       field("finalIds", "定稿原件", "documents"),
     ],
   },
@@ -376,13 +376,13 @@ export function saveWorkflowRecord(s, p) {
           row.evidenceSheetIds.length +
           row.workpaperIds.length +
           1,
-      "四层证据链须分别引用原始资料、取证单、底稿及报告",
+      "方案、证据、底稿与报告对应关系须分别引用原始资料、取证单、底稿及报告",
     );
   }
   if (row.kind === "redline")
     requireThat(
       !row.draftIds.some((x) => row.finalIds.includes(x)),
-      "花脸稿与定稿须分别保留原件",
+      "修改留痕稿与定稿须分别保留原件",
     );
   if (row.kind === "issuance") {
     const gaps = qualityChecks(s, row.reportId, row.date);

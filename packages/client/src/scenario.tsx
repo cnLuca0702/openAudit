@@ -91,13 +91,13 @@ const factKinds: Record<string, string[]> = {
 const inputHints: Record<string, string> = {
   A01: "检查应有资料、版本及变化影响；新接收不等于最新有效。",
   A02: "主体、资金与期间关系均来自已保存资料。未核实关系不会作为责任认定。",
-  A03: "审计重点与所选文书会影响服务端生成的事项、程序及证据需求。",
-  B01: "按合同主键关联，每笔交易单列。修正事实的 amount、unit 或 contractId 后重新运行。",
-  B02: "保持日期原文与日期语义。可在下方修正 date / dateRole 后重排时间轴。",
+  A03: "填写本次审计重点，选择需要起草的文书，再逐项核对草稿。",
+  B01: "按合同编号汇总每笔款项。如金额、单位或合同编号有误，请先修改基础事实再重新核查。",
+  B02: "核对原始日期及其含义；如需调整，可修改基础事实后重新梳理。",
   B03: "按事项及实体匹配，复算计量区间交集。差异仅形成待核线索。",
   B04: "先核对法规官方原文、生效期间和适用条件；不自动认定违法。",
   B05: "按所选合同具体版本复算比例、冲回与验收条件。有效版本由人确定。",
-  B06: "图纸参数须有清晰来源，parameterConfirmed 经人工核验后才能参与复算。",
+  B06: "图纸参数须有清晰出处，并经人工核验后才能参与复算。",
   B07: "人工盘点数量与换算确认独立记录，重复影像不能重复计数。",
   B08: "保留时间码、说话人及转写不确定性。录音、影像和陈述分别核验。",
   B09: "转换保留原始事实和来源，待核陈述不会自动升级为已查明事实。",
@@ -106,13 +106,13 @@ const inputHints: Record<string, string> = {
   D01: "检查具体送审清单及指定版本，缺件需补正后重新运行。",
   D02: "检查样本范围、数字、依据引用与未决事项，保留独立复核责任。",
   D03: "核验拟引用依据的原文、行为期间和已证明条件。",
-  D04: "修改位置、证据、回复及回归检查关联；冲突意见需人工协调。",
+  D04: "修改位置、证据、回复及重新核对关联；冲突意见需人工协调。",
   E01: "事实、日期、数字、版本四类审核。文稿或关键事实变动使相关确认失效。",
   F01: "单位自报状态与审计核验状态分开；到账、主体和凭证唯一性逐项核对。",
   F02: "复查连续期数据与反弹情况；销号需人工决定及有效证明。",
-  F03: "输出公告候选，保留事实限定并按范围显示信息；不执行公开发布。",
+  F03: "起草审计结果公告，保留事实限定并按范围显示信息；不执行公开发布。",
   F04: "应有、实有及缺件三方核对，归档与整改状态独立管理。",
-  F05: "来源、脱敏、授权、适用性及能力实测完成后方可审核入库。",
+  F05: "来源、脱敏、授权、适用性及方法验证完成后方可审核入库。",
 };
 export function ScenarioView({
   state,
@@ -183,9 +183,9 @@ export function ScenarioView({
         <div className="section-heading">
           <div className="section-title">
             <Settings2 size={19} />
-            <h2>核查输入与运行设置</h2>
+            <h2>办理准备</h2>
           </div>
-          <span className="badge neutral">输入与结果均持久化</span>
+          <span className="badge neutral">办理结果自动保存</span>
         </div>
         <p className="scenario-hint">{inputHints[scenario.id]}</p>
         <div className="required-kinds">
@@ -209,157 +209,119 @@ export function ScenarioView({
             </span>
           ))}
         </div>
-        <div className="config-grid">
-          <div>
-            <label>
-              工作资料范围
-              <select
-                value={explicit ? "explicit" : "default"}
-                onChange={(e) => setExplicit(e.target.value === "explicit")}
-              >
-                <option value="default">
-                  服务端当前适用资料集（保留具体版本快照）
-                </option>
-                <option value="explicit">人工指定文件与版本</option>
-              </select>
-            </label>
-            {explicit && (
-              <div className="checkbox-list source-picker">
-                {state.documents.map((d) => (
-                  <label key={d.id} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={documentIds.includes(d.id)}
-                      onChange={(e) =>
-                        setDocuments(
-                          e.target.checked
-                            ? [...documentIds, d.id]
-                            : documentIds.filter((x) => x !== d.id),
-                        )
-                      }
-                    />
-                    <span>
-                      {d.name}{" "}
-                      <small>
-                        V{d.version} · {display(d.status)}
-                      </small>
-                    </span>
-                    <button
-                      type="button"
-                      className="icon-button"
-                      aria-label={"查看" + d.name}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onSource({ documentId: d.id });
-                      }}
-                    >
-                      <Link2 size={13} />
-                    </button>
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
-          <div>
-            <label>前序成果引用（可选）</label>
-            <details className="source-select">
-              <summary>
-                {artifactIds.length
-                  ? `已选择 ${artifactIds.length} 个成果版本`
-                  : "选择底稿、报告或复核成果"}
-                <ChevronDown size={14} />
-              </summary>
-              <div className="checkbox-list">
-                {state.artifacts
-                  .filter((a) => a.scenarioId !== scenario.id)
-                  .map((a) => (
-                    <label className="checkbox-label" key={a.id}>
+        <details className="optional-settings">
+          <summary>
+            调整本次使用的资料{" "}
+            <span className="muted small">
+              {explicit
+                ? `已指定 ${documentIds.length} 份资料`
+                : "默认使用项目当前适用资料"}
+              {artifactIds.length ? ` · 引用 ${artifactIds.length} 份成果` : ""}
+            </span>
+          </summary>
+          <div className="config-grid">
+            <div>
+              <label>
+                本次使用的资料
+                <select
+                  value={explicit ? "explicit" : "default"}
+                  onChange={(e) => setExplicit(e.target.value === "explicit")}
+                >
+                  <option value="default">
+                    使用项目当前适用资料（自动记录版本）
+                  </option>
+                  <option value="explicit">自行选择资料及版本</option>
+                </select>
+              </label>
+              {explicit && (
+                <div className="checkbox-list source-picker">
+                  {state.documents.map((d) => (
+                    <label key={d.id} className="checkbox-label">
                       <input
                         type="checkbox"
-                        checked={artifactIds.includes(a.id)}
+                        checked={documentIds.includes(d.id)}
                         onChange={(e) =>
-                          setArtifacts(
+                          setDocuments(
                             e.target.checked
-                              ? [...artifactIds, a.id]
-                              : artifactIds.filter((x) => x !== a.id),
+                              ? [...documentIds, d.id]
+                              : documentIds.filter((x) => x !== d.id),
                           )
                         }
                       />
                       <span>
-                        {a.scenarioId} · {a.title} V{a.version} ·{" "}
-                        {display(a.status)}
+                        {d.name}{" "}
+                        <small>
+                          V{d.version} · {display(d.status)}
+                        </small>
                       </span>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        aria-label={"查看" + d.name}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onSource({ documentId: d.id });
+                        }}
+                      >
+                        <Link2 size={13} />
+                      </button>
                     </label>
                   ))}
-                {!state.artifacts.length && (
-                  <p className="muted small">尚无可引用成果</p>
-                )}
-              </div>
-            </details>
+                </div>
+              )}
+            </div>
+            <div>
+              <label>前序成果引用（可选）</label>
+              <details className="source-select">
+                <summary>
+                  {artifactIds.length
+                    ? `已选择 ${artifactIds.length} 个成果版本`
+                    : "选择底稿、报告或复核成果"}
+                  <ChevronDown size={14} />
+                </summary>
+                <div className="checkbox-list">
+                  {state.artifacts
+                    .filter((a) => a.scenarioId !== scenario.id)
+                    .map((a) => (
+                      <label className="checkbox-label" key={a.id}>
+                        <input
+                          type="checkbox"
+                          checked={artifactIds.includes(a.id)}
+                          onChange={(e) =>
+                            setArtifacts(
+                              e.target.checked
+                                ? [...artifactIds, a.id]
+                                : artifactIds.filter((x) => x !== a.id),
+                            )
+                          }
+                        />
+                        <span>
+                          {a.scenarioId} · {a.title} V{a.version} ·{" "}
+                          {display(a.status)}
+                        </span>
+                      </label>
+                    ))}
+                  {!state.artifacts.length && (
+                    <p className="muted small">尚无可引用成果</p>
+                  )}
+                </div>
+              </details>
+            </div>
           </div>
-        </div>
+        </details>
         <Options
           scenarioId={scenario.id}
           options={options}
           setOptions={setOptions}
         />
-        {useModel && ["B06", "B07", "B08"].includes(scenario.id) && (
-          <div className="form-grid">
-            <label>
-              模型处理模式
-              <select
-                value={options.mode || "auto"}
-                onChange={(e) => {
-                  const next = { ...options };
-                  if (e.target.value === "auto") delete next.mode;
-                  else next.mode = e.target.value;
-                  setOptions(next);
-                }}
-              >
-                <option value="auto">按所选媒体自动选择</option>
-                <option value="vision">真实视觉模型（图像 / 视频帧）</option>
-                <option value="text">文本模型（核对解析内容）</option>
-              </select>
-            </label>
-            <label>
-              视频抽帧时间（秒，逗号分隔）
-              <input
-                placeholder="0"
-                value={(options.seconds || []).join(",")}
-                onChange={(e) =>
-                  setOptions({
-                    ...options,
-                    seconds: e.target.value
-                      .split(",")
-                      .map(Number)
-                      .filter((n) => Number.isFinite(n) && n >= 0),
-                  })
-                }
-              />
-            </label>
-          </div>
-        )}
-        {useModel && (
-          <label>
-            补充模型核查问题（选填）
-            <textarea
-              rows={2}
-              value={options.prompt || ""}
-              onChange={(e) =>
-                setOptions({ ...options, prompt: e.target.value })
-              }
-              placeholder="仅作辅助提问，模型不得改变确定性计算与人工状态"
-            />
-          </label>
-        )}
         <details className="editable-inputs">
           <summary>
             <FileText size={15} />
-            编辑业务事实与口径 <span>{relevantFacts.length} 条可核对记录</span>
+            核对或修改基础事实 <span>{relevantFacts.length} 条可核对记录</span>
             <ChevronDown size={14} />
           </summary>
           <p className="small muted">
-            打开具体事实后逐字段修改并说明理由；保存新版本后重新运行，服务端重算依赖关系。
+            核对资料出处后修改事实并填写理由。修改后重新办理，以更新引用该事实的结果。
           </p>
           <div className="input-records">
             {relevantFacts.map((f) => (
@@ -378,10 +340,10 @@ export function ScenarioView({
                   className="button secondary compact"
                   disabled={busy}
                   onClick={() =>
-                    onAction("revise", "fact", f, "修正业务字段与计算口径")
+                    onAction("revise", "fact", f, "修改事实与计算口径")
                   }
                 >
-                  编辑字段
+                  修改事实
                 </button>
                 <button
                   className="text-button"
@@ -396,12 +358,18 @@ export function ScenarioView({
             ))}
           </div>
           {!relevantFacts.length && (
-            <Empty title="尚无相关结构化事实">
-              接收该场景所需资料并补充人工解析记录。
+            <Empty title="尚无相关事实记录">
+              上传所需资料，核对系统摘录；必要时补充人工摘录。
             </Empty>
           )}
         </details>
-        <div className="run-footer">
+        <details className="optional-settings intelligent-settings">
+          <summary>
+            智能辅助分析（选用）
+            <span className="muted small">
+              {useModel ? "已开启" : "未开启"}
+            </span>
+          </summary>
           <label className="checkbox-label model-toggle">
             <input
               type="checkbox"
@@ -410,16 +378,67 @@ export function ScenarioView({
             />
             <Sparkles size={16} />
             <span>
-              调用真实模型辅助解释<small>失败将保留错误，不生成替代答案</small>
+              使用智能辅助分析<small>分析建议须由审计人员核实</small>
             </span>
           </label>
+          {useModel && ["B06", "B07", "B08"].includes(scenario.id) && (
+            <div className="form-grid">
+              <label>
+                智能识别方式
+                <select
+                  value={options.mode || "auto"}
+                  onChange={(e) => {
+                    const next = { ...options };
+                    if (e.target.value === "auto") delete next.mode;
+                    else next.mode = e.target.value;
+                    setOptions(next);
+                  }}
+                >
+                  <option value="auto">按所选媒体自动选择</option>
+                  <option value="vision">识别照片和视频画面</option>
+                  <option value="text">分析已提取文字</option>
+                </select>
+              </label>
+              <label>
+                视频抽帧时间（秒，逗号分隔）
+                <input
+                  placeholder="0"
+                  value={(options.seconds || []).join(",")}
+                  onChange={(e) =>
+                    setOptions({
+                      ...options,
+                      seconds: e.target.value
+                        .split(",")
+                        .map(Number)
+                        .filter((n) => Number.isFinite(n) && n >= 0),
+                    })
+                  }
+                />
+              </label>
+            </div>
+          )}
+          {useModel && (
+            <label>
+              需要辅助分析的问题（选填）
+              <textarea
+                rows={2}
+                value={options.prompt || ""}
+                onChange={(e) =>
+                  setOptions({ ...options, prompt: e.target.value })
+                }
+                placeholder="例如：请列出需进一步核实的付款条件"
+              />
+            </label>
+          )}
+        </details>
+        <div className="run-footer">
           <button
             className="button primary"
             disabled={busy || (explicit && !documentIds.length)}
             onClick={() => void run()}
           >
             <Play size={16} />
-            {busy ? "运行处理中…" : operationNames[scenario.id] || "执行场景"}
+            {busy ? "正在办理…" : operationNames[scenario.id] || "开始办理"}
           </button>
         </div>
         {localError && (
@@ -493,7 +512,7 @@ export function ScenarioView({
                 ? "图纸与区域依据"
                 : scenario.id === "B07"
                   ? "盘点影像与实物记录"
-                  : "多模态证据墙"}
+                  : "现场照片、录音与录像"}
             </h2>
             <span className="muted small">图像不替代现场真实性与专业判断</span>
           </div>
@@ -514,7 +533,7 @@ export function ScenarioView({
                       )
                     }
                   >
-                    真实语音转写
+                    录音转文字
                   </button>
                 )}
                 <button
@@ -543,7 +562,7 @@ export function ScenarioView({
         <div className="section-heading padded">
           <div className="section-title">
             <FileCheck2 size={19} />
-            <h2>结构化成果</h2>
+            <h2>办理结果</h2>
             {current && <Badge value={current.status} />}
           </div>
           {artifacts.length > 0 && (
@@ -565,7 +584,7 @@ export function ScenarioView({
           <>
             {isStale(current) && (
               <div className="notice warning in-card">
-                <strong>此版本受上游变化影响</strong>
+                <strong>引用资料已变更，需要重新核对</strong>
                 <span>
                   {current.invalidationReason ||
                     current.staleReason ||
@@ -573,13 +592,17 @@ export function ScenarioView({
                 </span>
               </div>
             )}
+            <p className="result-guidance">
+              先查看核查结果与资料出处，再核验确认或修改文稿。需要报送、签发或送达时，请到{" "}
+              <a href="#workflow">文书办理台账</a> 登记实际办理情况。
+            </p>
             <div className="output-toolbar">
               <div className="tabs">
                 <button
                   className={tab === "structured" ? "active" : ""}
                   onClick={() => setTab("structured")}
                 >
-                  业务视图
+                  结果明细
                 </button>
                 <button
                   className={tab === "checks" ? "active" : ""}
@@ -591,14 +614,14 @@ export function ScenarioView({
                   className={tab === "document" ? "active" : ""}
                   onClick={() => setTab("document")}
                 >
-                  文稿与引用
+                  文书草稿
                 </button>
               </div>
               <div className="toolbar-actions">
                 <a
                   className="icon-button"
-                  title="导出 Markdown 成果"
-                  aria-label="导出 Markdown 成果"
+                  title="下载文本稿（Markdown）"
+                  aria-label="下载文本稿（Markdown）"
                   href={
                     "/api/audit/export?artifactId=" +
                     encodeURIComponent(current.id) +
@@ -615,7 +638,7 @@ export function ScenarioView({
                     "&format=csv"
                   }
                 >
-                  CSV
+                  数据表（CSV）
                 </a>
                 <a
                   className="text-button small"
@@ -625,7 +648,7 @@ export function ScenarioView({
                     "&format=docx"
                   }
                 >
-                  Word
+                  导出 Word
                 </a>
                 <a
                   className="text-button small"
@@ -635,7 +658,7 @@ export function ScenarioView({
                     "&format=xlsx"
                   }
                 >
-                  Excel
+                  导出 Excel
                 </a>
               </div>
             </div>
@@ -643,7 +666,7 @@ export function ScenarioView({
               <>
                 {current.summary && (
                   <section className="result-summary">
-                    <h3>本次计算与口径</h3>
+                    <h3>核查结果摘要</h3>
                     <DataView value={current.summary} onSource={onSource} />
                   </section>
                 )}
@@ -666,7 +689,7 @@ export function ScenarioView({
                         </div>
                         {finding.amount != null && (
                           <div className="finding-amount">
-                            涉及候选金额 <strong>{finding.amount}</strong>{" "}
+                            待核实金额 <strong>{finding.amount}</strong>{" "}
                             {finding.unit || "元"}
                           </div>
                         )}
@@ -797,7 +820,7 @@ export function ScenarioView({
         ) : (
           <Empty title="等待首次实际运行">
             选择输入并执行“{operationNames[scenario.id]}
-            ”。这里仅展示服务端真实保存的成果。
+            ”，完成后在这里查看结果。
           </Empty>
         )}
       </section>
@@ -812,7 +835,7 @@ export function ScenarioView({
           <span>{dateText(lastRun.startedAt)}</span>
           <span>
             {lastRun.engine === "deterministic+model"
-              ? "规则 + 真实模型"
+              ? "系统计算及智能辅助"
               : lastRun.engine === "deterministic"
                 ? "规则计算，未调用模型"
                 : display(lastRun.engine)}
@@ -833,7 +856,7 @@ export function ScenarioView({
       {scenario.id === "F05" && (
         <>
           <div className="section-heading margin-top">
-            <h2>受控三库资产</h2>
+            <h2>可供参考的经验与方法</h2>
           </div>
           <AssetView
             state={state}
@@ -867,24 +890,34 @@ function Options({
   return (
     <div className="scenario-options">
       {scenarioId === "A01" && (
-        <label>
-          应收资料类别（逗号分隔，可按机构清单修改）
-          <input
-            placeholder="project, approval, contract, payment, handover"
-            value={(options.requiredKinds || []).join(", ")}
-            onChange={(e) =>
-              e.target.value.trim()
-                ? set(
-                    "requiredKinds",
-                    e.target.value
-                      .split(/[,，]/)
-                      .map((x) => x.trim())
-                      .filter(Boolean),
-                  )
-                : setOptions({})
-            }
-          />
-        </label>
+        <details className="optional-settings">
+          <summary>调整应提供资料清单（选填）</summary>
+          <p className="small muted">
+            未调整时按项目资料要求核对；勾选后使用本次选择的类别。
+          </p>
+          <div className="inline-checks">
+            {Object.entries(kindNames).map(([key, title]) => (
+              <label className="checkbox-label" key={key}>
+                <input
+                  type="checkbox"
+                  checked={(options.requiredKinds || []).includes(key)}
+                  onChange={(e) => {
+                    const next = e.target.checked
+                      ? [...(options.requiredKinds || []), key]
+                      : (options.requiredKinds || []).filter(
+                          (x: string) => x !== key,
+                        );
+                    const updated = { ...options };
+                    if (next.length) updated.requiredKinds = next;
+                    else delete updated.requiredKinds;
+                    setOptions(updated);
+                  }}
+                />
+                {title}
+              </label>
+            ))}
+          </div>
+        </details>
       )}
       {scenarioId === "A03" && (
         <>
@@ -897,7 +930,7 @@ function Options({
               onChange={(e) => set("focus", e.target.value.split("\n"))}
             />
           </label>
-          <label>选择文书包</label>
+          <label>需要起草的文书</label>
           <div className="inline-checks">
             {["实施方案", "审计通知书", "提供资料清单", "审前公告"].map((t) => (
               <label className="checkbox-label" key={t}>
@@ -947,7 +980,7 @@ function Options({
       )}
       {scenarioId === "B09" && (
         <label>
-          目标过程文种
+          需要起草的审计记录
           <select
             value={options.documentType || "工作底稿"}
             onChange={(e) => set("documentType", e.target.value)}
@@ -962,7 +995,7 @@ function Options({
       )}
       {scenarioId === "F03" && (
         <>
-          <label>人工设定公开字段范围</label>
+          <label>拟公开的内容范围</label>
           <div className="inline-checks">
             {[
               ["title", "问题标题"],
@@ -989,7 +1022,7 @@ function Options({
             ))}
           </div>
           <p className="small muted">
-            生成公告候选后仍需人工核对正文脱敏与公开范围。
+            起草公告后仍需人工核对正文脱敏与公开范围。
           </p>
         </>
       )}
@@ -1005,7 +1038,7 @@ function Structured({
   rows: Row[];
   onSource: (s: any) => void;
 }) {
-  if (!rows.length) return <Empty title="本次成果未返回结构化明细" />;
+  if (!rows.length) return <Empty title="本次成果未返回业务明细" />;
   if (scenarioId === "B02")
     return (
       <div className="timeline">

@@ -13,13 +13,11 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
       data: { action, payload, scenarioId },
     });
   await page.goto("/audit/");
-  await expect(
-    page.getByRole("heading", { name: "项目工作总览" }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "我的工作台" })).toBeVisible();
   await page
     .getByRole("button", { name: "导入首批演示资料", exact: true })
     .click();
-  await expect(page.getByText("操作已保存，状态已与服务端同步。")).toBeVisible({
+  await expect(page.getByText("已保存，可继续办理。")).toBeVisible({
     timeout: 90000,
   });
   await page.goto("/audit/#settings");
@@ -102,7 +100,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   });
   // Browser upload creates immutable input, then original source remains downloadable after reload.
   await page.goto("/audit/#documents");
-  await page.getByRole("button", { name: "接收资料", exact: true }).click();
+  await page.getByRole("button", { name: "上传资料", exact: true }).click();
   await page.getByLabel("选择上传文件").setInputFiles({
     name: "浏览器上传-演示模拟数据.json",
     mimeType: "application/json",
@@ -123,7 +121,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   });
   await page.getByLabel("资料类别", { exact: true }).selectOption("payment");
   await page
-    .getByLabel("提供方 / 来源说明")
+    .getByLabel("资料提供单位及来源")
     .fill("演示模拟数据，Playwright 浏览器实际上传");
   await page.getByRole("button", { name: "保存原件并登记" }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -147,7 +145,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
     }),
   });
   await row.getByRole("button", { name: "确认版本", exact: true }).click();
-  await page.getByLabel("实际操作 / 审核人").fill("浏览器验收审核人");
+  await page.getByLabel("经办人 / 核验人").fill("浏览器验收审核人");
   await page
     .getByLabel("核验依据与处理理由")
     .fill("已核对浏览器上传的原件及版本，用于演示测试");
@@ -163,7 +161,9 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   ).toBe("confirmed");
   // Editable amount and unit must change the authoritative record, and invalidate dependencies.
   await page.goto("/audit/#B01");
-  await page.getByRole("button", { name: "汇成审计表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "汇总合同与支付", exact: true })
+    .click();
   await expect(page.locator(".notice.processing")).toHaveCount(0);
   s = await state();
   const oldB01 = s.artifacts.filter((a: any) => a.scenarioId === "B01").at(-1);
@@ -172,7 +172,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   const inputRow = page
     .locator(".input-record")
     .filter({ has: page.getByText("ui-proof", { exact: true }) });
-  await inputRow.getByRole("button", { name: "编辑字段" }).click();
+  await inputRow.getByRole("button", { name: "修改事实" }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("金额", { exact: true }).fill("15.5");
   await dialog
@@ -184,7 +184,9 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   const newFact = s.facts.find((f: any) => f.previousId === fact.id);
   expect(newFact.record.amount).toBe(15.5);
   expect(s.artifacts.find((a: any) => a.id === oldB01.id).status).toBe("stale");
-  await page.getByRole("button", { name: "汇成审计表", exact: true }).click();
+  await page
+    .getByRole("button", { name: "汇总合同与支付", exact: true })
+    .click();
   await expect(page.locator(".notice.processing")).toHaveCount(0);
   s = await state();
   expect(
@@ -195,8 +197,11 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   ).toBe(155000);
   // Model absence/failure must remain visible, without substituting an artifact.
   const oldArtifacts = s.artifacts.length;
-  await page.getByRole("checkbox", { name: /调用真实模型辅助解释/ }).check();
-  await page.getByRole("button", { name: "汇成审计表", exact: true }).click();
+  await page.locator(".intelligent-settings > summary").click();
+  await page.getByRole("checkbox", { name: /使用智能辅助分析/ }).check();
+  await page
+    .getByRole("button", { name: "汇总合同与支付", exact: true })
+    .click();
   await expect(page.locator(".notice.processing")).toHaveCount(0, {
     timeout: 90000,
   });
@@ -207,7 +212,7 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   // E01 confirmation cannot silently bypass a blocking issue.
   await page.goto("/audit/#E01");
   await page
-    .getByRole("button", { name: "运行出具前核验", exact: true })
+    .getByRole("button", { name: "核对报告签发条件", exact: true })
     .click();
   await expect(page.locator(".notice.processing")).toHaveCount(0);
   await page.getByRole("button", { name: "人工确认", exact: true }).click();
@@ -244,10 +249,11 @@ test("real persisted project: 24 scenario runs, provenance, review, changes, exp
   await page.goto("/audit/#overview");
   await expect(page.getByRole("button", { name: "打开导航" })).toBeVisible();
   await page.getByRole("button", { name: "打开导航" }).click();
-  await page.getByRole("button", { name: /资料与版本/ }).click();
-  await expect(
-    page.getByRole("heading", { name: "资料与版本中心" }),
-  ).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "主导航" })
+    .getByRole("button", { name: /审计资料/ })
+    .click();
+  await expect(page.getByRole("heading", { name: "审计资料" })).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -285,7 +291,7 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
     reason: "演示模拟数据，核对来源及当前版本后执行测试",
   };
   const submitHuman = async () => {
-    await page.getByLabel("实际操作 / 审核人").fill(human.actor);
+    await page.getByLabel("经办人 / 核验人").fill(human.actor);
     await page.getByLabel("核验依据与处理理由").fill(human.reason);
     const check = page.getByRole("checkbox", {
       name: "我已核对本次具体版本及其证据，愿意记录本次人工确认。",
@@ -299,7 +305,7 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
   expect((await post("seed", { batch: "all" })).ok()).toBeTruthy();
   const uploadContract = async (ratio: number) => {
     await page.goto("/audit/#documents");
-    await page.getByRole("button", { name: "接收资料", exact: true }).click();
+    await page.getByRole("button", { name: "上传资料", exact: true }).click();
     await page.getByLabel("选择上传文件").setInputFiles({
       name: "浏览器版本测试-演示模拟数据.json",
       mimeType: "application/json",
@@ -320,9 +326,12 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
       ),
     });
     await page.getByLabel("资料类别", { exact: true }).selectOption("contract");
-    await page.getByLabel("版本链标识（选填）").fill("browser-contract-chain");
+    await page.getByText("自行填写资料标识（选填）", { exact: true }).click();
     await page
-      .getByLabel("提供方 / 来源说明")
+      .getByLabel("同一资料标识（选填）")
+      .fill("browser-contract-chain");
+    await page
+      .getByLabel("资料提供单位及来源")
       .fill("演示模拟数据，浏览器版本比较专项");
     await page.getByRole("button", { name: "保存原件并登记" }).click();
     await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -338,7 +347,11 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
   expect(payment).toBeTruthy();
   const selectRun = async (contract: any) => {
     await page.goto("/audit/#B05");
-    await page.getByLabel("工作资料范围").selectOption("explicit");
+    await page
+      .locator(".optional-settings > summary")
+      .filter({ hasText: "调整本次使用的资料" })
+      .click();
+    await page.getByLabel("本次使用的资料").selectOption("explicit");
     for (const id of [contract.id, payment.id]) {
       const doc = (await state()).documents.find((d: any) => d.id === id);
       await page
@@ -349,7 +362,7 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
         .check();
     }
     await page
-      .getByRole("button", { name: "核验履约与支付", exact: true })
+      .getByRole("button", { name: "核查履约与支付", exact: true })
       .click();
     await expect(page.locator(".notice.processing")).toHaveCount(0);
   };
@@ -385,7 +398,7 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
     page.getByRole("dialog", { name: "操作结果与差异" }),
   ).toContainText("0.7");
   await page.getByRole("button", { name: "关闭弹窗" }).click();
-  await page.getByRole("button", { name: "冻结资料集" }).click();
+  await page.getByRole("button", { name: "留存资料清单" }).click();
   await submitHuman();
   await expect(
     page.getByRole("dialog", { name: "操作结果与差异" }),
@@ -433,7 +446,9 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
   ).toBeTruthy();
   // Select real confirmed provenance, then test/publish/reuse the generated capability through UI.
   await page.goto("/audit/#F05");
-  await page.getByRole("button", { name: "提取三库候选", exact: true }).click();
+  await page
+    .getByRole("button", { name: "整理经验与方法", exact: true })
+    .click();
   await expect(page.locator(".notice.processing")).toHaveCount(0);
   s = await state();
   const capability = s.assets
@@ -452,10 +467,12 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
   await page.reload();
   const assetCard = page
     .locator(".library")
-    .filter({ has: page.getByRole("heading", { name: "能力库", exact: true }) })
+    .filter({
+      has: page.getByRole("heading", { name: "审计方法库", exact: true }),
+    })
     .locator(".asset-card")
     .last();
-  await assetCard.getByRole("button", { name: "实际测试能力" }).click();
+  await assetCard.getByRole("button", { name: "验证审计方法" }).click();
   await expect(page.locator(".notice.processing")).toHaveCount(0);
   expect(
     (await state()).assets
@@ -476,12 +493,12 @@ test("human workflows: contract revision, freeze, legal applicability, resolutio
   await page.getByLabel("新项目编号").fill("BROWSER-NEW-DEMO-2027");
   await page.getByLabel("项目类型", { exact: true }).fill("linear-engineering");
   await page.getByLabel("新项目计量单位").fill("米");
-  await page.getByLabel("实际操作 / 审核人").fill(human.actor);
+  await page.getByLabel("经办人 / 核验人").fill(human.actor);
   await page.getByRole("button", { name: "生成适配清单" }).click();
   await expect(
     page.getByRole("dialog", { name: "操作结果与差异" }),
   ).toContainText("待新项目提供输入并验证");
-  await expect(page.getByRole("dialog")).toContainText("复制的原项目事实");
+  await expect(page.getByRole("dialog")).toContainText("复制的原事实核对");
   await page.screenshot({
     path: testInfo.outputPath("governed-reuse.png"),
     fullPage: true,
@@ -532,7 +549,7 @@ test("source media: original-image zoom and visible OCR / ASR failures without m
   expect(audio).toBeTruthy();
   await page.getByRole("button", { name: audio.name, exact: true }).click();
   await expect(page.locator(".evidence-panel audio")).toBeVisible();
-  await page.getByRole("button", { name: "真实语音转写", exact: true }).click();
+  await page.getByRole("button", { name: "录音转文字", exact: true }).click();
   await expect(page.locator(".evidence-panel .notice.processing")).toHaveCount(
     0,
     { timeout: 90000 },

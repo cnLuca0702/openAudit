@@ -287,7 +287,7 @@ test("four-layer evidence requires distinct source, evidence sheet, workpaper an
     evidenceSheetIds: [proof.id],
     workpaperIds: [proof.id],
   };
-  await assert.rejects(save(chain), /四层证据链/);
+  await assert.rejects(save(chain), /方案、证据、底稿与报告对应关系/);
   const sheet = await document("取证单"),
     paper = await document("工作底稿");
   const saved = await save({

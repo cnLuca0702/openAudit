@@ -1,0 +1,21 @@
+{
+  "matched": true,
+  "fileCount": 15,
+  "sha256": {
+    "packages/client/src/components.tsx": "41686c847d5fa974d3f5cf2c868174c7045894dee6693619cfa39d93527d0cde",
+    "packages/client/src/model.ts": "4e0c7f03f57afb768481d7e15b7106a7bce2d1abc5aeb7b81442e334724338de",
+    "packages/client/src/workspace.tsx": "52f8682772609472e90a1daed2b278a678838beee93bf88baf3db377ae4140e3",
+    "packages/client/src/scenario.tsx": "db0149d852710a91155604b6681d1823cd66b9e7cb1a4c8b3fb3be3898162905",
+    "packages/client/src/App.tsx": "76b13104f52bf6aab37d25f611bf3967c3d9e7dda879cbb385779ffef98ba1fc",
+    "packages/client/src/workflow.tsx": "d20584c2016e0688594c4a4b3eaec711190cff15f20f58a459c288709421b8ea",
+    "packages/client/src/styles.css": "9846bb25f77f84b3333e54217cdd5e33980443c7402ed80f8a67ebbb2df187bd",
+    "packages/client/src/dialogs.tsx": "3ab8b952bbefa48249e5217c6bef007af539dcaccd38884bad89f56384310d08",
+    "packages/client/src/main.tsx": "7dd0ec7c005211dc0191dbe92115cb395ec8f04c2591d2259039a5d7b42fb3c0",
+    "packages/client/dist/index.html": "7c08e99844c9848b571ba51c31d1ab9d7462cf2fc3a7cc5e77611841495f5716",
+    "packages/client/dist/assets/index-C3GygWBP.css": "aab70aae0f7bab59b6cf77162ac5857fe29296d919a5215d72ce79701e5c24bd",
+    "packages/client/dist/assets/index-TE219yb0.js": "de9717c3591a24d2f1855cf9aedf4dcc947acd6e4b638921ca8f761841afc7c4",
+    "packages/server/scenarios.js": "97488a83f288ebbf853857fe9ce0a2d6af4eef4c7bd5f0be1ecdeb3c2c0158e1",
+    "packages/server/workflow.js": "7adecb98be8045b0b7df8a223b35d26bbdd9f1d54b0fd96e222871f06797ecf5",
+    "scripts/verify-personal-deployed.mjs": "7b2482c5857143e9ba0b7202307459fefb94fc9944679b332420b94dbc8c4101"
+  }
+}
