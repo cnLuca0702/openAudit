@@ -1,0 +1,54 @@
+{
+  "at": "2026-11-15T08:40:03.900Z",
+  "checks": [
+    {
+      "label": "VPN audit without cookies",
+      "status": 200
+    },
+    {
+      "label": "VPN workbench without cookies",
+      "status": 200
+    },
+    {
+      "label": "Public root still requires login",
+      "status": 401
+    },
+    {
+      "label": "Public audit still requires login",
+      "status": 401
+    },
+    {
+      "label": "Forwarded root cannot auto-login",
+      "status": 401
+    },
+    {
+      "label": "Forwarded API cannot bypass login",
+      "status": 401
+    },
+    {
+      "label": "Tunnel headers cannot auto-login",
+      "status": 401
+    },
+    {
+      "label": "Cross-origin API is denied",
+      "status": 403
+    },
+    {
+      "label": "Cross-origin index cannot auto-login",
+      "status": 401
+    },
+    {
+      "label": "Same-site cross-origin index cannot auto-login",
+      "status": 401
+    },
+    {
+      "label": "Fresh browser opens DSH and audit workbench without entering token",
+      "passed": true
+    },
+    {
+      "label": "LAN session cannot authenticate public hostname",
+      "status": 401
+    }
+  ],
+  "passed": true
+}

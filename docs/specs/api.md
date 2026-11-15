@@ -1,6 +1,6 @@
 # openAudit API v1（演示模拟数据）
 
-同源 `/api/audit`；UI `/audit/`。DSH 0.2.2-rc.1 `webServer.register` 与 `connection.requestRejection` 保护 API/静态资源，先通过 DSH 根入口登录并取得同源会话，审计路由不自行签发令牌。没有独立监听端口。
+同源 `/api/audit`；UI `/audit/`。DSH 0.2.2-rc.1 `webServer.register` 与 `connection.requestRejection` 保护 API/静态资源，审计路由不自行签发令牌。公网与 SSH 转发先通过 DSH 根入口登录并取得同源会话。2026-11-15 用户授权两个内网入口免 token：由 `packages/lan-access` 校验真实 socket、Host、Origin 及代理标记后放行；首页使用 DSH 原有会话机制。VPN 与局域网均使用 3090 端口，公网仍鉴权，详见部署说明。
 
 ## 请求
 

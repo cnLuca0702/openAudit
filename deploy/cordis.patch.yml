@@ -2,6 +2,8 @@
   config:
     documentsDirectory: /opt/dsh-v2/workspace
 - insert:
+    - id: openaudit-lan-access
+      name: /opt/dsh-v2/openaudit/packages/lan-access/index.js
     - id: openaudit-server
       name: /opt/dsh-v2/openaudit/packages/server/index.js
       config:

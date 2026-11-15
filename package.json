@@ -4,7 +4,7 @@
   "scripts":{
     "setup":"npm ci --prefix packages/parsers && npm ci --prefix packages/client",
     "build":"npm run build --prefix packages/client",
-    "test":"node --test packages/models/test/*.test.js packages/parsers/test/*.test.js packages/server/test/*.test.js",
+    "test":"node --test packages/models/test/*.test.js packages/parsers/test/*.test.js packages/server/test/*.test.js packages/lan-access/test/*.test.js",
     "test:models":"node --test packages/models/test/*.test.js",
     "test:parsers":"node --test packages/parsers/test/*.test.js"
   },
