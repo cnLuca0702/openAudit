@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-15T08:25:15.760566+00:00",
+  "codeCommit": "440ea2c",
+  "unitIntegrationTests": 71,
+  "browserTests": 10,
+  "actualModelDraftKinds": 14,
+  "editableArchitectureNodes": 167,
+  "architectureSlides": 31,
+  "architectureDrawioPages": 32,
+  "architectureInputs": 262,
+  "architectureOperations": 263,
+  "architectureRenderedDescriptionsPresent": 167,
+  "productionBackup": "/opt/dsh-v2/backups/centers-before-20261115T082206Z.tar.gz",
+  "productionStateUnchangedDuringDeployment": true,
+  "oldDSHProcessUnchanged": true,
+  "limits": [
+    "个人偏好仍保存在浏览器，暂无账号级工作区和通知",
+    "疑点分发登记承办人、办理要求及期限，不发送账号通知",
+    "政策法规 MCP 仅保存待接入设置，当前使用上传法规资料",
+    "删除项目停止普通访问并保留历史，演示主项目使用独立重置入口"
+  ]
+}

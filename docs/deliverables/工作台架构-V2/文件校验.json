@@ -1,0 +1,356 @@
+{
+  "nodeCount": 167,
+  "scenarioCount": 24,
+  "workflowForms": 8,
+  "referenceNodes": 19,
+  "slides": 31,
+  "drawioPages": 32,
+  "inputFields": 262,
+  "operations": 263,
+  "baselineCommit": "440ea2c",
+  "allNodesHaveDescription": true,
+  "allNodesHaveEditableShapes": true,
+  "packageIntegrity": "passed",
+  "pages": [
+    {
+      "page": 2,
+      "parent": "ROOT",
+      "nodes": [
+        "P",
+        "M",
+        "FA",
+        "WP",
+        "RV",
+        "ST",
+        "R",
+        "L",
+        "H"
+      ]
+    },
+    {
+      "page": 3,
+      "parent": "ROOT",
+      "nodes": [
+        "SET",
+        "U",
+        "SYS",
+        "NEXT"
+      ]
+    },
+    {
+      "page": 4,
+      "parent": "P",
+      "nodes": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07"
+      ]
+    },
+    {
+      "page": 5,
+      "parent": "P01",
+      "nodes": [
+        "ROLE-member",
+        "ROLE-lead",
+        "ROLE-review",
+        "ROLE-legal",
+        "ROLE-followup"
+      ]
+    },
+    {
+      "page": 6,
+      "parent": "M",
+      "nodes": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07",
+        "M08",
+        "M09"
+      ]
+    },
+    {
+      "page": 7,
+      "parent": "M",
+      "nodes": [
+        "M10",
+        "W01",
+        "W02",
+        "M11",
+        "M12",
+        "DOC-extract",
+        "DOC-plan"
+      ]
+    },
+    {
+      "page": 8,
+      "parent": "M03",
+      "nodes": [
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06"
+      ]
+    },
+    {
+      "page": 9,
+      "parent": "FA",
+      "nodes": [
+        "W05",
+        "FA-FACT",
+        "FA05",
+        "FA06",
+        "FA07",
+        "FA08",
+        "DOC-request",
+        "DOC-interview",
+        "DOC-evidence"
+      ]
+    },
+    {
+      "page": 10,
+      "parent": "FA-FACT",
+      "nodes": [
+        "FA01",
+        "FA02",
+        "FA03",
+        "FA04"
+      ]
+    },
+    {
+      "page": 11,
+      "parent": "WP",
+      "nodes": [
+        "W06",
+        "W08",
+        "WP01",
+        "DOC-workpaper",
+        "DOC-management",
+        "DOC-progress",
+        "DOC-report"
+      ]
+    },
+    {
+      "page": 12,
+      "parent": "RV",
+      "nodes": [
+        "W03",
+        "W04",
+        "W07",
+        "DOC-adoption",
+        "DOC-department",
+        "DOC-meeting",
+        "DOC-legal",
+        "DOC-reply"
+      ]
+    },
+    {
+      "page": 13,
+      "parent": "ST",
+      "nodes": [
+        "ST-A",
+        "ST-B",
+        "ST-C",
+        "ST-D",
+        "ST-E",
+        "ST-F"
+      ]
+    },
+    {
+      "page": 14,
+      "parent": "ST-A",
+      "nodes": [
+        "A01",
+        "A02",
+        "A03"
+      ]
+    },
+    {
+      "page": 15,
+      "parent": "ST-B",
+      "nodes": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09"
+      ]
+    },
+    {
+      "page": 16,
+      "parent": "ST-C",
+      "nodes": [
+        "C01",
+        "C02"
+      ]
+    },
+    {
+      "page": 17,
+      "parent": "ST-D",
+      "nodes": [
+        "D01",
+        "D02",
+        "D03",
+        "D04"
+      ]
+    },
+    {
+      "page": 18,
+      "parent": "ST-E",
+      "nodes": [
+        "E01"
+      ]
+    },
+    {
+      "page": 19,
+      "parent": "ST-F",
+      "nodes": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05"
+      ]
+    },
+    {
+      "page": 20,
+      "parent": "R",
+      "nodes": [
+        "R01",
+        "R02",
+        "R03",
+        "R04"
+      ]
+    },
+    {
+      "page": 21,
+      "parent": "L",
+      "nodes": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05",
+        "L06"
+      ]
+    },
+    {
+      "page": 22,
+      "parent": "H",
+      "nodes": [
+        "H01",
+        "H02"
+      ]
+    },
+    {
+      "page": 23,
+      "parent": "SET",
+      "nodes": [
+        "SET01",
+        "SET02"
+      ]
+    },
+    {
+      "page": 24,
+      "parent": "U",
+      "nodes": [
+        "W09",
+        "W10",
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07"
+      ]
+    },
+    {
+      "page": 25,
+      "parent": "U",
+      "nodes": [
+        "U08",
+        "U09",
+        "U10"
+      ]
+    },
+    {
+      "page": 26,
+      "parent": "W10",
+      "nodes": [
+        "REF01",
+        "REF02",
+        "REF03",
+        "REF04",
+        "REF05",
+        "REF06",
+        "REF07",
+        "REF08",
+        "REF09"
+      ]
+    },
+    {
+      "page": 27,
+      "parent": "W10",
+      "nodes": [
+        "REF10",
+        "REF11",
+        "REF12",
+        "REF13",
+        "REF14",
+        "REF15",
+        "REF16",
+        "REF17",
+        "REF18"
+      ]
+    },
+    {
+      "page": 28,
+      "parent": "W10",
+      "nodes": [
+        "REF19"
+      ]
+    },
+    {
+      "page": 29,
+      "parent": "SYS",
+      "nodes": [
+        "SYS01",
+        "SYS02",
+        "SYS03",
+        "SYS04",
+        "SYS05",
+        "SYS06",
+        "SYS07"
+      ]
+    },
+    {
+      "page": 30,
+      "parent": "NEXT",
+      "nodes": [
+        "N01",
+        "N02",
+        "N03",
+        "N04",
+        "N05",
+        "N06",
+        "N07",
+        "N08",
+        "N09"
+      ]
+    }
+  ]
+}

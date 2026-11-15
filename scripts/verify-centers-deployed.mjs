@@ -73,13 +73,14 @@ try {
   const row = page
     .getByRole("table", { name: "审计资料目录" })
     .locator("tbody tr")
-    .filter({ hasText: doc.name })
+    .filter({ has: page.getByRole("button", { name: doc.name, exact: true }) })
     .first();
   await row.getByRole("button", { name: "查看原文", exact: true }).click();
   const canvas = page.locator(".document-preview canvas");
   await canvas.waitFor();
+  await page.getByLabel("原文页码", { exact: true }).waitFor();
   await page.waitForFunction(
-    () => !!document.querySelector(".document-preview canvas")?.width,
+    () => document.querySelector(".document-preview canvas")?.height > 150,
   );
   report.checks.push("现有 PDF 原件可直接阅读");
   await page.getByRole("button", { name: "关闭来源", exact: true }).click();
